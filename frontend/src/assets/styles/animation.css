@@ -1,0 +1,54 @@
+:root {
+  --transition-duration: 0.5s;
+  --fade-transition-duration: 1s;
+}
+
+.fade-in {
+  visibility: visible;
+  opacity: 1;
+  transition:
+    visibility 0s linear 0s,
+    opacity var(--fade-transition-duration);
+}
+
+.fade-out {
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    visibility 0s linear var(--fade-transition-duration),
+    opacity var(--fade-transition-duration);
+}
+
+@keyframes slideIn {
+  from {
+    visibility: hidden;
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    visibility: visible;
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.slide-in {
+  animation: slideIn var(--transition-duration) ease-in-out forwards;
+}
+
+@keyframes slideOut {
+  from {
+    visibility: visible;
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    visibility: hidden;
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+.slide-out {
+  animation: slideOut var(--transition-duration) ease-in-out forwards;
+}

@@ -1,0 +1,15 @@
+.default {
+  place-self: center;
+  width: 3rem;
+  aspect-ratio: 1;
+  border: 8px solid lightblue;
+  border-right-color: orange;
+  border-radius: 50%;
+  animation: spinnerDefault 1s infinite linear;
+}
+
+@keyframes spinnerDefault {
+  to {
+    transform: rotate(1turn);
+  }
+}

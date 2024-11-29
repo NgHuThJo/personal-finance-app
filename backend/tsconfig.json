@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "#backend/*": ["./src/*"]
+    },
+    "customConditions": ["production"],
+    "outDir": "dist"
+  },
+  "include": ["./src/**/*", "./prisma/**/*"],
+  "references": []
+}

@@ -1,0 +1,97 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+html {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body {
+  flex-grow: 1;
+  overflow-y: scroll;
+}
+
+a,
+button,
+input,
+label {
+  cursor: pointer;
+}
+
+a {
+  display: inline-block;
+  font-weight: var(--fw-link);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: revert;
+  }
+}
+
+button {
+  border: none;
+  font-weight: var(--fw-button);
+  background-color: transparent;
+  transition: opacity var(--transition-duration);
+
+  &:hover {
+    opacity: 0.5;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: revert;
+  font-weight: var(--fw-heading);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+textarea {
+  width: 100%;
+  min-height: 10em;
+  padding: 0.2em;
+  cursor: text;
+  background-color: #ddd;
+  overflow: auto;
+}
+
+/* root styles */
+#root {
+  display: grid;
+  min-height: 100vh;
+  min-width: var(--min-w-root);
+  font-family: var(--ff-root);
+  font-weight: var(--fw-root);
+  font-size: var(--fs-root);
+  color: var(--c-root);
+  background-color: var(--bgc-root);
+}
+
+@media (prefers-reduced-motion) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

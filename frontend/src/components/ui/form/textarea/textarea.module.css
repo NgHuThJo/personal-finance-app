@@ -1,0 +1,9 @@
+.default {
+  composes: flow-spacing from global;
+
+  font-weight: var(--fw-button);
+
+  textarea {
+    padding: 0.5rem;
+  }
+}

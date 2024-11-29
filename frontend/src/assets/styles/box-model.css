@@ -1,0 +1,20 @@
+:root {
+  --min-w-root: 20rem;
+  --p-inline-container: 2rem;
+  --flow-spacing: 1em;
+  --box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+    rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+
+/* Document flow spacing */
+.flow-spacing {
+  > * + * {
+    margin-top: var(--flow-spacing);
+  }
+}
+
+/* Container */
+.container {
+  max-width: min(90rem, 100% - 2 * var(--p-inline-container));
+  margin: 0 auto;
+}

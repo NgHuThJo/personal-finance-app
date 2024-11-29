@@ -1,0 +1,21 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "typeRoots": ["../node_modules", "../node_modules/@testing-library"],
+    "types": ["vite/client", "vitest/globals", "jest-dom"],
+    "jsx": "react-jsx",
+    "paths": {
+      "#frontend/*": ["./src/*"],
+      "#backend/*": ["../backend/src/*"]
+    },
+    "outDir": "dist"
+  },
+  "include": ["./src/**/*"],
+  "references": [
+    {
+      "path": "../backend"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+.container {
+  height: 0.375rem;
+  background-color: var(--bgc-progress-bar);
+}
+
+.progress-bar {
+  height: 100%;
+  background-image: var(--gradient-progress-bar);
+}

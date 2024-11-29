@@ -1,0 +1,65 @@
+:root {
+  --ff-root: system-ui, sans-serif;
+
+  --fw-button: 600;
+  --fw-heading: 700;
+  --fw-link: 500;
+  --fw-root: 400;
+
+  --fs-h1: clamp(3rem, 2rem + 5vw, 5rem);
+  --fs-h2: clamp(2rem, 1.5rem + 2.5vw, 3rem);
+  --fs-h3: clamp(1.5rem, 1rem + 2.5vw, 2.5rem);
+  --fs-h4: clamp(1.125rem, 0.6875rem + 2.1875vw, 2rem);
+  --fs-root: 1rem;
+}
+
+/* Font weight related utility classes */
+.fw-thin {
+  font-weight: 100;
+}
+
+.fw-extra-light {
+  font-weight: 200;
+}
+
+.fw-light {
+  font-weight: 300;
+}
+
+.fw-normal {
+  font-weight: 400;
+}
+
+.fw-medium {
+  font-weight: 500;
+}
+
+.fw-semi-bold {
+  font-weight: 600;
+}
+
+.fw-bold {
+  font-weight: 700;
+}
+
+.fw-extra-bold {
+  font-weight: 800;
+}
+
+.fw-heavy {
+  font-weight: 900;
+}
+
+/* Heading levels */
+.h1 {
+  font-size: var(--fs-h1);
+}
+.h2 {
+  font-size: var(--fs-h2);
+}
+.h3 {
+  font-size: var(--fs-h3);
+}
+.h4 {
+  font-size: var(--fs-h4);
+}

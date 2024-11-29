@@ -1,0 +1,27 @@
+.container {
+  display: grid;
+  place-self: center;
+  gap: 1rem;
+  width: min(100%, var(--max-w-skeleton));
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background-color: var(--bgc-content);
+
+  > * {
+    height: 0.5rem;
+    border-radius: 1rem;
+    animation: pulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    background-color: var(--bgc-brand);
+  }
+  50% {
+    background-color: var(--bgc-notification);
+  }
+  100% {
+    background-color: var(--bgc-brand);
+  }
+}

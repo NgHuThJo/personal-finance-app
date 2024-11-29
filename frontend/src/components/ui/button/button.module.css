@@ -1,0 +1,4 @@
+.default {
+  padding: 0.5rem;
+  background-color: var(--bgc-button);
+}

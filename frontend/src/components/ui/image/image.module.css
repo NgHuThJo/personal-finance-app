@@ -1,0 +1,8 @@
+:root {
+  --w-icon: 2rem;
+}
+
+.icon {
+  width: var(--w-icon);
+  aspect-ratio: 1;
+}

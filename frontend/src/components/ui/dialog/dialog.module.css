@@ -1,0 +1,5 @@
+.default {
+  max-width: min(100%, 40rem);
+  margin: auto;
+  background-color: var(--bgc-dialog);
+}
