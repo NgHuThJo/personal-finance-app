@@ -1,5 +1,5 @@
 :root {
-  --c-white-900: #fff;
+  /* --c-white-900: #fff;
   --c-black-900: #000;
   --c-red-900: #f00;
   --c-orange-900: #ff7f00;
@@ -12,5 +12,10 @@
   --c-blue-900: #00f;
   --c-violet-900: #7f00ff;
   --c-magenta-900: #f0f;
-  --c-raspberry-900: #ff007f;
+  --c-raspberry-900: #ff007f; */
+
+  --foreground-primary: #201f24;
+  --background-primary: #fff;
+  --background-root: #f8f4f0;
+  --error: #ef4444;
 }

@@ -1,5 +1,9 @@
 .default {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 0.5rem;
+
+  &:has(:where(input:invalid, input:required)) {
+    color: var(--error);
+  }
 }

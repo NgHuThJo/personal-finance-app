@@ -1,6 +1,6 @@
 :root {
   --min-w-root: 20rem;
-  --p-inline-container: 2rem;
+  --p-inline-container: 1rem;
   --flow-spacing: 1em;
   --box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
     rgba(0, 0, 0, 0.22) 0px 15px 12px;
