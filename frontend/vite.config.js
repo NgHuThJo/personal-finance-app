@@ -12,4 +12,9 @@ export default defineConfig({
       "#publicAssets": path.resolve(__dirname, "public"),
     },
   },
+  test: {
+    environment: "jsdom",
+    globals: true,
+    setupFiles: ["./src/test/setup.js"],
+  },
 });

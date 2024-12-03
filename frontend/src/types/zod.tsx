@@ -17,7 +17,7 @@ export const emailSchema = z
 export const nameSchema = z
   .string()
   .trim()
-  .min(4, "Name must have at least 4 characters");
+  .min(1, "Name must have at least one character");
 export const passwordSchema = z
   .string()
   .trim()
@@ -70,6 +70,5 @@ export type AuthSchemaError = SchemaError<typeof authSchema>;
 export const registrationSchema = authSchema.extend({
   firstName: nameSchema,
   lastName: nameSchema,
-  displayName: nameSchema,
 });
 export type RegistrationSchemaError = SchemaError<typeof registrationSchema>;

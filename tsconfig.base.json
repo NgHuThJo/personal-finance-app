@@ -10,7 +10,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "sourceMap": true,
-    "lib": ["DOM", "ESNext"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "composite": true,
     "declaration": true,
     "declarationMap": true,

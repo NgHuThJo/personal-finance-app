@@ -14,8 +14,9 @@
   --c-magenta-900: #f0f;
   --c-raspberry-900: #ff007f; */
 
-  --foreground-primary: #201f24;
-  --background-primary: #fff;
-  --background-root: #f8f4f0;
-  --error: #ef4444;
+  --c-root: #a7b0bd;
+  --c-error: #ef4444;
+  --bgc-foreground-primary: #201f24;
+  --bgc-background-primary: #fff;
+  --bgc-root: #f8f4f0;
 }

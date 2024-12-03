@@ -1,4 +1,11 @@
 .default {
   padding: 0.5rem;
-  background-color: var(--bgc-button);
+}
+
+.auth {
+  width: 100%;
+  padding-block: 1rem;
+  border-radius: 0.5rem;
+  color: #fff;
+  background-color: var(--bgc-foreground-primary);
 }

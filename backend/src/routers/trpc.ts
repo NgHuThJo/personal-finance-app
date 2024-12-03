@@ -1,9 +1,9 @@
 import { SocketService } from "#backend/services/socket-io.js";
-import { inferAsyncReturnType, initTRPC } from "@trpc/server";
+import { initTRPC } from "@trpc/server";
 import { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 
 export const t = initTRPC
-  .context<inferAsyncReturnType<typeof createContext>>()
+  .context<Awaited<ReturnType<typeof createContext>>>()
   .create();
 
 export const { router } = t;

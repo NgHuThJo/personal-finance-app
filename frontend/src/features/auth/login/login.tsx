@@ -8,9 +8,16 @@ export function Login() {
   return (
     <form className={styles.form}>
       <h1>Login</h1>
-      <Input type="email" label="Email address" />
-      <Input type="text" minLength={8} label="Password" />
-      <Button type="submit">Login</Button>
+      <Input type="email" label="Email" placeholder="Email" />
+      <Input
+        type="text"
+        minLength={8}
+        label="Password"
+        placeholder="Password"
+      />
+      <Button type="submit" className="auth">
+        Login
+      </Button>
       <p>
         Need an account? <Link to="/register">Sign up here</Link>
       </p>

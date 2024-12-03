@@ -19,7 +19,7 @@ export const nonEmptyStringSchema = z
 export const nameSchema = z
   .string()
   .trim()
-  .min(4, "Name must have at least 4 characters");
+  .min(1, "Name must have at least one character");
 export const stringToNumberSchema = z
   .string()
   .trim()

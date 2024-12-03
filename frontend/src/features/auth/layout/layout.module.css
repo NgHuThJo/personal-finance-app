@@ -1,7 +1,6 @@
 .container {
   display: grid;
   grid-template-rows: auto 1fr;
-  background-color: var(--background-root);
 }
 
 .logo-container {
@@ -10,7 +9,7 @@
   align-items: center;
   padding-block: 1.5rem;
   border-radius: 0 0 1rem 1rem;
-  background-color: var(--foreground-primary);
+  background-color: var(--bgc-foreground-primary);
 }
 
 .form-container {
