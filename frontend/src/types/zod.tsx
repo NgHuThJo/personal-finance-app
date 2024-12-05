@@ -67,8 +67,11 @@ export const authSchema = z.object({
 export type AuthSchemaError = SchemaError<typeof authSchema>;
 
 // Extended schemas
-export const registrationSchema = authSchema.extend({
-  firstName: nameSchema,
-  lastName: nameSchema,
+export const registrationSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Email address is invalid"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
+
 export type RegistrationSchemaError = SchemaError<typeof registrationSchema>;

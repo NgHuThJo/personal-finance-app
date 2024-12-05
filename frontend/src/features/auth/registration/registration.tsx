@@ -3,15 +3,13 @@ import { Link } from "react-router-dom";
 import { Button } from "#frontend/components/ui/button/button";
 import { FormError } from "#frontend/components/ui/form/error/error";
 import { Input } from "#frontend/components/ui/form/input/input";
-import { trpc } from "#frontend/lib/trpc/trpc";
+import { trpc } from "#frontend/lib/trpc";
 import { registrationSchema } from "#frontend/types/zod";
 import styles from "./registration.module.css";
 
 export function Registration() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const registration = trpc.user.registerUser.useMutation();
-
-  console.log(registration);
 
   const handleRegistration = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -24,11 +22,11 @@ export function Registration() {
     }
 
     registration.mutate(parsedData.data, {
-      onError: (error) => {
-        console.log("Backend error", error);
+      onSuccess: (data) => {
+        console.log("Registration successful", data);
       },
-      onSettled: (data) => {
-        console.log("Registration finished", data);
+      onError: (error) => {
+        console.error("Backend error", error.message);
       },
     });
   };

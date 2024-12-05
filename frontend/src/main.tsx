@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { Context } from "./providers/context";
 import { Router } from "./app/router";
-import { trpc } from "#frontend/lib/trpc/trpc";
+import { trpc } from "#frontend/lib/trpc";
 import "#frontend/assets/styles";
 
 const root = document.getElementById("root");

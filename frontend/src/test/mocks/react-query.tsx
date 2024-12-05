@@ -1,9 +1,17 @@
 import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, RenderOptions } from "@testing-library/react";
+import { httpLink } from "@trpc/client";
+import { trpc } from "#frontend/lib/trpc";
 
-const createTestQueryClient = () =>
-  new QueryClient({
+export const createTestTRPCandQueryClients = (children: ReactNode) => {
+  const trpcClient = trpc.createClient({
+    links: [
+      httpLink({
+        url: import.meta.env.VITE_API_URL,
+      }),
+    ],
+  });
+  const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
         retry: false,
@@ -11,14 +19,9 @@ const createTestQueryClient = () =>
     },
   });
 
-export const renderWithQueryClient = (
-  ui: ReactNode,
-  options?: RenderOptions,
-) => {
-  const queryClient = createTestQueryClient();
-
-  return render(
-    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
-    options,
+  return (
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </trpc.Provider>
   );
 };
