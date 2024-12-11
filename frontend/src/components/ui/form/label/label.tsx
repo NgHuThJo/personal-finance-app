@@ -23,7 +23,9 @@ export function Label({
       {typeof error === "string" ? (
         <FormError message={error} />
       ) : (
-        error?.map((message) => <FormError message={message} />)
+        error?.map((message, index) => (
+          <FormError key={index} message={message} />
+        ))
       )}
     </label>
   );

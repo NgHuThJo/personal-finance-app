@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpLink } from "@trpc/client";
 import { trpc } from "#frontend/lib/trpc";
+import { GlobalContext } from "#frontend/providers/global-context";
 
 export const createTestTRPCandQueryClients = (children: ReactNode) => {
   const trpcClient = trpc.createClient({
@@ -21,7 +22,9 @@ export const createTestTRPCandQueryClients = (children: ReactNode) => {
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <GlobalContext>{children}</GlobalContext>
+      </QueryClientProvider>
     </trpc.Provider>
   );
 };

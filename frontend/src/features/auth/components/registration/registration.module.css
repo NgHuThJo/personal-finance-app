@@ -1,6 +1,12 @@
 .form {
+  composes: flow-spacing from global;
+
   width: 100%;
   padding: 2rem;
   border-radius: 0.5rem;
   background-color: var(--bgc-background-primary);
+}
+
+.success-message {
+  color: var(--c-success);
 }

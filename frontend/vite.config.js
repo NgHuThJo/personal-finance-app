@@ -13,6 +13,8 @@ export default defineConfig({
     },
   },
   test: {
+    pool: "threads",
+    isolate: false,
     environment: "jsdom",
     globals: true,
     setupFiles: ["./src/test/setup.js"],

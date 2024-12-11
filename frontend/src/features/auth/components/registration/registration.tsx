@@ -4,11 +4,14 @@ import { Button } from "#frontend/components/ui/button/button";
 import { FormError } from "#frontend/components/ui/form/error/error";
 import { Input } from "#frontend/components/ui/form/input/input";
 import { trpc } from "#frontend/lib/trpc";
-import { registrationSchema } from "#frontend/types/zod";
+import {
+  registrationSchema,
+  RegistrationSchemaError,
+} from "#frontend/types/zod";
 import styles from "./registration.module.css";
 
 export function Registration() {
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+  const [fieldErrors, setFieldErrors] = useState<RegistrationSchemaError>({});
   const registration = trpc.user.registerUser.useMutation();
 
   const handleRegistration = (event: FormEvent<HTMLFormElement>) => {
@@ -23,10 +26,13 @@ export function Registration() {
 
     registration.mutate(parsedData.data, {
       onSuccess: (data) => {
-        console.log("Registration successful", data);
+        console.log("Registration successful:", data);
       },
       onError: (error) => {
-        console.error("Backend error", error.message);
+        console.error("Backend error:", error.message);
+      },
+      onSettled: () => {
+        setFieldErrors({});
       },
     });
   };
@@ -36,7 +42,7 @@ export function Registration() {
   }
 
   return (
-    <form action="" className={styles.form} onSubmit={handleRegistration}>
+    <form className={styles.form} onSubmit={handleRegistration} noValidate>
       <h1>Registration</h1>
       <Input
         type="text"
@@ -66,12 +72,17 @@ export function Registration() {
         placeholder="Password"
         error={fieldErrors.password}
       />
-      <Button type="submit">Create Account</Button>
+      <Button type="submit" className="auth">
+        Create Account
+      </Button>
       <p>
         Already have an account? <Link to="/">Log in</Link>
       </p>
       {registration.isError && (
         <FormError message={registration.error.message} />
+      )}
+      {registration.isSuccess && (
+        <p className={styles["success-message"]}>Registration successful!</p>
       )}
     </form>
   );

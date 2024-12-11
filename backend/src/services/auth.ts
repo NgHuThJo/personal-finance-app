@@ -7,9 +7,6 @@ class AuthService {
       where: {
         email,
       },
-      include: {
-        avatar: true,
-      },
       omit: {
         password: false,
       },
@@ -18,7 +15,7 @@ class AuthService {
     if (!user) {
       throw new AppError(
         "NOT_FOUND",
-        `No user with email address "${email}" found`,
+        `No user with email address ${email} found`,
       );
     }
 
@@ -26,9 +23,7 @@ class AuthService {
       throw new AppError("UNAUTHORIZED", "Passwords do not match");
     }
 
-    const { password: _userPassword, ...rest } = user;
-
-    return rest;
+    return { id: user.id };
   }
 }
 

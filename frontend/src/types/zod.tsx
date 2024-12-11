@@ -50,10 +50,8 @@ export const infiniteScrollSchema = z.object({
 });
 
 // Schemas and error types for React Router actions and event handlers
-export type SchemaError<T extends z.ZodSchema> = {
-  general?: string;
-  fieldErrors?: z.inferFlattenedErrors<T>["fieldErrors"];
-};
+export type SchemaError<T extends z.ZodSchema> =
+  z.inferFlattenedErrors<T>["fieldErrors"];
 
 // Base schemas
 export const userIdSchema = z.object({
@@ -70,8 +68,8 @@ export type AuthSchemaError = SchemaError<typeof authSchema>;
 export const registrationSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Email address is invalid"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  email: emailSchema,
+  password: passwordSchema,
 });
 
 export type RegistrationSchemaError = SchemaError<typeof registrationSchema>;

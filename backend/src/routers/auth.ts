@@ -16,9 +16,9 @@ export const authRouter = router({
       const { email, password } = input;
 
       try {
-        const user = await authService.loginUser(email, password);
+        const userId = await authService.loginUser(email, password);
 
-        return user;
+        return userId;
       } catch (error) {
         logError(error);
       }
