@@ -14,28 +14,67 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Category {
+  ENTERTAINMENT
+  BILL
+  GROCERIES
+  TRANSPORTATION
+  EDUCATION
+  LIFESTYLE
+  SHOPPING
+  GENERAL
+}
+
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  firstName String
-  lastName  String
-  password  String
-  balance   Account?
-  Pot       Pot?
+  id         Int           @id @default(autoincrement())
+  email      String        @unique
+  firstName  String
+  lastName   String
+  password   String
+  balance    Account?
+  pot        Pot?
+  budget     Budget?
+  senders    Transaction[] @relation("sender")
+  recipients Transaction[] @relation("recipient")
+}
+
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  sender      User     @relation("sender", fields: [senderId], references: [id])
+  senderId    Int
+  recipient   User     @relation("recipient", fields: [recipientId], references: [id])
+  recipientId Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Account {
-  id      Int  @id @default(autoincrement())
-  user    User @relation(fields: [userId], references: [id])
-  userId  Int  @unique
-  income  Int  @default(0)
-  expense Int  @default(0)
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+  income    Decimal  @db.Decimal(10, 2)
+  expense   Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Pot {
-  id            Int     @id @default(autoincrement())
-  user          User    @relation(fields: [userId], references: [id])
-  userId        Int     @unique
-  totalAmount   Decimal @db.Decimal(10, 2)
-  currentAmount Decimal @db.Decimal(10, 2)
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int      @unique
+  totalAmount Decimal  @db.Decimal(10, 2)
+  savedAmount Decimal  @db.Decimal(10, 2)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Budget {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int      @unique
+  maxAmount   Decimal  @db.Decimal(10, 2)
+  spentAmount Decimal  @db.Decimal(10, 2)
+  category    Category
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

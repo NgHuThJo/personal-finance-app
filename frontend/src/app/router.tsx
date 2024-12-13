@@ -3,7 +3,7 @@ import { AuthRoute } from "#frontend/app/routes/auth";
 import { ErrorRoute } from "#frontend/app/routes/error";
 import { HomeRoute } from "#frontend/app/routes/home";
 import { NotFoundRoute } from "#frontend/app/routes/not-found";
-import { Home } from "#frontend/features/home/components/home/home";
+import { Home } from "#frontend/features/home/components/home";
 import { Login } from "#frontend/features/auth/components/login/login";
 import { Registration } from "#frontend/features/auth/components/registration/registration";
 

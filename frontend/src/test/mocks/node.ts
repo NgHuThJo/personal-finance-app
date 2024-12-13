@@ -2,19 +2,18 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { handlers } from "./handlers";
 
-export const server = setupServer(...handlers);
+type HttpMethod = "get" | "post";
 
-export const mockPostHttpError = (endpoint: string) => {
-  server.use(
-    http.post(endpoint, () => {
-      return HttpResponse.error();
-    }),
-  );
+const httpMethodMap: Record<HttpMethod, any> = {
+  get: http.get,
+  post: http.post,
 };
 
-export const mockGetHttpError = (endpoint: string) => {
+export const server = setupServer(...handlers);
+
+export const mockHttpError = (endpoint: string, method: HttpMethod) => {
   server.use(
-    http.get(endpoint, () => {
+    httpMethodMap[method](endpoint, () => {
       return HttpResponse.error();
     }),
   );

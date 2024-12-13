@@ -1,4 +1,3 @@
-import { SocketService } from "#backend/services/socket-io.js";
 import { initTRPC } from "@trpc/server";
 import { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 
@@ -9,12 +8,6 @@ export const t = initTRPC
 export const { router } = t;
 export const publicProcedure = t.procedure;
 
-export function createContext({
-  req,
-  res,
-  socketService,
-}: CreateExpressContextOptions & {
-  socketService: SocketService;
-}) {
-  return { req, res, socketService };
+export function createContext({ req, res }: CreateExpressContextOptions) {
+  return { req, res };
 }

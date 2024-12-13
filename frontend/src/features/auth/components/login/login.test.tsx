@@ -1,6 +1,6 @@
 import { screen, render, waitFor } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
-import { mockPostHttpError } from "#frontend/test/mocks/node";
+import { mockHttpError } from "#frontend/test/mocks/node";
 import { createTestTRPCandQueryClients } from "#frontend/test/mocks/react-query";
 import { createTestRouter } from "#frontend/test/mocks/react-router";
 
@@ -46,7 +46,7 @@ describe("Login", () => {
   });
 
   it("should show error if fetch fails", async () => {
-    mockPostHttpError(`${import.meta.env.VITE_API_URL}/auth.loginUser`);
+    mockHttpError(`${import.meta.env.VITE_API_URL}/auth.loginUser`, "post");
 
     const email = screen.getByPlaceholderText(/Email/i);
     const password = screen.getByPlaceholderText(/Password/i);

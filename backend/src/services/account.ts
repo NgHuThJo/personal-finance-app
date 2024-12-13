@@ -1,5 +1,4 @@
 import { prisma } from "#backend/models/index.js";
-import { AppError } from "#backend/utils/app-error.js";
 
 class AccountService {
   async getBalance(data: { userId: number }) {

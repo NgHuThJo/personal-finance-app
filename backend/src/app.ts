@@ -1,19 +1,16 @@
 // Third party
 import http from "node:http";
-import path from "node:path";
 import cors from "cors";
 import express, { ErrorRequestHandler } from "express";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "#backend/routers/api.js";
 import { createContext } from "./routers/trpc.js";
-import { SocketService } from "./services/socket-io.js";
 import logger from "#backend/utils/logger.js";
 
 // Entry point file
 const app = express();
 const port = process.env.PORT || 3000;
 const server = http.createServer(app);
-export const socketService = new SocketService(server);
 
 server.listen(port, () => {
   logger.debug(`Server listening on port ${port}`);
@@ -35,7 +32,7 @@ app.use(
   "/api",
   createExpressMiddleware({
     router: appRouter,
-    createContext: ({ req, res }) => createContext({ req, res, socketService }),
+    createContext,
   }),
 );
 

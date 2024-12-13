@@ -9,7 +9,7 @@ class PotService {
       },
       select: {
         totalAmount: true,
-        currentAmount: true,
+        savedAmount: true,
       },
     });
 
