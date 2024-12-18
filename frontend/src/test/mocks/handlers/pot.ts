@@ -1,20 +1,20 @@
 import { http, HttpResponse } from "msw";
+import { createPotMock } from "#frontend/test/mocks/factories/pot";
+import {
+  getScenario,
+  resolveScenario,
+} from "#frontend/test/mocks/utils/scenario";
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export const potHandlers = [
-  http.get(`${import.meta.env.VITE_API_URL}/pot.getAllPots`, () => {
-    const mockResponse = {
-      result: {
-        data: [
-          {
-            totalAmount: "200.00",
-            savedAmount: "70.00",
-          },
-        ],
-        error: null,
-      },
-    };
+  http.get(`${apiUrl}/pot.getAllPots`, () => {
+    const scenario = getScenario();
 
-    console.log("get pots", mockResponse);
-    return HttpResponse.json(mockResponse);
+    if (scenario) {
+      return resolveScenario(scenario);
+    }
+
+    return HttpResponse.json(createPotMock());
   }),
 ];

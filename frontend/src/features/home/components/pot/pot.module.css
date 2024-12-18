@@ -1,0 +1,29 @@
+.top {
+  display: flex;
+  justify-content: space-between;
+  color: var(--c-light);
+}
+
+.total {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  color: var(--c-light);
+  background-color: var(--bgc-root);
+
+  div {
+    font-weight: var(--fw-heading);
+
+    p {
+      font-size: var(--fs-number);
+    }
+  }
+
+  svg {
+    color: var(--c-jar);
+    width: 2rem;
+    height: 2rem;
+  }
+}

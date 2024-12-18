@@ -1,0 +1,22 @@
+.container {
+  display: grid;
+  gap: 2rem;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 {
+    color: var(--c-light);
+  }
+
+  button {
+    display: flex;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    color: var(--c-dark);
+    background-color: var(--bgc-dark);
+  }
+}

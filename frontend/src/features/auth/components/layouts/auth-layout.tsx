@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "#frontend/providers/auth-context";
 import { Logo } from "#frontend/components/ui/icon/icon";
-import styles from "./layout.module.css";
+import styles from "./auth-layout.module.css";
 import { image_authentication } from "#frontend/assets/resources/images";
 
 export function AuthLayout({ children }: PropsWithChildren) {

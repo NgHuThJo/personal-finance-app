@@ -11,6 +11,8 @@
   --fs-h3: clamp(1.5rem, 1rem + 2.5vw, 2.5rem);
   --fs-h4: clamp(1.125rem, 0.6875rem + 2.1875vw, 2rem);
   --fs-root: 1rem;
+  --fs-number: 2.5rem;
+  --fs-sub-heading: 1rem;
 }
 
 /* Font weight related utility classes */

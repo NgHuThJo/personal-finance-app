@@ -18,3 +18,10 @@ export const mockHttpError = (endpoint: string, method: HttpMethod) => {
     }),
   );
 };
+
+export const createTRPCShape = (data: object | any[], error?: any) => ({
+  result: {
+    data,
+    error,
+  },
+});

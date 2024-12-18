@@ -6,6 +6,7 @@ import { NotFoundRoute } from "#frontend/app/routes/not-found";
 import { Home } from "#frontend/features/home/components/home";
 import { Login } from "#frontend/features/auth/components/login/login";
 import { Registration } from "#frontend/features/auth/components/registration/registration";
+import { Transaction } from "#frontend/features/transaction/components/transaction";
 
 export const routesConfig = [
   {
@@ -20,7 +21,7 @@ export const routesConfig = [
             element: <Login />,
           },
           {
-            path: "/register",
+            path: "register",
             element: <Registration />,
           },
         ],
@@ -32,6 +33,10 @@ export const routesConfig = [
           {
             index: true,
             element: <Home />,
+          },
+          {
+            path: "transactions",
+            element: <Transaction />,
           },
         ],
       },

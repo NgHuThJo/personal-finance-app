@@ -5,7 +5,7 @@ import { logError } from "#backend/utils/error-logger.js";
 import { positiveNumberSchema } from "#backend/types/zod.js";
 
 export const transactionRouter = router({
-  getBalance: publicProcedure
+  getAllTransactions: publicProcedure
     .input(
       z.object({
         userId: positiveNumberSchema,

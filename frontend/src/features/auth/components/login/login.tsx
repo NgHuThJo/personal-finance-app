@@ -29,7 +29,6 @@ export function Login() {
       onSuccess: (data) => {
         if (data) {
           loginUser(data.id);
-          console.log("Success loggging in:", data.id);
           navigate("/app");
         }
       },

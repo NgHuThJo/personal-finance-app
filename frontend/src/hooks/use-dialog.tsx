@@ -4,6 +4,7 @@ export function useDialog() {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   const openDialog = () => {
+    console.log("Open modal");
     dialogRef.current?.showModal();
   };
 

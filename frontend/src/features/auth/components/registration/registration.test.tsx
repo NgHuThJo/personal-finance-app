@@ -23,7 +23,7 @@ describe("Registration", () => {
 
     await user.type(firstName, "John");
     await user.type(lastName, "Doe");
-    await user.type(email, "JohnDoe@gmail.com");
+    await user.type(email, "johndoe@email.com");
     await user.type(password, "password");
     await user.click(submitButton);
 

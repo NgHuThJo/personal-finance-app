@@ -1,5 +1,8 @@
+import { Link } from "react-router-dom";
 import { useUserId } from "#frontend/providers/auth-context";
 import { trpc } from "#frontend/lib/trpc";
+import { CardLayout } from "#frontend/features/home/components/layouts/card-layout";
+import styles from "./budget.module.css";
 
 export function Budget() {
   const userId = useUserId();
@@ -27,9 +30,13 @@ export function Budget() {
   }
 
   return (
-    <div>
-      <p>{totalSpentMoney}</p>
-      <p>{totalBudget}</p>
-    </div>
+    <CardLayout className="light">
+      <div className={styles.top}>
+        <h2>Budgets</h2>
+        <Link to="budgets">See Details</Link>
+      </div>
+      <p>${totalSpentMoney.toFixed(2)}</p>
+      <p>of ${totalBudget.toFixed(2)} limit</p>
+    </CardLayout>
   );
 }

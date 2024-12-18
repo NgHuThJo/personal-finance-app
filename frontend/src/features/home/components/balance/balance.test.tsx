@@ -10,12 +10,12 @@ describe("Balance", () => {
   it("should fetch data and show it on screen", async () => {
     expect(screen.getByText(/Loading/i)).toBeInTheDocument();
 
-    const balance = await screen.findByText(/3.00/i);
-    const income = screen.getByText(/10.00/i);
-    const expense = screen.getByText(/7.00/i);
+    const balance = await screen.findByText(/700.00/i);
+    const income = screen.getByText(/1000.00/i);
+    const expense = screen.getByText(/300.00/i);
 
-    expect(balance).toHaveTextContent(/3.00/i);
-    expect(income).toHaveTextContent(/10.00/i);
-    expect(expense).toHaveTextContent(/7.00/i);
+    expect(balance).toBeInTheDocument();
+    expect(income).toBeInTheDocument();
+    expect(expense).toBeInTheDocument();
   });
 });

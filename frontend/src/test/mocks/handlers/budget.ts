@@ -1,23 +1,20 @@
 import { http, HttpResponse } from "msw";
+import { createBudgetMock } from "#frontend/test/mocks/factories/budget";
+import {
+  getScenario,
+  resolveScenario,
+} from "#frontend/test/mocks/utils/scenario";
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export const budgetHandlers = [
-  http.get(`${import.meta.env.VITE_API_URL}/budget.getAllBudgets`, () => {
-    const mockResponse = {
-      result: {
-        data: [
-          {
-            maxAmount: "100.00",
-            spentAmount: "70.00",
-          },
-          {
-            maxAmount: "20.00",
-            spentAmount: "10.00",
-          },
-        ],
-        error: null,
-      },
-    };
+  http.get(`${apiUrl}/budget.getAllBudgets`, () => {
+    const scenario = getScenario();
 
-    return HttpResponse.json(mockResponse);
+    if (scenario) {
+      return resolveScenario(scenario);
+    }
+
+    return HttpResponse.json(createBudgetMock());
   }),
 ];

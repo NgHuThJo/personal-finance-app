@@ -1,5 +1,9 @@
+import { Link } from "react-router-dom";
 import { useUserId } from "#frontend/providers/auth-context";
 import { trpc } from "#frontend/lib/trpc";
+import { CardLayout } from "#frontend/features/home/components/layouts/card-layout";
+import styles from "./pot.module.css";
+import { Jar } from "#frontend/components/ui/icon/icon";
 
 export function Pot() {
   const userId = useUserId();
@@ -26,8 +30,18 @@ export function Pot() {
     }, 0) ?? 0;
 
   return (
-    <div>
-      <p>{totalSavings.toFixed(2)}</p>
-    </div>
+    <CardLayout className="light">
+      <div className={styles.top}>
+        <h2>Pots</h2>
+        <Link to="pots">See Details</Link>
+      </div>
+      <div className={styles.total}>
+        <Jar />
+        <div>
+          <h3>Pots</h3>
+          <p>${totalSavings.toFixed(2)}</p>
+        </div>
+      </div>
+    </CardLayout>
   );
 }

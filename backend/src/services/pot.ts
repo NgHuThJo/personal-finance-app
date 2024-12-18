@@ -8,6 +8,7 @@ class PotService {
         userId: data.userId,
       },
       select: {
+        name: true,
         totalAmount: true,
         savedAmount: true,
       },
