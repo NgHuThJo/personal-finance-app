@@ -10,10 +10,12 @@ export const createBudgetMock = (extraData: Budget = []) => {
     {
       maxAmount: "100.00",
       spentAmount: "70.00",
+      category: "Bills",
     },
     {
       maxAmount: "20.00",
       spentAmount: "10.00",
+      category: "Groceries",
     },
     ...extraData,
   ];

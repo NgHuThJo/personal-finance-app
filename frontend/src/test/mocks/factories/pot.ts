@@ -8,6 +8,7 @@ type Pot = Partial<{
 export const createPotMock = (extraData: Pot = []) => {
   const data = [
     {
+      name: "Bills",
       totalAmount: "1000.00",
       savedAmount: "300.00",
     },

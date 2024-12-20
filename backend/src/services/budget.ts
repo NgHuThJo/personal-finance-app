@@ -9,6 +9,7 @@ class BudgetService {
       select: {
         spentAmount: true,
         maxAmount: true,
+        category: true,
       },
     });
 

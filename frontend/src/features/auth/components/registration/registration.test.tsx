@@ -1,8 +1,8 @@
 import { screen, render, waitFor } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
-import { mockHttpError } from "#frontend/test/mocks/node";
 import { createTestTRPCandQueryClients } from "#frontend/test/mocks/react-query";
 import { createTestRouter } from "#frontend/test/mocks/react-router";
+import { setScenario } from "#frontend/test/mocks/utils/scenario";
 
 describe("Registration", () => {
   let user: UserEvent;
@@ -41,7 +41,7 @@ describe("Registration", () => {
   });
 
   it("should show error when fetch fails", async () => {
-    mockHttpError(`${import.meta.env.VITE_API_URL}/user.registerUser`, "post");
+    setScenario("error");
 
     const firstName = screen.getByPlaceholderText("First Name");
     const lastName = screen.getByPlaceholderText("Last Name");

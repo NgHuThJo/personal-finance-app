@@ -1,8 +1,8 @@
 import { screen, render } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
-import { vi } from "vitest";
 import { Transaction } from "#frontend/features/transaction/components/transaction";
 import { createTestTRPCandQueryClients } from "#frontend/test/mocks/react-query";
+import { setScenario } from "#frontend/test/mocks/utils/scenario";
 
 describe("Transaction", () => {
   let user: UserEvent;
@@ -25,6 +25,7 @@ describe("Transaction", () => {
   });
 
   it("should show message if data is empty", async () => {
+    setScenario("noArrayData");
     const emptyDataMessage = await screen.findByText(/no transactions/i);
 
     expect(emptyDataMessage).toBeInTheDocument();

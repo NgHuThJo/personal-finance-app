@@ -15,7 +15,7 @@ describe("Pot", () => {
   });
 
   it("should show the total amount of pot money", async () => {
-    expect(screen.getByText(/Loading/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Loading/i)).toBeInTheDocument();
 
     const totalMoney = await screen.findByText(/700.00/i);
 

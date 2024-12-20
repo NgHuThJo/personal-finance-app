@@ -35,39 +35,43 @@ export function Transaction() {
         <Button onClick={openDialog}>+ Add New Transaction</Button>
       </div>
       <div>
-        <table>
-          <thead>
-            <tr>
-              <th>Recipient/Sender</th>
-              <th>Category</th>
-              <th>Transaction Date</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions?.map((transaction) => (
-              <tr key={transaction.id}>
-                <td>
-                  {transaction.recipientId === userId
-                    ? transaction.sender.firstName +
-                      " " +
-                      transaction.sender.lastName
-                    : transaction.recipient.firstName +
-                      " " +
-                      transaction.recipient.lastName}
-                </td>
-                <td>
-                  {capitalizeFirstLetter(transaction.category.toLowerCase())}
-                </td>
-                <td>{formatDate(new Date(transaction.createdAt))}</td>
-                <td>
-                  {transaction.senderId === userId ? "-" : "+"}$
-                  {transaction.transactionAmount}
-                </td>
+        {transactions?.length ? (
+          <table>
+            <thead>
+              <tr>
+                <th>Recipient/Sender</th>
+                <th>Category</th>
+                <th>Transaction Date</th>
+                <th>Amount</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {transactions?.map((transaction) => (
+                <tr key={transaction.id}>
+                  <td>
+                    {transaction.recipientId === userId
+                      ? transaction.sender.firstName +
+                        " " +
+                        transaction.sender.lastName
+                      : transaction.recipient.firstName +
+                        " " +
+                        transaction.recipient.lastName}
+                  </td>
+                  <td>
+                    {capitalizeFirstLetter(transaction.category.toLowerCase())}
+                  </td>
+                  <td>{formatDate(new Date(transaction.createdAt))}</td>
+                  <td>
+                    {transaction.senderId === userId ? "-" : "+"}$
+                    {transaction.transactionAmount}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>No transactions</p>
+        )}
       </div>
     </div>
   );

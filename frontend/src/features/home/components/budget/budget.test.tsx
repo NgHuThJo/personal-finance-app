@@ -2,7 +2,7 @@ import { MemoryRouter } from "react-router-dom";
 import { screen, render } from "@testing-library/react";
 import { Budget } from "#frontend/features/home/components/budget/budget";
 import { createTestTRPCandQueryClients } from "#frontend/test/mocks/react-query";
-import { mockHttpError } from "#frontend/test/mocks/node";
+import { setScenario } from "#frontend/test/mocks/utils/scenario";
 
 describe("Budget", () => {
   it("should show data returned from the backend", async () => {
@@ -24,10 +24,7 @@ describe("Budget", () => {
   });
 
   it("should show error if server call fails", async () => {
-    mockHttpError(
-      `${import.meta.env.VITE_API_URL}/budget.getAllBudgets`,
-      "get",
-    );
+    setScenario("error");
     render(
       createTestTRPCandQueryClients(
         <MemoryRouter>
