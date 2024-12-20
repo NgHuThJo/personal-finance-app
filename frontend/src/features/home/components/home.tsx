@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useAuthStore } from "#frontend/providers/auth-context";
 import { Balance } from "#frontend/features/home/components/balance/balance";
 import { Budget } from "#frontend/features/home/components/budget/budget";

@@ -1,5 +1,5 @@
 import { PropsWithChildren, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useAuthStore } from "#frontend/providers/auth-context";
 import { Logo } from "#frontend/components/ui/icon/icon";
 import styles from "./auth-layout.module.css";

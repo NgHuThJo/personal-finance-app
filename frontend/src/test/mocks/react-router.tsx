@@ -1,4 +1,4 @@
-import { createMemoryRouter, RouterProvider } from "react-router-dom";
+import { createMemoryRouter, RouterProvider } from "react-router";
 import { routesConfig } from "#frontend/app/router";
 
 type MemoryRouterOptions = Parameters<typeof createMemoryRouter>[1];

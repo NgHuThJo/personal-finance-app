@@ -1,13 +1,14 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { AuthRoute } from "#frontend/app/routes/auth";
-import { ErrorRoute } from "#frontend/app/routes/error";
-import { HomeRoute } from "#frontend/app/routes/home";
-import { NotFoundRoute } from "#frontend/app/routes/not-found";
-import { Budget } from "#frontend/features/budget/components/budget";
-import { Home } from "#frontend/features/home/components/home";
-import { Login } from "#frontend/features/auth/components/login/login";
-import { Registration } from "#frontend/features/auth/components/registration/registration";
-import { Transaction } from "#frontend/features/transaction/components/transaction";
+import { createBrowserRouter, RouterProvider } from "react-router";
+import { AuthLayoutRoute } from "#frontend/app/routes/auth/auth";
+import { ErrorRoute } from "#frontend/app/routes/error/error";
+import { HomeRoute } from "#frontend/app/routes/app/home";
+import { HomeLayoutRoute } from "#frontend/app/routes/app/home-layout";
+import { NotFoundRoute } from "#frontend/app/routes/error/not-found";
+import { BudgetRoute } from "#frontend/app/routes/app/budget";
+import { LoginRoute } from "#frontend/app/routes/auth/login";
+import { PotRoute } from "#frontend/app/routes/app/pot";
+import { RegistrationRoute } from "#frontend/app/routes/auth/registration";
+import { TransactionRoute } from "#frontend/app/routes/app/transaction";
 
 export const routesConfig = [
   {
@@ -15,33 +16,37 @@ export const routesConfig = [
     children: [
       {
         path: "/",
-        element: <AuthRoute />,
+        element: <AuthLayoutRoute />,
         children: [
           {
             index: true,
-            element: <Login />,
+            element: <LoginRoute />,
           },
           {
             path: "register",
-            element: <Registration />,
+            element: <RegistrationRoute />,
           },
         ],
       },
       {
         path: "/app",
-        element: <HomeRoute />,
+        element: <HomeLayoutRoute />,
         children: [
           {
             index: true,
-            element: <Home />,
+            element: <HomeRoute />,
           },
           {
             path: "transactions",
-            element: <Transaction />,
+            element: <TransactionRoute />,
           },
           {
             path: "budgets",
-            element: <Budget />,
+            element: <BudgetRoute />,
+          },
+          {
+            path: "pots",
+            element: <PotRoute />,
           },
         ],
       },

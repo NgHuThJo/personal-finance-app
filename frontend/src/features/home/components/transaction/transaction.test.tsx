@@ -1,4 +1,4 @@
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 import { screen, render } from "@testing-library/react";
 import { Transaction } from "#frontend/features/home/components/transaction/transaction";
 import { createTestTRPCandQueryClients } from "#frontend/test/mocks/react-query";

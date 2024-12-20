@@ -1,7 +1,7 @@
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 import { AuthLayout } from "#frontend/features/auth/components/layouts/auth-layout";
 
-export function AuthRoute() {
+export function AuthLayoutRoute() {
   return (
     <AuthLayout>
       <Outlet />

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { useUserId } from "#frontend/providers/auth-context";
 import { trpc } from "#frontend/lib/trpc";
 import { CardLayout } from "#frontend/features/home/components/layouts/card-layout";

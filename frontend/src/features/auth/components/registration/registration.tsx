@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { Button } from "#frontend/components/ui/button/button";
 import { FormError } from "#frontend/components/ui/form/error/error";
 import { Input } from "#frontend/components/ui/form/input/input";

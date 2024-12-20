@@ -1,5 +1,5 @@
 import { TRPCClientError } from "@trpc/client";
-import { Link, useRouteError } from "react-router-dom";
+import { Link, useRouteError } from "react-router";
 
 export function ErrorRoute() {
   const error = useRouteError();

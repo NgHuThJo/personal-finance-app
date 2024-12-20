@@ -1,4 +1,4 @@
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 import { screen, render } from "@testing-library/react";
 import { createTestTRPCandQueryClients } from "#frontend/test/mocks/react-query";
 import { Pot } from "#frontend/features/pot/components/pot";
