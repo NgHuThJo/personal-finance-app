@@ -2,8 +2,17 @@ export function formatDate(date: Date) {
   return new Intl.DateTimeFormat(navigator.language).format(date);
 }
 
-export function formatNumber(number: number) {
-  return new Intl.NumberFormat(navigator.language).format(number);
+export function formatNumber(
+  number: number,
+  config?: {
+    locales?: Intl.LocalesArgument;
+    opts?: Intl.NumberFormatOptions;
+  },
+) {
+  return new Intl.NumberFormat(
+    config?.locales ?? navigator.language,
+    config?.opts,
+  ).format(number);
 }
 
 export function formatRelativeTimeDate(date: Date, locale?: string) {

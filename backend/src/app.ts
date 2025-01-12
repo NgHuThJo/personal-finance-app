@@ -23,7 +23,7 @@ app.use(
   cors({
     origin: "*",
     // origin: process.env.PROXY_URL || "http://localhost:5173",
-    credentials: true,
+    // credentials: true,
   }),
 );
 

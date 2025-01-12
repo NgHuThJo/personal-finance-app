@@ -3,6 +3,8 @@ import { AppError } from "#backend/utils/app-error.js";
 
 class AuthService {
   async loginUser(email: string, password: string) {
+    console.log("Email:", email, "Password:", password);
+
     const user = await prisma.user.findUnique({
       where: {
         email,
@@ -11,6 +13,8 @@ class AuthService {
         password: false,
       },
     });
+
+    console.log("User:", user);
 
     if (!user) {
       throw new AppError(

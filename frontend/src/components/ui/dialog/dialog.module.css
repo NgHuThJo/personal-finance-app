@@ -3,3 +3,13 @@
   margin: auto;
   background-color: var(--bgc-dialog);
 }
+
+.transaction {
+  composes: default;
+  padding: 2rem;
+  background-color: blue;
+
+  form > * + * {
+    margin-top: 1em;
+  }
+}

@@ -34,6 +34,22 @@ export const createTransactionMock = (extraData: Transaction = []) => {
         lastName: "Foe",
       },
     },
+    {
+      id: 2,
+      senderId: 2,
+      recipientId: 1,
+      transactionAmount: "500.00",
+      createdAt: "2/1/2024",
+      category: "BILLS",
+      sender: {
+        firstName: "Jane",
+        lastName: "Foe",
+      },
+      recipient: {
+        firstName: "John",
+        lastName: "Doe",
+      },
+    },
     ...extraData,
   ];
 

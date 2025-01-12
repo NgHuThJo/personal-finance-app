@@ -29,7 +29,7 @@ export const stringToNumberSchema = z
     if (isNaN(convertedValue)) {
       throw new Error(`${convertedValue} can't be converted to number`);
     }
-    if (convertedValue < 1) {
+    if (convertedValue <= 0) {
       throw new Error(`${convertedValue} must be positive number`);
     }
 

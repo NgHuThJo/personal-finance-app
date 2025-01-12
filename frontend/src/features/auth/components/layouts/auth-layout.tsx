@@ -11,7 +11,7 @@ export function AuthLayout({ children }: PropsWithChildren) {
 
   useEffect(() => {
     if (userId) {
-      return navigate("/app");
+      navigate("/app");
     }
   }, [navigate, userId]);
 

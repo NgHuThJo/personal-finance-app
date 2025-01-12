@@ -22,6 +22,9 @@ export const passwordSchema = z
   .string()
   .trim()
   .min(8, "Password must have at least 8 characters");
+export const positiveNumberSchema = z
+  .number()
+  .positive("Number must be positive");
 export const fileSchema = z.object({
   name: z.string().min(1, "File name is required"),
   size: z.number().max(10 * 1024 * 1024, "File size must be less than 10MB"),
@@ -73,3 +76,21 @@ export const registrationSchema = z.object({
 });
 
 export type RegistrationSchemaError = SchemaError<typeof registrationSchema>;
+
+export const transactionFormSchema = z.object({
+  userId: positiveNumberSchema,
+  email: emailSchema,
+  category: z.enum(["BILLS", "GROCERIES", "TRANSPORTATION", "ENTERTAINMENT"]),
+  amount: numericStringSchema,
+});
+
+export type TransactionFormSchemaError = SchemaError<
+  typeof transactionFormSchema
+>;
+
+export const budgetFormSchema = z.object({
+  userId: positiveNumberSchema,
+  category: z.enum(["BILLS", "GROCERIES", "TRANSPORTATION", "ENTERTAINMENT"]),
+  amount: numericStringSchema,
+});
+export type BudgetFormSchemaError = SchemaError<typeof transactionFormSchema>;

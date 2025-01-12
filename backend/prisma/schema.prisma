@@ -16,7 +16,7 @@ datasource db {
 
 enum Category {
   ENTERTAINMENT
-  BILL
+  BILLS
   GROCERIES
   TRANSPORTATION
   EDUCATION
@@ -32,8 +32,8 @@ model User {
   lastName   String
   password   String
   balance    Account?
-  pot        Pot?
-  budget     Budget?
+  pot        Pot[]
+  budget     Budget[]
   senders    Transaction[] @relation("sender")
   recipients Transaction[] @relation("recipient")
 }
@@ -54,8 +54,8 @@ model Account {
   id        Int      @id @default(autoincrement())
   user      User     @relation(fields: [userId], references: [id])
   userId    Int      @unique
-  income    Decimal  @db.Decimal(10, 2)
-  expense   Decimal  @db.Decimal(10, 2)
+  income    Decimal  @default(0) @db.Decimal(10, 2)
+  expense   Decimal  @default(0) @db.Decimal(10, 2)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -63,7 +63,7 @@ model Account {
 model Pot {
   id          Int      @id @default(autoincrement())
   user        User     @relation(fields: [userId], references: [id])
-  userId      Int      @unique
+  userId      Int
   name        String
   totalAmount Decimal  @db.Decimal(10, 2)
   savedAmount Decimal  @db.Decimal(10, 2)
@@ -74,10 +74,10 @@ model Pot {
 model Budget {
   id          Int      @id @default(autoincrement())
   user        User     @relation(fields: [userId], references: [id])
-  userId      Int      @unique
-  maxAmount   Decimal  @db.Decimal(10, 2)
-  spentAmount Decimal  @db.Decimal(10, 2)
-  category    Category
+  userId      Int
+  maxAmount   Decimal  @default(0) @db.Decimal(10, 2)
+  spentAmount Decimal  @default(0) @db.Decimal(10, 2)
+  category    Category @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

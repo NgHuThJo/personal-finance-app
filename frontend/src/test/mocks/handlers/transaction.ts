@@ -17,4 +17,34 @@ export const transactionHandlers = [
 
     return HttpResponse.json(createTransactionMock());
   }),
+  http.post(`${apiUrl}/transaction.createTransaction`, () => {
+    const scenario = getScenario();
+
+    if (scenario) {
+      return resolveScenario(scenario);
+    }
+
+    console.log("in createTransaction");
+
+    return HttpResponse.json(
+      createTransactionMock([
+        {
+          id: 3,
+          senderId: 1,
+          recipientId: 2,
+          transactionAmount: "1000.00",
+          createdAt: "1/1/2024",
+          category: "ENTERTAINMENT",
+          sender: {
+            firstName: "John",
+            lastName: "Doe",
+          },
+          recipient: {
+            firstName: "test",
+            lastName: "Foe",
+          },
+        },
+      ]),
+    );
+  }),
 ];

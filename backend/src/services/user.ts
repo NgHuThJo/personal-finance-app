@@ -21,8 +21,13 @@ class UserService {
       );
     }
 
+    const normalizdData = {
+      ...data,
+      email: data.email.toLowerCase(),
+    };
+
     const newUser = await prisma.user.create({
-      data,
+      data: normalizdData,
     });
 
     return newUser;

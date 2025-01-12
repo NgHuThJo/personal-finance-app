@@ -11,6 +11,8 @@ export const accountHandlers = [
   http.get(`${apiUrl}/account.getBalance`, () => {
     const scenario = getScenario();
 
+    console.log("inside account.getBalance handler");
+
     if (scenario) {
       return resolveScenario(scenario);
     }

@@ -15,6 +15,8 @@ export const budgetHandlers = [
       return resolveScenario(scenario);
     }
 
+    console.log("inside budget.getAllBudgets handler");
+
     return HttpResponse.json(createBudgetMock());
   }),
 ];

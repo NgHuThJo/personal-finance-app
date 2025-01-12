@@ -15,7 +15,7 @@ export default defineConfig({
   test: {
     pool: "threads",
     isolate: false,
-    environment: "jsdom",
+    environment: "happy-dom",
     globals: true,
     setupFiles: ["./src/test/setup.js"],
   },

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { handleError } from "#frontend/utils/error-handling";
+import { handleError } from "#frontend/utils/error/error-handling";
 
 type FetchErrorType = ReturnType<typeof handleError>;
 type FetchOptionsType = {

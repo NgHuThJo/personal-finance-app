@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Budget" ALTER COLUMN "maxAmount" SET DEFAULT 0,
+ALTER COLUMN "spentAmount" SET DEFAULT 0;
