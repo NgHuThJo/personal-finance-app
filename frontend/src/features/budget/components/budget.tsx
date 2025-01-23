@@ -1,15 +1,16 @@
-import { FormEvent, useState } from "react";
-import { Link } from "react-router";
-import { useUserId } from "#frontend/providers/auth-context";
-import { useDialog } from "#frontend/hooks/use-dialog";
-import { trpc } from "#frontend/lib/trpc";
 import { Button } from "#frontend/components/ui/button/button";
 import { Dialog } from "#frontend/components/ui/dialog/dialog";
 import { FormError } from "#frontend/components/ui/form/error/error";
 import { Input } from "#frontend/components/ui/form/input/input";
-import { capitalizeFirstLetter } from "#frontend/utils/primitives/string";
-import { formatNumber } from "#frontend/utils/internationalization/intl";
+import { BudgetCard } from "#frontend/features/budget/components/card/card";
+import { BudgetSummary } from "#frontend/features/budget/components/summary/summary";
+import { useDialog } from "#frontend/hooks/use-dialog";
+import { trpc } from "#frontend/lib/trpc";
+import { useUserId } from "#frontend/providers/auth-context";
 import { budgetFormSchema, BudgetFormSchemaError } from "#frontend/types/zod";
+import { FormEvent, useState } from "react";
+import { Close } from "#frontend/components/ui/icon/icon";
+import styles from "./budget.module.css";
 
 export function Budget() {
   const utils = trpc.useUtils();
@@ -21,6 +22,9 @@ export function Budget() {
     error,
     isPending,
   } = trpc.budget.getAllBudgets.useQuery({ userId });
+  const { data: transactions } = trpc.transaction.getAllTransactions.useQuery({
+    userId,
+  });
   const createBudget = trpc.budget.createBudget.useMutation();
 
   if (isPending) {
@@ -30,6 +34,18 @@ export function Budget() {
   if (error) {
     return <p>{error.message}</p>;
   }
+
+  const categoryMap: Record<string, []> = {};
+
+  transactions?.forEach((item) => {
+    const key = item.category.toLocaleLowerCase();
+
+    if (!categoryMap[key]) {
+      categoryMap[key] = [];
+    }
+
+    categoryMap[key].push(item);
+  });
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -47,9 +63,9 @@ export function Budget() {
     }
 
     createBudget.mutate(parsedData.data, {
-      onSuccess: (data) => {
-        console.log("new budget created:", data);
+      onSuccess: () => {
         utils.budget.invalidate();
+        closeDialog();
       },
       onError: (error) => {
         console.error("Backend error:", error.message);
@@ -61,10 +77,15 @@ export function Budget() {
   };
 
   return (
-    <div>
-      <Dialog ref={dialogRef} className="budget">
+    <div className={styles.container}>
+      <Dialog ref={dialogRef} className="add-dialog">
         <form method="post" onSubmit={handleSubmit}>
-          <h2>Add New Budget</h2>
+          <div>
+            <h2>Add New Budget</h2>
+            <Button type="button" onClick={closeDialog}>
+              <Close />
+            </Button>
+          </div>
           <p>
             Choose a category to set a spending budget. These categories can
             help you monitor spending.
@@ -82,7 +103,9 @@ export function Budget() {
               <option value="GENERAL">General</option>
             </select>
           </label>
-          <FormError message={fieldErrors?.category} />
+          {fieldErrors.category && (
+            <FormError message={fieldErrors?.category} />
+          )}
           <Input
             label="Maximum Spend"
             placeholder="e.g. 2000"
@@ -90,83 +113,24 @@ export function Budget() {
             name="amount"
             error={fieldErrors?.amount}
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit" className="add">
+            Submit
+          </Button>
         </form>
       </Dialog>
-      <div>
+      <div className={styles.heading}>
         <h1>Budgets</h1>
-        <Button type="button" onClick={openDialog}>
+        <Button type="button" onClick={openDialog} className="add">
           + Add New Budget
         </Button>
       </div>
-      <div>
-        <div></div>
-        <div>
-          <h2>Spending Summary</h2>
-          <ul>
-            {budgets?.map((budget, index) => (
-              <li key={index}>
-                <span>{budget.category}</span>
-                <p>
-                  <span>${budget.spentAmount}</span> of ${budget.maxAmount}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      {budgets?.map((budget) => (
-        <div>
-          <h2>{capitalizeFirstLetter(budget.category)}</h2>
-          <p>
-            Maximum of $
-            {formatNumber(Number(budget.maxAmount), {
-              opts: {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              },
-            })}
-          </p>
-          <div>
-            <div></div>
-          </div>
-          <div>
-            <div>
-              <span>Spent</span>
-              <span>
-                $
-                {formatNumber(Number(budget.spentAmount), {
-                  opts: {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  },
-                })}
-                ,
-              </span>
-            </div>
-            <div>
-              <span>Free</span>
-              <span>
-                $
-                {formatNumber(
-                  Number(budget.maxAmount) - Number(budget.spentAmount),
-                  {
-                    opts: {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    },
-                  },
-                )}
-              </span>
-            </div>
-          </div>
-          <div>
-            <div>
-              <h3>Latest Spending</h3>
-              <Link to="../transactions">See All</Link>
-            </div>
-          </div>
-        </div>
+      <BudgetSummary budgets={budgets} />
+      {budgets?.map((budget, index) => (
+        <BudgetCard
+          budget={budget}
+          key={index}
+          transactions={categoryMap[budget.category.toLocaleLowerCase()]}
+        />
       ))}
     </div>
   );

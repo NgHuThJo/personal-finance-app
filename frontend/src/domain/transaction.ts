@@ -29,14 +29,14 @@ export function sortTransactions<T extends TransactionQueryOutput>(
     case "Newest":
       return data.sort(
         (a, b) =>
-          new Date(a.createdAt).getMilliseconds() -
-          new Date(b.createdAt).getMilliseconds(),
+          new Date(b.createdAt).getMilliseconds() -
+          new Date(a.createdAt).getMilliseconds(),
       );
     case "Oldest":
       return data.sort(
         (a, b) =>
-          new Date(b.createdAt).getMilliseconds() -
-          new Date(a.createdAt).getMilliseconds(),
+          new Date(a.createdAt).getMilliseconds() -
+          new Date(b.createdAt).getMilliseconds(),
       );
     case "AtoZ":
       return data.sort((a, b) => {

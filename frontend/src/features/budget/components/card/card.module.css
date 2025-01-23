@@ -1,0 +1,73 @@
+.card {
+  --theme: red;
+
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  color: var(--c-light);
+  background-color: var(--bgc-light);
+}
+
+.heading {
+  display: flex;
+  justify-content: space-between;
+}
+
+.status-bar {
+  align-content: center;
+  height: 2rem;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+  background-color: var(--bgc-root);
+
+  > div {
+    height: 80%;
+    border-radius: 0.5rem;
+    background-color: var(--theme);
+  }
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  > div {
+    display: grid;
+    padding-left: 1rem;
+    border-left: 4px solid var(--theme);
+
+    span:last-child {
+      font-weight: var(--fw-heading);
+    }
+  }
+}
+
+.transactions {
+  > div {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+.transaction {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: var(--fw-heading);
+
+  > div {
+    display: grid;
+    justify-items: end;
+
+    span:first-child {
+      color: var(--c-success);
+    }
+  }
+}

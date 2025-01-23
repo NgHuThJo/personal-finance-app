@@ -5,6 +5,9 @@ export const numericStringSchema = z
   .string()
   .trim()
   .regex(/^\d+$/, "String is not numeric");
+export const stringToNumberSchema = numericStringSchema.transform((value) =>
+  Number(value),
+);
 export const numberToStringSchema = z
   .number()
   .transform((value) => String(value));
@@ -94,3 +97,10 @@ export const budgetFormSchema = z.object({
   amount: numericStringSchema,
 });
 export type BudgetFormSchemaError = SchemaError<typeof transactionFormSchema>;
+
+export const potFormSchema = z.object({
+  userId: positiveNumberSchema,
+  name: nonEmptyStringSchema,
+  totalAmount: stringToNumberSchema,
+});
+export type PotFormSchemaError = SchemaError<typeof potFormSchema>;

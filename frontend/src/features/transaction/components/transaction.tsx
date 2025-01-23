@@ -4,6 +4,7 @@ import { useDialog } from "#frontend/hooks/use-dialog";
 import { trpc } from "#frontend/lib/trpc";
 import { Button } from "#frontend/components/ui/button/button";
 import { Dialog } from "#frontend/components/ui/dialog/dialog";
+import { FormError } from "#frontend/components/ui/form/error/error";
 import { Input } from "#frontend/components/ui/form/input/input";
 import { SearchBar } from "#frontend/components/ui/form/search/search";
 import {
@@ -25,6 +26,8 @@ import {
   transactionFormSchema,
   TransactionFormSchemaError,
 } from "#frontend/types/zod";
+import { Close } from "#frontend/components/ui/icon/icon";
+import styles from "./transaction.module.css";
 
 export function Transaction() {
   const utils = trpc.useUtils();
@@ -110,14 +113,20 @@ export function Transaction() {
     ) ?? filteredTransactions;
 
   return (
-    <div>
-      <Dialog ref={dialogRef} className="transaction">
+    <div className={styles.container}>
+      <Dialog ref={dialogRef} className="add-dialog">
         <form method="post" onSubmit={handleSubmit}>
-          <h2>Add New Transaction</h2>
+          <div>
+            <h2>Add New Transaction</h2>
+            <Button type="button" onClick={closeDialog}>
+              <Close />
+            </Button>
+          </div>
           <Input
             label="Transaction Name"
             name="email"
             type="text"
+            placeholder="e.g. email@email.com"
             error={fieldErrors?.email}
           />
           <label htmlFor="category">
@@ -131,7 +140,9 @@ export function Transaction() {
               <option value="GROCERIES">Groceries</option>
               <option value="TRANSPORTATION">Transportation</option>
             </select>
-            {fieldErrors?.category?.map((error) => <p>{error}</p>)}
+            {fieldErrors?.category?.map((error) => (
+              <FormError message={error} />
+            ))}
           </label>
           <Input
             label="Amount"
@@ -140,7 +151,9 @@ export function Transaction() {
             placeholder="e.g. $1000"
             error={fieldErrors?.amount}
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit" className="add">
+            Submit
+          </Button>
           {createTransaction.isError && (
             <p>{createTransaction.error.message}</p>
           )}
@@ -149,37 +162,41 @@ export function Transaction() {
           )}
         </form>
       </Dialog>
-      <div>
+      <div className={styles.header}>
         <h1>Transactions</h1>
-        <Button onClick={openDialog}>+ Add New Transaction</Button>
+        <Button onClick={openDialog} className="add">
+          + Add New Transaction
+        </Button>
       </div>
-      <div>
-        <SearchBar filterFn={handleSearch} placeholder={"Search..."} />
-        <div>
-          <select data-testid="sort-select" onChange={handleSort}>
-            <option value="Newest">Newest</option>
-            <option value="Oldest">Oldest</option>
-            <option value="AtoZ">A to Z</option>
-            <option value="ZtoA">Z to A</option>
-            <option value="Highest">Highest</option>
-            <option value="Lowest">Lowest</option>
-          </select>
-        </div>
-        <div>
-          <select
-            defaultValue={filter}
-            data-testid="filter-select"
-            onChange={handleFilter}
-          >
-            <option value="ALL">All Transactions</option>
-            <option value="ENTERTAINMENT">Entertainment</option>
-            <option value="BILLS">Bills</option>
-            <option value="GROCERIES">Groceries</option>
-            <option value="TRANSPORTATION">Transportation</option>
-          </select>
+      <div className={styles["transaction-list"]}>
+        <div className={styles.filters}>
+          <SearchBar filterFn={handleSearch} placeholder={"Search..."} />
+          <div>
+            <select data-testid="sort-select" onChange={handleSort}>
+              <option value="Newest">Newest</option>
+              <option value="Oldest">Oldest</option>
+              <option value="AtoZ">A to Z</option>
+              <option value="ZtoA">Z to A</option>
+              <option value="Highest">Highest</option>
+              <option value="Lowest">Lowest</option>
+            </select>
+          </div>
+          <div>
+            <select
+              defaultValue={filter}
+              data-testid="filter-select"
+              onChange={handleFilter}
+            >
+              <option value="ALL">All Transactions</option>
+              <option value="ENTERTAINMENT">Entertainment</option>
+              <option value="BILLS">Bills</option>
+              <option value="GROCERIES">Groceries</option>
+              <option value="TRANSPORTATION">Transportation</option>
+            </select>
+          </div>
         </div>
         {searchResults?.length ? (
-          <table>
+          <table className={styles.table}>
             <thead>
               <tr>
                 <th>Recipient/Sender</th>
@@ -200,7 +217,13 @@ export function Transaction() {
                     {capitalizeFirstLetter(transaction.category.toLowerCase())}
                   </td>
                   <td>{formatDate(new Date(transaction.createdAt))}</td>
-                  <td>
+                  <td
+                    className={
+                      transaction.senderId === userId
+                        ? styles.minus
+                        : styles.plus
+                    }
+                  >
                     {transaction.senderId === userId ? "-" : "+"}$
                     {formatNumber(Number(transaction.transactionAmount), {
                       opts: {

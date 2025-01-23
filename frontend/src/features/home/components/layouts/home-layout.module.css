@@ -1,5 +1,8 @@
 .container {
+  --padding: 2rem;
+
   > :not(nav) {
-    padding: 0.75rem;
+    padding-inline: var(--padding);
+    padding-bottom: var(--padding);
   }
 }

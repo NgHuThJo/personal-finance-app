@@ -1,0 +1,9 @@
+.container {
+  color: var(--c-light);
+}
+
+.heading {
+  display: flex;
+  justify-content: space-between;
+  padding-block: 2rem;
+}

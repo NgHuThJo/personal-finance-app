@@ -4,6 +4,7 @@ import { ErrorRoute } from "#frontend/app/routes/error/error";
 import { HomeRoute } from "#frontend/app/routes/app/home";
 import { HomeLayoutRoute } from "#frontend/app/routes/app/home-layout";
 import { NotFoundRoute } from "#frontend/app/routes/error/not-found";
+import { BillsRoute } from "#frontend/app/routes/app/bills";
 import { BudgetRoute } from "#frontend/app/routes/app/budget";
 import { LoginRoute } from "#frontend/app/routes/auth/login";
 import { PotRoute } from "#frontend/app/routes/app/pot";
@@ -47,6 +48,10 @@ export const routesConfig = [
           {
             path: "pots",
             element: <PotRoute />,
+          },
+          {
+            path: "bills",
+            element: <BillsRoute />,
           },
         ],
       },

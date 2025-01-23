@@ -1,0 +1,26 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+}
+
+.chart {
+  composes: grid-stack from global;
+
+  justify-items: center;
+  align-items: center;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: conic-gradient(red, blue, green);
+
+  > p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 175px;
+    height: 175px;
+    border-radius: inherit;
+    background-color: red;
+  }
+}

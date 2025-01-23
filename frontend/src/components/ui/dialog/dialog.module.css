@@ -1,15 +1,65 @@
 .default {
-  max-width: min(100%, 40rem);
+  max-width: 60rem;
+  width: calc(100% - 6rem);
   margin: auto;
   background-color: var(--bgc-dialog);
 }
 
-.transaction {
+.add-dialog {
   composes: default;
   padding: 2rem;
-  background-color: blue;
+  background-color: var(--bgc-dialog);
 
-  form > * + * {
+  form {
+    > div:first-child {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    label {
+      font-weight: var(--fw-button);
+    }
+
+    label:has(select) {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    display: grid;
+    gap: 2rem;
+  }
+}
+
+.delete {
+  composes: default;
+  padding: 1.5rem;
+  border: none;
+  border-radius: 1rem;
+  background-color: var(--bgc-light);
+
+  > * + * {
     margin-top: 1em;
+  }
+
+  div:has(button) {
+    display: flex;
+    justify-content: end;
+    gap: 1rem;
+
+    button {
+      padding: 1rem;
+      border-radius: 0.5rem;
+
+      &:first-of-type {
+        color: var(--c-dark);
+        background-color: var(--bgc-delete);
+      }
+
+      &:last-of-type {
+        color: var(--c-light);
+        background-color: var(--bgc-root);
+      }
+    }
   }
 }

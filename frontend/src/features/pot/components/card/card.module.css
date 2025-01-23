@@ -1,0 +1,34 @@
+.container {
+  display: grid;
+  gap: 1.5rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  background-color: var(--bgc-light);
+}
+
+.heading {
+  display: flex;
+  justify-content: space-between;
+}
+
+.middle {
+  display: flex;
+  justify-content: space-between;
+}
+
+.bar {
+  width: 100%;
+  height: 1rem;
+  border-radius: 1rem;
+  background-color: blue;
+}
+
+.percent {
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttons {
+  display: flex;
+  gap: 1.5rem;
+}

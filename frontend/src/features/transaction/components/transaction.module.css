@@ -1,0 +1,54 @@
+.container {
+  color: var(--c-light);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding-block: 2rem;
+}
+
+.transaction-list {
+  padding: 4rem 2rem;
+  border-radius: 1rem;
+  background-color: var(--bgc-light);
+
+  > *:not(:last-child) {
+    margin-bottom: 2rem;
+  }
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  overflow: auto;
+
+  th {
+    background-color: var(--c-root);
+  }
+
+  th,
+  td {
+    padding: 0.5rem;
+    text-align: center;
+  }
+
+  th,
+  tr:not(:last-child) {
+    border-bottom: 2px solid var(--c-root);
+  }
+}
+
+.minus {
+  color: var(--c-error);
+}
+
+.plus {
+  color: var(--c-success);
+}

@@ -18,4 +18,6 @@
   --bgc-root: var(--beige);
   --bgc-dark: var(--black);
   --bgc-light: var(--white);
+  --bgc-delete: var(--red);
+  --bgc-dialog: var(--white);
 }

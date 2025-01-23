@@ -44,7 +44,16 @@ class BudgetService {
     return budget;
   }
 
-  async deleteBudget(data: { userId: number; category: string }) {}
+  async deleteBudget(data: { userId: number; category: string }) {
+    const deletedBudget = await prisma.budget.delete({
+      where: {
+        category: data.category as Category,
+        userId: data.userId,
+      },
+    });
+
+    return deletedBudget;
+  }
 }
 
 export const budgetService = new BudgetService();

@@ -8,3 +8,7 @@ export type TransactionQueryOutput = NonNullable<
 export type BudgetQueryOutput = NonNullable<
   inferRouterOutputs<AppRouter>["budget"]["getAllBudgets"]
 >[number];
+
+export type PotQueryOutput = NonNullable<
+  inferRouterOutputs<AppRouter>["pot"]["getAllPots"]
+>[number];

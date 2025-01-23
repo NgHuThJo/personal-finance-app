@@ -9,3 +9,17 @@
   color: #fff;
   background-color: var(--bgc-dark);
 }
+
+.add {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color: var(--c-dark);
+  background-color: var(--bgc-dark);
+}
+
+.action {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  font-weight: var(--fw-heading);
+  background-color: var(--bgc-root);
+}
