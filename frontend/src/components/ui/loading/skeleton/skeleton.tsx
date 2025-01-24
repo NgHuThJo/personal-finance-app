@@ -4,9 +4,9 @@ import styles from "./skeleton.module.css";
 type LoadingSkeletonProps = ComponentPropsWithRef<"div">;
 
 // 8 spans
-export function LoadingSkeleton({ ...restProps }: LoadingSkeletonProps) {
+export function LoadingSkeleton({ ...props }: LoadingSkeletonProps) {
   return (
-    <div className={styles.container} {...restProps}>
+    <div className={styles.container} {...props}>
       <span></span>
       <span></span>
       <span></span>

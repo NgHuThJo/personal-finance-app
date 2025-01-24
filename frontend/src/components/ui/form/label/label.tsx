@@ -14,10 +14,10 @@ export function Label({
   error,
   htmlFor,
   label,
-  ...restProps
+  ...props
 }: LabelProps) {
   return (
-    <label className={styles[className]} htmlFor={htmlFor} {...restProps}>
+    <label className={styles[className]} htmlFor={htmlFor} {...props}>
       {label}
       {children}
       {typeof error === "string" ? (

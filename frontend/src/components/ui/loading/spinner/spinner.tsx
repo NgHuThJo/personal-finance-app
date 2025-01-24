@@ -5,7 +5,7 @@ type SpinnerProps = ComponentPropsWithRef<"div">;
 
 export function LoadingSpinner({
   className = "default",
-  ...restProps
+  ...props
 }: SpinnerProps) {
-  return <div className={styles[className]} {...restProps}></div>;
+  return <div className={styles[className]} {...props}></div>;
 }

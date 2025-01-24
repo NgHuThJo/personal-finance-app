@@ -17,7 +17,7 @@ export function Input({
   labelClassName,
   name,
   type,
-  ...restProps
+  ...props
 }: InputProps) {
   return (
     <Label
@@ -31,7 +31,7 @@ export function Input({
         id={name}
         name={name}
         type={type}
-        {...restProps}
+        {...props}
       />
     </Label>
   );

@@ -8,14 +8,14 @@ type SearchBarProps = InputHTMLAttributes<HTMLInputElement> & {
 export function SearchBar({
   filterFn,
   className = "default",
-  ...restProps
+  ...props
 }: SearchBarProps) {
   return (
     <input
       type="text"
       className={styles[className]}
       onChange={(event) => filterFn(event)}
-      {...restProps}
+      {...props}
     />
   );
 }

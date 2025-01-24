@@ -17,10 +17,12 @@ export function isSender(
   return senderId === userId;
 }
 
-export function sortTransactions<T extends TransactionQueryOutput>(
-  data: T[] | undefined,
-  action: Action,
-) {
+export function sortTransactions<
+  T extends Pick<
+    TransactionQueryOutput,
+    "category" | "createdAt" | "transactionAmount"
+  >,
+>(data: T[] | undefined, action: Action) {
   if (!data) {
     return data;
   }

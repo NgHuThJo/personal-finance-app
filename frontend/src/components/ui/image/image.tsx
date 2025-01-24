@@ -7,9 +7,7 @@ export function Image({
   alt,
   className = "default",
   src,
-  ...restProps
+  ...props
 }: ImageProps) {
-  return (
-    <img alt={alt} className={styles[className]} src={src} {...restProps} />
-  );
+  return <img alt={alt} className={styles[className]} src={src} {...props} />;
 }

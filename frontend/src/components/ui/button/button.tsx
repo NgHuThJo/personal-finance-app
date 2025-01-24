@@ -7,10 +7,10 @@ export function Button({
   children,
   className = "default",
   type = "button",
-  ...restProps
+  ...props
 }: ButtonProps) {
   return (
-    <button className={styles[className]} type={type} {...restProps}>
+    <button className={styles[className]} type={type} {...props}>
       {children}
     </button>
   );

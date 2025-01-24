@@ -9,11 +9,11 @@ export function TextArea({
   className = "default",
   error,
   name,
-  ...restProps
+  ...props
 }: TextAreaProps) {
   return (
     <div className={styles[className]}>
-      <textarea id={name} name={name} {...restProps}></textarea>
+      <textarea id={name} name={name} {...props}></textarea>
       {typeof error === "string" ? (
         <FormError message={error} />
       ) : (
