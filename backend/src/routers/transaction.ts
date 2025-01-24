@@ -25,6 +25,21 @@ export const transactionRouter = router({
         logError(error);
       }
     }),
+  getAllBills: publicProcedure
+    .input(
+      z.object({
+        userId: positiveNumberSchema,
+      }),
+    )
+    .query(async ({ input }) => {
+      try {
+        const bills = await transactionService.getAllBills(input);
+
+        return bills;
+      } catch (error) {
+        logError(error);
+      }
+    }),
   createTransaction: publicProcedure
     .input(
       z.object({

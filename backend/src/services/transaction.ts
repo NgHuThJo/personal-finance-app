@@ -24,6 +24,25 @@ class TransactionService {
     return transactions;
   }
 
+  async getAllBills(data: { userId: number }) {
+    const bills = await prisma.transaction.findMany({
+      where: {
+        senderId: data.userId,
+        recurring: true,
+      },
+      include: {
+        recipient: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+
+    return bills;
+  }
+
   async createTransaction(data: {
     amount: number;
     category: string;
