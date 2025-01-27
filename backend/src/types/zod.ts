@@ -7,6 +7,9 @@ export const numericStringSchema = z
 export const positiveNumberSchema = z
   .number()
   .positive("Number must be positive");
+export const nonNegativeNumberSchema = z
+  .number()
+  .nonnegative("Number must not be negative");
 export const emailSchema = z
   .string()
   .trim()

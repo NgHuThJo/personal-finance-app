@@ -28,7 +28,6 @@ class TransactionService {
     const bills = await prisma.transaction.findMany({
       where: {
         senderId: data.userId,
-        recurring: true,
       },
       include: {
         recipient: {

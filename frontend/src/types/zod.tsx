@@ -28,6 +28,9 @@ export const passwordSchema = z
 export const positiveNumberSchema = z
   .number()
   .positive("Number must be positive");
+export const nonNegativeNumberSchema = z
+  .number()
+  .nonnegative("Number must not be negative");
 export const fileSchema = z.object({
   name: z.string().min(1, "File name is required"),
   size: z.number().max(10 * 1024 * 1024, "File size must be less than 10MB"),
@@ -104,3 +107,9 @@ export const potFormSchema = z.object({
   totalAmount: stringToNumberSchema,
 });
 export type PotFormSchemaError = SchemaError<typeof potFormSchema>;
+
+export const potAddFormSchema = z.object({
+  id: positiveNumberSchema,
+  savedAmount: stringToNumberSchema,
+});
+export type PotAddFormSchemaError = SchemaError<typeof potAddFormSchema>;

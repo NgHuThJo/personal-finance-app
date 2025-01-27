@@ -4,8 +4,14 @@ import { trpc } from "#frontend/lib/trpc";
 import { SearchBar } from "#frontend/components/ui/form/search/search";
 import { Select } from "#frontend/components/ui/form/select/select";
 import { sortTransactions } from "#frontend/domain/transaction";
+import { getFullName } from "#frontend/domain/user";
 import { Receipt2 } from "#frontend/components/ui/icon/icon";
-import { Actions } from "#frontend/domain/transaction";
+import {
+  formatDate,
+  formatNumber,
+} from "#frontend/utils/internationalization/intl";
+import { Action } from "#frontend/domain/transaction";
+import styles from "./bills.module.css";
 
 const options = [
   {
@@ -42,7 +48,7 @@ export function Bills() {
     error,
   } = trpc.transaction.getAllBills.useQuery({ userId });
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<Actions>("Newest");
+  const [filter, setFilter] = useState<Action>("Newest");
 
   if (isPending) {
     return <p>Loading...</p>;
@@ -58,50 +64,90 @@ export function Bills() {
     setSearch(searchValue);
   };
 
-  const filteredData = sortTransactions(bills, search);
+  const handleFilter = (event: ChangeEvent<HTMLSelectElement>) => {
+    const filterValue = event.currentTarget.value as Action;
+
+    setFilter(filterValue);
+  };
+
+  const paidBills =
+    bills?.reduce((prev, curr) => prev + Number(curr.transactionAmount), 0) ??
+    0;
+  const upcomingBill = bills?.reduce(
+    (total, bill) =>
+      new Date(bill.createdAt) > new Date()
+        ? total + Number(bill.transactionAmount)
+        : total,
+    0,
+  );
+
+  const filteredData = sortTransactions(bills, filter);
 
   return (
-    <div>
+    <div className={styles.container}>
       <div>
         <h1>Recurring Bills</h1>
       </div>
-      <div>
+      <div className={styles.total}>
+        <Receipt2 />
         <div>
-          <Receipt2 />
           <h2>Total bills</h2>
           <span>$40.99</span>
         </div>
-        <div>
+      </div>
+      <div>
+        <div className={styles.summary}>
           <h2>Summary</h2>
           <ul>
             <li>
               <span>Paid bills</span>
-              <span>$</span>
+              <span>${paidBills?.toFixed(2)}</span>
             </li>
             <li>
               <span>Total Upcoming</span>
-              <span>$</span>
+              <span>${upcomingBill?.toFixed(2)}</span>
             </li>
           </ul>
         </div>
       </div>
-      <div>
-        <div>
-          <SearchBar filterFn={handleSearch} />
+      <div className={styles["table-container"]}>
+        <div className={styles.filters}>
+          <SearchBar filterFn={handleSearch} placeholder="Search bills" />
           <Select
             options={options}
             name="order"
             placeholder="All Bills"
+            onChange={handleFilter}
           ></Select>
         </div>
-        <table>
-          <thead>
-            <th>Bill Title</th>
-            <th>Due Date</th>
-            <th>Amount</th>
-          </thead>
-          <tbody></tbody>
-        </table>
+        {filteredData?.length ? (
+          <table>
+            <thead>
+              <th>Bill Title</th>
+              <th>Due Date</th>
+              <th>Amount</th>
+            </thead>
+            <tbody>
+              {filteredData?.map((bill) => (
+                <tr>
+                  <td>{getFullName(bill.recipient)}</td>
+                  <td>{formatDate(new Date(bill.createdAt))}</td>
+                  <td>
+                    $
+                    {formatNumber(Number(bill.transactionAmount), {
+                      opts: {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      },
+                    })}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>No bills available.</p>
+        )}
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { potService } from "#backend/services/pot.js";
 import { logError } from "#backend/utils/error-logger.js";
 import {
   nonEmptyStringSchema,
+  nonNegativeNumberSchema,
   positiveNumberSchema,
 } from "#backend/types/zod.js";
 
@@ -51,6 +52,22 @@ export const potRouter = router({
         const newPot = await potService.createPot(input);
 
         return newPot;
+      } catch (error) {
+        logError(error);
+      }
+    }),
+  updatePot: publicProcedure
+    .input(
+      z.object({
+        id: positiveNumberSchema,
+        savedAmount: nonNegativeNumberSchema,
+      }),
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const updatedPot = await potService.updatePot(input);
+
+        return updatedPot;
       } catch (error) {
         logError(error);
       }

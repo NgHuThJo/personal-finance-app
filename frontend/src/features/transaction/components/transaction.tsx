@@ -237,7 +237,7 @@ export function Transaction() {
             </tbody>
           </table>
         ) : (
-          <p>No transactions</p>
+          <p>No transactions.</p>
         )}
       </div>
     </div>

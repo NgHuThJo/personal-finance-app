@@ -39,6 +39,18 @@ class PotService {
 
     return newPot;
   }
+  async updatePot(data: { id: number; savedAmount: number }) {
+    const updatedPot = await prisma.pot.update({
+      where: {
+        id: data.id,
+      },
+      data: {
+        savedAmount: data.savedAmount,
+      },
+    });
+
+    return updatedPot;
+  }
 }
 
 export const potService = new PotService();

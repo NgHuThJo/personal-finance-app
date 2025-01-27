@@ -26,7 +26,7 @@ export function Select({
     <select
       defaultValue=""
       name={name}
-      id={label ?? ""}
+      id={label}
       className={styles[className]}
       {...props}
     >
