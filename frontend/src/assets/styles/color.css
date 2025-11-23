@@ -1,35 +1,20 @@
 :root {
   color-scheme: light dark;
 
-  --neutral-900: #02012c;
-  --neutral-800: #262540;
-  --neutral-700: #302f4a;
-  --neutral-600: #3c3b5e;
-  --neutral-300: #acacb7;
-  --neutral-200: #d4d3d9;
-  --neutral-0: #ffffff;
+  --grey-900: #201f24;
+  --grey-500: #696868;
+  --grey-300: #b3b3b3;
+  --white: #ffffff;
+  --beige-100: #f8f4f0;
+  --beige-500: #98908b;
+  --green: #277c78;
+  --cyan: #82c9d7;
+  --navy: #626070;
+  --yellow: #f2cdac;
+  --red: #c94736;
 
-  --orange-500: #ff820a;
+  --bgc-body: var(--beige-100);
 
-  --blue-500: #4658d9;
-  --blue-700: #2b1b9c;
-
-  --c-root: var(--neutral-0);
-  --c-error-meessage: var(--neutral-200);
-  --bgc-root: var(--neutral-900);
-  --bgc-unit-button: var(--neutral-800);
-  --bgc-weekday-button: var(--neutral-600);
-  --bgc-search-button: var(--blue-500);
-  --c-description-current-card: var(--neutral-200);
-  --c-value-current-card: var(--neutral-0);
-  --bgc-current-card: var(--neutral-800);
-  --bgc-hourly-card: var(--neutral-700);
-  --bgc-dropdown: var(--neutral-800);
-  --bgc-dropdown-item: var(--neutral-700);
-  --c-dropdown-border: var(--neutral-0);
-  --c-dropdown-heading: var(--neutral-300);
-  --bgc-separator: var(--neutral-600);
-  --bgc-search-suggestion: var(--neutral-800);
-  --bgc-retry-button: var(--neutral-800);
-  --bgc-bookmark-button: var(--blue-500);
+  --c-log-button: var(--white);
+  --bgc-log-button: var(--grey-900);
 }

@@ -311,3 +311,8 @@
 .bookmark {
   background-color: var(--bgc-bookmark-button);
 }
+
+.log {
+  color: var(--c-log-button);
+  background-color: var(--bgc-log-button);
+}

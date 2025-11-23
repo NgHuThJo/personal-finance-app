@@ -18,6 +18,7 @@ const buttonVariants = cva(styles.button, {
       dropdown: styles.dropdown,
       bookmark: styles.bookmark,
       retry: styles.retry,
+      log: styles.log,
       ["search-item"]: styles["search-item"],
     },
     size: {

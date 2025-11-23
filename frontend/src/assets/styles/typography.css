@@ -1,33 +1,22 @@
-@font-face {
-  font-family: "Bricolage Grotesque";
-  src: url("../fonts/Bricolage_Grotesque/BricolageGrotesque-VariableFont_opsz,wdth,wght.ttf");
-}
-
-@font-face {
-  font-family: "DM Sans";
-  src:
-    url("../fonts/DM_Sans/DMSans-VariableFont_opsz,wght.ttf"),
-    url("../fonts/DM_Sans/DMSans-Italic-VariableFont_opsz,wght.ttf");
-}
-
 :root {
-  --ff-root: "DM Sans", "Bricolage Grotesque", system-ui, sans-serif;
+  --ff-root:
+    ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji,
+    Segoe UI Symbol, Noto Color Emoji;
 
   --fw-light: 300;
+  --fw-normal: 400;
   --fw-medium: 500;
   --fw-semibold: 600;
   --fw-bold: 700;
-  --fw-root: var(--fw-medium);
 
-  --fs-1: 0.875rem;
-  --fs-2: 1rem;
-  --fs-3: 1.125rem;
-  --fs-4: 1.25rem;
-  --fs-5: 1.75rem;
-  --fs-6: 2rem;
-  --fs-7: 3.25rem;
-  --fs-8: 6rem;
-  --fs-root: var(--fs-2);
+  --fw-body: var(--fw-normal);
+
+  --fs-1: 1.25rem;
+  --fs-2: 1.5rem;
+  --fs-3: 2rem;
+  --fs-4: 3.25rem;
+
+  --fs-body: var(--fs-1);
 
   /* --fw-root: 400;
   --fw-label: 500;
