@@ -1,0 +1,8 @@
+.layout {
+  display: grid;
+  grid-column: breakout-start / breakout-end;
+}
+
+.list-item {
+  padding: var(--spacing-8);
+}

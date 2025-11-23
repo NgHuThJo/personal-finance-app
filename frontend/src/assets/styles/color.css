@@ -17,4 +17,8 @@
 
   --c-log-button: var(--white);
   --bgc-log-button: var(--grey-900);
+
+  --c-summary-balance: var(--white);
+  --bgc-summary-balance: var(--grey-900);
+  --bgc-summary-rest: var(--white);
 }

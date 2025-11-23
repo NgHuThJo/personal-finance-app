@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import styles from "./index.module.css";
 import { Logout } from "#frontend/assets/icons/icons";
-import { Summary } from "#frontend/features/dashboard/components/summary/summary";
+import { BottomSummary } from "#frontend/features/dashboard/components/bottom-summary";
+import { TopSummary } from "#frontend/features/dashboard/components/top-summary";
 import { Button } from "#frontend/shared/primitives/button";
 
 export const Route = createFileRoute("/")({
@@ -18,7 +19,8 @@ function Index() {
           Logout
         </Button>
       </header>
-      <Summary />
+      <TopSummary />
+      <BottomSummary />
     </main>
   );
 }

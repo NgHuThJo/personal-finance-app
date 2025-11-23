@@ -1,0 +1,30 @@
+.layout {
+  display: grid;
+  grid-column: breakout-start / breakout-end;
+  gap: 0.75rem;
+
+  @media screen and (width>= 1024px) {
+    gap: 1.5rem;
+  }
+}
+
+.list-item {
+  padding: 1.5rem;
+  border-radius: var(--border-radius-4);
+  background-color: var(--bgc-summary-rest);
+
+  &:first-child {
+    background-color: var(--bgc-summary-balance);
+    color: var(--c-summary-balance);
+  }
+
+  h3 {
+    margin-block-end: 0.75rem;
+    font-size: var(--fs-1);
+  }
+
+  span {
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-4);
+  }
+}

@@ -1,0 +1,7 @@
+.layout {
+  padding: var(--spacing-8);
+
+  > * + * {
+    margin-block-end: var(--spacing-6);
+  }
+}

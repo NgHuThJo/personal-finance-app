@@ -1,5 +1,5 @@
 .layout {
-  --macro-grid-padding-inline: 2.5rem;
+  --macro-grid-padding-inline: var(--spacing-10);
   --macro-grid-breakout-column-width: 20rem;
   --macro-grid-content-max-width: 50rem;
 
@@ -22,8 +22,8 @@
     [breakout-end breakout-left-end]
     minmax(var(--macro-grid-padding-inline), 1fr)
     [full-width-end breakout-right-end];
-  row-gap: 2rem;
-  padding-block: 2rem;
+  row-gap: var(--spacing-8);
+  padding-block: var(--spacing-8);
 }
 
 .fallback {
@@ -37,6 +37,6 @@
 
   h1 {
     font-weight: var(--fw-bold);
-    font-size: var(--fs-3);
+    font-size: var(--fs-4);
   }
 }
