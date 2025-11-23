@@ -1,0 +1,43 @@
+.scroll-area-viewport {
+  height: 100%;
+  padding: var(--spacing-8);
+  border-radius: inherit;
+  transition-property: color, box-shadow;
+  outline: none;
+
+  > div {
+    height: 100%;
+  }
+
+  &:focus-visible {
+    outline-width: 1px;
+    box-shadow: 0 0 0 3px rgba(var(--ring), 0.5);
+  }
+}
+
+.scroll-area-scrollbar {
+  display: flex;
+  padding: 1px;
+  user-select: none;
+  touch-action: none;
+  transition-property: color;
+}
+
+.vertical {
+  height: 100%;
+  width: 0.625rem; /* 2.5 * 0.25rem */
+  border-left: 1px solid transparent;
+}
+
+.horizontal {
+  height: 0.625rem;
+  flex-direction: column;
+  border-top: 1px solid transparent;
+}
+
+.scroll-area-thumb {
+  background-color: var(--border);
+  position: relative;
+  flex: 1;
+  border-radius: 9999px;
+}

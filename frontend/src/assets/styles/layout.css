@@ -1,0 +1,111 @@
+:root {
+  --auto-grid-column-w: 15rem;
+  --macro-grid-breakout-max-w: 90rem;
+  --macro-grid-content-max-w: 70rem;
+  --macro-grid-p-inline: 2rem;
+  --macro-grid-breakout-column-w: calc(
+    (var(--macro-grid-breakout-max-w) - var(--macro-grid-content-max-w)) / 2
+  );
+}
+
+/* Flex */
+.flex,
+.flex-col,
+.flex-grid,
+.flex-group,
+.flex-wrap {
+  display: flex;
+}
+
+.flex-grid,
+.flex-group,
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+/* Common flex layout patterns */
+.flex-grid {
+  > * {
+    flex-grow: 1;
+  }
+}
+
+.flex-group {
+  width: fit-content;
+}
+
+/* Grid */
+.grid-auto-fill,
+.grid-auto-fit,
+.grid,
+.grid-stack,
+.macro-grid {
+  display: grid;
+}
+
+/* Common grid layout patterns */
+.grid-auto-fill {
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(var(--grid-auto-column-w), 100%), 1fr)
+  );
+}
+
+.grid-auto-fit {
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(var(--grid-auto-column-w), 100%), 1fr)
+  );
+}
+
+.grid-stack {
+  > * {
+    grid-area: 1 / 1;
+  }
+}
+
+.macro-grid {
+  grid-template-columns:
+    [full-width-start breakout-left-start] minmax(
+      var(--macro-grid-p-inline),
+      1fr
+    )
+    [breakout-start breakout-right-start] minmax(
+      0,
+      var(--macro-grid-breakout-column-w)
+    )
+    [content-start] min(
+      100% - 2 * var(--macro-grid-p-inline),
+      var(--macro-grid-content-max-w)
+    )
+    [content-end]
+    minmax(0, var(--macro-grid-breakout-column-w))
+    [breakout-end breakout-left-end]
+    minmax(var(--macro-grid-p-inline), 1fr)
+    [full-width-end breakout-right-end];
+}
+
+/* Macro grid related utility classes */
+.full-width {
+  grid-column: full-width;
+}
+
+.breakout {
+  grid-column: breakout;
+}
+
+.breakout-left {
+  grid-column: breakout-left;
+}
+
+.breakout-right {
+  grid-column: breakout-right;
+}
+
+.content {
+  grid-column: content;
+}

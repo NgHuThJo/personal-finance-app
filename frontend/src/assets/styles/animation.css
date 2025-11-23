@@ -1,0 +1,83 @@
+:root {
+  --transition-duration: 0.3s;
+  --fade-transition-duration: 1s;
+}
+
+@keyframes slideIn {
+  from {
+    visibility: hidden;
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    visibility: visible;
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    visibility: visible;
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    visibility: hidden;
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    visibility: hidden;
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+  to {
+    visibility: visible;
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    visibility: hidden;
+    transform: translateX(50%);
+    opacity: 0;
+  }
+  to {
+    visibility: visible;
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes loading {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes typing {
+  20% {
+    content: ".";
+  }
+  40% {
+    content: "..";
+  }
+  60% {
+    content: "...";
+  }
+  80% {
+    content: "....";
+  }
+  100% {
+    content: ".....";
+  }
+}

@@ -1,0 +1,128 @@
+.board {
+  --gap: 1rem;
+
+  display: grid;
+  grid-column: breakout-start / breakout-end;
+  grid-template-areas: "current" "daily" "hourly";
+  gap: 2rem;
+
+  @media screen and (width >= 1024px) {
+    grid-template-areas: "current current hourly" "daily daily hourly";
+  }
+}
+
+.current {
+  display: grid;
+  align-items: center;
+  gap: var(--gap);
+  grid-area: current;
+}
+
+.card-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--gap);
+}
+
+.daily {
+  grid-area: daily;
+
+  > h2 {
+    margin-bottom: var(--gap);
+    font-weight: var(--fw-semibold);
+    font-size: var(--fs-4);
+  }
+}
+
+.daily-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: var(--gap);
+}
+
+.daily-heading {
+  font-size: var(--fs-3);
+}
+
+.daily-card {
+  --index: 0;
+
+  display: grid;
+  justify-items: center;
+  padding: 0.625rem 1rem;
+  border-radius: calc(var(--border-radius-6) * 1px);
+  background-color: var(--bgc-current-card);
+  animation: 1s ease-out calc(50ms * var(--index)) global(slideIn);
+}
+
+.daily-temperature {
+  display: flex;
+  gap: 1rem;
+  text-align: center;
+}
+
+.hourly {
+  grid-area: hourly;
+  padding: 1rem 1.25rem;
+  border-radius: calc(var(--border-radius-8) * 1px);
+  background-color: var(--bgc-current-card);
+}
+
+.stack {
+  display: grid;
+  align-items: center;
+  border-radius: calc(var(--border-radius-8) * 1px);
+  overflow: hidden;
+
+  > * {
+    grid-area: 1 / 1 / -1 / -1;
+  }
+}
+
+.image-container {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+
+  @media screen and (width >= 768px) {
+    grid-template-columns: auto 1fr;
+  }
+}
+
+.image-left {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+
+  @media screen and (width >= 768px) {
+    justify-self: start;
+    text-align: revert;
+  }
+}
+
+.image-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+
+  @media screen and (width >= 768px) {
+    justify-self: end;
+  }
+}
+
+.image-heading {
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-5);
+}
+
+.image-day {
+  font-weight: var(--fw-light);
+  font-size: var(--fs-3);
+}
+
+.image-temperature {
+  font-size: clamp(var(--fs-7), 2.4643rem + 3.9286vw, var(--fs-8));
+  font-style: italic;
+}

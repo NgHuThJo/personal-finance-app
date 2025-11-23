@@ -1,0 +1,53 @@
+@keyframes linear {
+}
+
+.layout {
+  display: grid;
+  gap: 1rem;
+
+  @media screen and (width >= 768px) {
+    grid-template-columns: 1fr 10rem;
+    align-items: center;
+  }
+}
+
+.search-input {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  position: relative;
+  background-color: var(--bgc-unit-button);
+
+  input {
+    width: 100%;
+    border: none;
+    background-color: inherit;
+
+    &:focus,
+    &:focus-visible {
+      outline: none;
+    }
+  }
+}
+
+.search-item {
+  border-radius: calc(var(--border-radius-4) * 1px);
+
+  &:hover,
+  &:focus-within {
+    background-color: var(--bgc-dropdown-item);
+  }
+}
+
+.search-loader {
+  &:after {
+    content: "";
+    animation: 1s steps(5, jump-start) infinite global(typing);
+  }
+}
+
+.error {
+  grid-row: 2;
+  color: red;
+}

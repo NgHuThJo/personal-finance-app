@@ -1,0 +1,18 @@
+# Environment and secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDEs and editors
+/.idea
+/.vscode
+*.swp
+*.swo
+
+# Misc
+*.log
+*.pem
+.DS_Store
+Thumbs.db

@@ -1,0 +1,270 @@
+.select-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border: 1px solid var(--c-tertiary);
+  background: transparent;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  white-space: nowrap;
+  box-shadow: var(--shadow-xs);
+  transition:
+    color 0.2s,
+    box-shadow 0.2s;
+  outline: none;
+
+  &[data-size="default"] {
+    height: 2.25rem;
+  }
+  &[data-size="sm"] {
+    height: 2rem;
+  }
+
+  & [data-slot="select-value"][placeholder] {
+    color: var(--muted-foreground);
+  }
+
+  & svg:not([class*="text-"]) {
+    color: var(--muted-foreground);
+    pointer-events: none;
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &:focus-visible {
+    border-color: var(--ring);
+    box-shadow: 0 0 0 3px var(--ring) 50;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &[aria-invalid="true"] {
+    border-color: var(--destructive);
+    box-shadow: 0 0 0 3px var(--destructive) 20;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &[aria-invalid="true"] {
+      box-shadow: 0 0 0 3px var(--destructive) 40;
+    }
+    & {
+      background: var(--input) 30;
+    }
+    &:hover {
+      background: var(--input) 50;
+    }
+  }
+}
+
+/* ============ CONTENT ============ */
+.select-content {
+  position: relative;
+  z-index: 50;
+  background-color: var(--c-bg-secondary);
+  max-height: var(--radix-select-content-available-height);
+  width: var(--radix-select-trigger-width);
+  min-width: 8rem;
+  border: 1px solid var(--c-tertiary);
+  border-radius: 0.375rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-shadow: var(--shadow-md);
+
+  &[position="popper"] {
+    &[data-side="bottom"] {
+      transform-origin: var(--radix-select-content-transform-origin);
+      animation-name: slide-in-from-top-2;
+      transform: translateY(0.25rem);
+    }
+
+    &[data-side="top"] {
+      animation-name: slide-in-from-bottom-2;
+      transform: translateY(-0.25rem);
+    }
+
+    &[data-side="left"] {
+      animation-name: slide-in-from-right-2;
+      transform: translateX(-0.25rem);
+    }
+
+    &[data-side="right"] {
+      animation-name: slide-in-from-left-2;
+      transform: translateX(0.25rem);
+    }
+
+    &[data-side] .select-viewport {
+      height: var(--radix-select-trigger-height);
+      width: 100%;
+      min-width: var(--radix-select-trigger-width);
+      scroll-margin: 0.25rem;
+    }
+  }
+
+  &[data-state="open"] {
+    animation:
+      fade-in 0.2s ease-out,
+      zoom-in 0.2s ease-out,
+      slide-in;
+  }
+
+  &[data-state="closed"] {
+    animation:
+      fade-out 0.2s ease-in,
+      zoom-out 0.2s ease-in;
+  }
+
+  & .select-viewport {
+    padding: 0.25rem;
+  }
+}
+
+/* Animations and positioning */
+
+/* ============ SCROLL BUTTONS ============ */
+.select-scroll-up-button,
+.select-scroll-down-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  cursor: default;
+}
+[data-slot^="select-scroll-"] svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ============ LABEL ============ */
+.select-label {
+  padding: 0.375rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+
+/* ============ ITEMS ============ */
+.select-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 1.5rem;
+  padding: 0.375rem 2rem 0.375rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: normal;
+  cursor: default;
+  border-radius: 0.25rem;
+  outline: none;
+  user-select: none;
+
+  /* Hover/Focus highlight */
+  &:focus,
+  &:hover {
+    background-color: var(--c-primary);
+  }
+
+  /* Disabled items */
+  &[data-disabled="true"] {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  /* Check icon spot */
+  & > span {
+    /* position: absolute; */
+    /* right: 0.5rem; */
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+  }
+
+  & svg {
+    pointer-events: none;
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+/* ============ SEPARATOR ============ */
+.select-separator {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  margin-left: -0.25rem;
+  margin-right: -0.25rem;
+  pointer-events: none;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ============ VALUE (Inside Trigger) ============ */
+.select-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes zoom-in {
+  from {
+    transform: scale(0.95);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes zoom-out {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.95);
+  }
+}
+/*---------------------------------------------------------------------------*/
+/* NOTE: You'll need to define custom properties and keyframe animations, 
+   e.g.:
+
+:root {
+  --input-border: #ccc;
+  --ring: #5b7dfc;
+  --destructive: #e53e3e;
+  --muted-foreground: #6b7280;
+  --input: #fff;
+  --popover: #fff;
+  --popover-foreground: #000;
+  --accent: #f3f4f6;
+  --accent-foreground: #111;
+  --border: #e5e7eb;
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+}
+/* And slide-in-from-…-2 animations or define with appropriate keyframes */

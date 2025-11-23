@@ -1,0 +1,45 @@
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("../fonts/Bricolage_Grotesque/BricolageGrotesque-VariableFont_opsz,wdth,wght.ttf");
+}
+
+@font-face {
+  font-family: "DM Sans";
+  src:
+    url("../fonts/DM_Sans/DMSans-VariableFont_opsz,wght.ttf"),
+    url("../fonts/DM_Sans/DMSans-Italic-VariableFont_opsz,wght.ttf");
+}
+
+:root {
+  --ff-root: "DM Sans", "Bricolage Grotesque", system-ui, sans-serif;
+
+  --fw-light: 300;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-root: var(--fw-medium);
+
+  --fs-1: 0.875rem;
+  --fs-2: 1rem;
+  --fs-3: 1.125rem;
+  --fs-4: 1.25rem;
+  --fs-5: 1.75rem;
+  --fs-6: 2rem;
+  --fs-7: 3.25rem;
+  --fs-8: 6rem;
+  --fs-root: var(--fs-2);
+
+  /* --fw-root: 400;
+  --fw-label: 500;
+  --fw-link: 500;
+  --fw-button: 600;
+  --fw-heading: 700; */
+
+  /* --fs-root: 1rem;
+  --fs-h1: clamp(3rem, 2rem + 5vw, 5rem);
+  --fs-h2: clamp(2rem, 1.5rem + 2.5vw, 3rem);
+  --fs-h3: clamp(1.5rem, 1rem + 2.5vw, 2.5rem);
+  --fs-h4: clamp(1.125rem, 0.6875rem + 2.1875vw, 2rem);
+  --fs-button: 1.25rem;
+  --fs-label: 1rem; */
+}
