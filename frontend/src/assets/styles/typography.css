@@ -22,8 +22,8 @@
   /* --fw-root: 400;
   --fw-label: 500;
   --fw-link: 500;
-  --fw-button: 600;
-  --fw-heading: 700; */
+  --fw-button: 600; */
+  --fw-heading: var(--fw-bold);
 
   /* --fs-root: 1rem;
   --fs-h1: clamp(3rem, 2rem + 5vw, 5rem);

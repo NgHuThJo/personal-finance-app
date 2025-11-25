@@ -15,10 +15,13 @@
 
   --bgc-body: var(--beige-100);
 
-  --c-log-button: var(--white);
-  --bgc-log-button: var(--grey-900);
+  --c-logout-button: var(--white);
+  --bgc-logout-button: var(--grey-900);
 
-  --c-summary-balance: var(--white);
-  --bgc-summary-balance: var(--grey-900);
-  --bgc-summary-rest: var(--white);
+  --c-dashboard-link: var(--grey-500);
+  --c-dashboard-top-summary-balance: var(--white);
+  --bgc-dashboard-top-summary-balance: var(--grey-900);
+  --bgc-dashboard-top-summary-rest: var(--white);
+
+  --bgc-dashboard-bottom-summary: var(--white);
 }

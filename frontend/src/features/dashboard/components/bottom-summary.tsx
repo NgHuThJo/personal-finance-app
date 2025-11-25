@@ -1,47 +1,43 @@
 import { Link } from "@tanstack/react-router";
 import styles from "./bottom-summary.module.css";
 import { CaretRight } from "#frontend/assets/icons/icons";
-import { BottomCardLayout } from "#frontend/features/dashboard/layouts/bottom-card";
+
+const options = [
+  {
+    name: "Pots",
+    to: "/pots",
+  },
+  {
+    name: "Transactions",
+    to: "/transactions",
+  },
+  {
+    name: "Budgets",
+    to: "/budgets",
+  },
+  {
+    name: "Recurring Bills",
+    to: "/recurring-bills",
+  },
+];
 
 export function BottomSummary() {
   return (
     <ul className={styles.layout}>
-      <li>
-        <BottomCardLayout>
-          <h2>Pots</h2>
-          <Link to="">
-            See Details
-            <CaretRight />
-          </Link>
-        </BottomCardLayout>
-      </li>
-      <li>
-        <BottomCardLayout>
-          <h2>Transactions</h2>
-          <Link to="">
-            See Details
-            <CaretRight />
-          </Link>
-        </BottomCardLayout>
-      </li>
-      <li>
-        <BottomCardLayout>
-          <h2>Budgets</h2>
-          <Link to="">
-            See Details
-            <CaretRight />
-          </Link>
-        </BottomCardLayout>
-      </li>
-      <li>
-        <BottomCardLayout>
-          <h2>Recurring Bills</h2>
-          <Link to="">
-            See Details
-            <CaretRight />
-          </Link>
-        </BottomCardLayout>
-      </li>
+      {options.map(({ name, to }) => (
+        <li className={styles["list-item"]}>
+          <div className={styles["list-item-top"]}>
+            <h2>{name}</h2>
+            <Link to={to} className={styles.link}>
+              See Details
+              <CaretRight />
+            </Link>
+          </div>
+          <div>
+            <p>No data provided.</p>
+          </div>
+        </li>
+      ))}
     </ul>
   );
 }

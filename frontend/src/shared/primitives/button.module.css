@@ -313,6 +313,6 @@
 }
 
 .log {
-  color: var(--c-log-button);
-  background-color: var(--bgc-log-button);
+  color: var(--c-logout-button);
+  background-color: var(--bgc-logout-button);
 }
