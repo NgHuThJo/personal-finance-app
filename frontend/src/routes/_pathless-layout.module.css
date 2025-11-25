@@ -25,18 +25,3 @@
   row-gap: var(--spacing-8);
   padding-block: var(--spacing-8);
 }
-
-.fallback {
-  grid-column: breakout-start / breakout-end;
-}
-
-.header {
-  grid-column: breakout-start / breakout-end;
-  display: flex;
-  justify-content: space-between;
-
-  h1 {
-    font-weight: var(--fw-bold);
-    font-size: var(--fs-4);
-  }
-}

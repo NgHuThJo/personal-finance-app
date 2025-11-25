@@ -1,0 +1,6 @@
+.layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  grid-column: breakout-start / breakout-end;
+}

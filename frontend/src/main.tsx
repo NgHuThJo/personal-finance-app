@@ -3,11 +3,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import {
-  RouterProvider,
-  createHashHistory,
-  createRouter,
-} from "@tanstack/react-router";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { z } from "zod";
@@ -60,8 +56,6 @@ const queryClient = new QueryClient({
   }),
 });
 
-const hashHistory = createHashHistory();
-
 const router = createRouter({
   routeTree,
   context: {
@@ -70,7 +64,6 @@ const router = createRouter({
   defaultPreload: "intent",
   defaultPreloadStaleTime: 0,
   scrollRestoration: true,
-  history: hashHistory,
 });
 
 declare module "@tanstack/react-router" {

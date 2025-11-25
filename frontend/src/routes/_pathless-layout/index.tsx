@@ -5,13 +5,13 @@ import { BottomSummary } from "#frontend/features/dashboard/components/bottom-su
 import { TopSummary } from "#frontend/features/dashboard/components/top-summary";
 import { Button } from "#frontend/shared/primitives/button";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_pathless-layout/")({
   component: Index,
 });
 
 function Index() {
   return (
-    <main className={styles.layout}>
+    <>
       <header className={styles.header}>
         <h1>Overview</h1>
         <Button variant="log">
@@ -21,6 +21,6 @@ function Index() {
       </header>
       <TopSummary />
       <BottomSummary />
-    </main>
+    </>
   );
 }
