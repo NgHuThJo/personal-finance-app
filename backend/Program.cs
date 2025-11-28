@@ -1,4 +1,4 @@
-using backend.Features;
+// using backend.Features;
 using backend.Models;
 using backend.Shared;
 using FluentValidation;
@@ -63,6 +63,7 @@ else
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();
-app.MapBoardApi().MapKanbanTaskApi().MapBoardColumnApi().MapSubTaskApi();
+
+// app.MapBoardApi().MapKanbanTaskApi().MapBoardColumnApi().MapSubTaskApi();
 
 app.Run();
