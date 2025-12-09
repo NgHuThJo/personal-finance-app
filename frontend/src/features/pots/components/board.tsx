@@ -1,3 +1,3 @@
 export function PotBoard() {
-  return <p>you don't have a pot accoutn yet.</p>;
+  return <p>You don't have a pot account yet.</p>;
 }

@@ -23,5 +23,17 @@
     minmax(var(--macro-grid-padding-inline), 1fr)
     [full-width-end breakout-right-end];
   row-gap: var(--spacing-8);
+  min-height: 100%;
   padding-block: var(--spacing-8);
+
+  > * {
+    grid-column: breakout-start / breakout-end;
+  }
+}
+
+.navigation {
+  height: 20px;
+  position: sticky;
+  bottom: 0;
+  background-color: red;
 }

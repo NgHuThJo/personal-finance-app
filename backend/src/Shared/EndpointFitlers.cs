@@ -1,0 +1,46 @@
+using FluentValidation;
+
+namespace backend.Shared;
+
+public class ValidationFilter<TRequest> : IEndpointFilter
+{
+    public async ValueTask<object?> InvokeAsync(
+        EndpointFilterInvocationContext context,
+        EndpointFilterDelegate next
+    )
+    {
+        var validation = context.HttpContext.RequestServices.GetService<
+            IValidator<TRequest>
+        >();
+
+        if (validation is null)
+        {
+            Console.WriteLine(
+                $"Validator for request type {nameof(TRequest)} could not be found"
+            );
+            return await next(context);
+        }
+
+        var entity = context.Arguments.OfType<TRequest>().FirstOrDefault();
+
+        if (entity is null)
+        {
+            Console.WriteLine(
+                $"Request object of type {nameof(TRequest)} could not be found"
+            );
+            return await next(context);
+        }
+
+        var validationResult = await validation.ValidateAsync(entity);
+
+        if (!validationResult.IsValid)
+        {
+            Console.WriteLine($"Validation error: {validationResult.Errors}");
+            return TypedResults.ValidationProblem(
+                validationResult.ToDictionary()
+            );
+        }
+
+        return await next(context);
+    }
+}

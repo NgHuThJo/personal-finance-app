@@ -7,8 +7,11 @@ export const Route = createFileRoute("/_pathless-layout")({
 
 function RouteComponent() {
   return (
-    <main className={styles.layout}>
-      <Outlet />
-    </main>
+    <>
+      <main className={styles.layout}>
+        <Outlet />
+      </main>
+      <nav className={styles.navigation}></nav>
+    </>
   );
 }
