@@ -5,17 +5,17 @@ export type ClientOptions = {
 };
 
 export type CreatePotRequest = {
-    target: number | string;
+    target: number;
     name: string;
-    userId: number | string;
+    userId: number;
 };
 
 export type CreatePotResponse = {
-    id: number | string;
-    total: number | string;
-    target: number | string;
+    id: number;
+    total: number;
+    target: number;
     name: string;
-    userId: number | string;
+    userId: number;
 };
 
 export type CreateUserRequest = {
@@ -24,22 +24,22 @@ export type CreateUserRequest = {
 };
 
 export type CreateUserResponse = {
-    id: number | string;
+    id: number;
     email: string;
 };
 
 export type GetAllPotsRequest = {
-    userId: number | string;
+    userId: number;
 };
 
 export type GetAllPotsResponse = {
-    id: number | string;
-    total: number | string;
-    target: number | string;
+    id: number;
+    total: number;
+    target: number;
 };
 
 export type GetUserByIdResponse = {
-    id: number | string;
+    id: number;
     email: string;
     name: null | string;
 };

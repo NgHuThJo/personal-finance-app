@@ -3,81 +3,45 @@
 import { z } from 'zod';
 
 export const zCreatePotRequest = z.object({
-    target: z.union([
-        z.number(),
-        z.string().regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/)
-    ]),
-    name: z.string(),
-    userId: z.union([
-        z.int(),
-        z.string().regex(/^-?(?:0|[1-9]\d*)$/)
-    ])
+    target: z.number().gte(0),
+    name: z.string().min(1),
+    userId: z.int().gte(0).lte(2147483647)
 });
 
 export const zCreatePotResponse = z.object({
-    id: z.union([
-        z.int(),
-        z.string().regex(/^-?(?:0|[1-9]\d*)$/)
-    ]),
-    total: z.union([
-        z.number(),
-        z.string().regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/)
-    ]),
-    target: z.union([
-        z.number(),
-        z.string().regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/)
-    ]),
-    name: z.string(),
-    userId: z.union([
-        z.int(),
-        z.string().regex(/^-?(?:0|[1-9]\d*)$/)
-    ])
+    id: z.int().gte(0).lte(2147483647),
+    total: z.number().gte(0),
+    target: z.number().gte(0),
+    name: z.string().min(1),
+    userId: z.int().gte(0).lte(2147483647)
 });
 
 export const zCreateUserRequest = z.object({
     email: z.string(),
-    password: z.string()
+    password: z.string().min(8)
 });
 
 export const zCreateUserResponse = z.object({
-    id: z.union([
-        z.int(),
-        z.string().regex(/^-?(?:0|[1-9]\d*)$/)
-    ]),
+    id: z.int().gte(0).lte(2147483647),
     email: z.string()
 });
 
 export const zGetAllPotsRequest = z.object({
-    userId: z.union([
-        z.int(),
-        z.string().regex(/^-?(?:0|[1-9]\d*)$/)
-    ])
+    userId: z.int().gte(0).lte(2147483647)
 });
 
 export const zGetAllPotsResponse = z.object({
-    id: z.union([
-        z.int(),
-        z.string().regex(/^-?(?:0|[1-9]\d*)$/)
-    ]),
-    total: z.union([
-        z.number(),
-        z.string().regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/)
-    ]),
-    target: z.union([
-        z.number(),
-        z.string().regex(/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/)
-    ])
+    id: z.int().gte(0).lte(2147483647),
+    total: z.number().gte(0),
+    target: z.number().gte(0)
 });
 
 export const zGetUserByIdResponse = z.object({
-    id: z.union([
-        z.int(),
-        z.string().regex(/^-?(?:0|[1-9]\d*)$/)
-    ]),
+    id: z.int().gte(0).lte(2147483647),
     email: z.string(),
     name: z.union([
         z.null(),
-        z.string()
+        z.string().min(1)
     ])
 });
 
