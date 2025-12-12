@@ -71,6 +71,6 @@ else
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();
-app.MapUserApi();
+app.MapUserApi().MapPotApi();
 
 app.Run();

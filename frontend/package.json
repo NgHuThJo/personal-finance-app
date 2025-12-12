@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@hey-api/openapi-ts": "0.89.0",
     "@playwright/test": "^1.56.1",
     "@tanstack/router-plugin": "^1.139.3",
     "@types/node": "^24.10.1",

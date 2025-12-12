@@ -44,3 +44,23 @@ public class ValidationFilter<TRequest> : IEndpointFilter
         return await next(context);
     }
 }
+
+public class UserIdValidationFilter : IEndpointFilter
+{
+    public async ValueTask<object?> InvokeAsync(
+        EndpointFilterInvocationContext context,
+        EndpointFilterDelegate next
+    )
+    {
+        var rawRouteValue = context
+            .HttpContext.Request.RouteValues["userId"]
+            ?.ToString();
+
+        if (!int.TryParse(rawRouteValue, out var userId) || userId <= 0)
+        {
+            return TypedResults.BadRequest("Invalid userId");
+        }
+
+        return await next(context);
+    }
+}

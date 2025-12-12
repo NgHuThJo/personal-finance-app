@@ -12,13 +12,13 @@ public class SetupTestFixture : IAsyncLifetime
 {
     public WebApplicationFactory<Program> Factory { get; private set; } = null!;
     public PostgreSqlContainer DbContainer { get; private set; } = null!;
+    public HttpClient Client { get; private set; } = null!;
 
     public async Task InitializeAsync()
     {
         DbContainer = new PostgreSqlBuilder()
+            .WithImage("postgres:latest")
             .WithDatabase("testdb")
-            .WithUsername("postgres")
-            .WithPassword("postgres")
             .Build();
         await DbContainer.StartAsync();
 
@@ -42,8 +42,15 @@ public class SetupTestFixture : IAsyncLifetime
                         options.UseNpgsql(connectionString)
                     );
                 });
+
+                Environment.SetEnvironmentVariable(
+                    "ConnectionStrings:PostgresConnection",
+                    connectionString
+                );
             }
         );
+
+        Client = Factory.CreateClient();
 
         // Ensure that db is created
         using var scope = Factory.Services.CreateScope();

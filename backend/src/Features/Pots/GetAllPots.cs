@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using backend.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -8,13 +9,19 @@ namespace backend.Features;
 
 public record GetAllPotsRequest
 {
+    [Range(0, int.MaxValue)]
     public required int UserId { get; init; }
 }
 
 public record GetAllPotsResponse
 {
+    [Range(0, int.MaxValue)]
     public required int Id { get; init; }
+
+    [Range(0, double.MaxValue)]
     public required decimal Total { get; init; }
+
+    [Range(0, double.MaxValue)]
     public required decimal Target { get; init; }
 }
 
@@ -26,7 +33,7 @@ public class GetAllPotsValidator : AbstractValidator<GetAllPotsRequest>
     }
 }
 
-public static class GetAllPotsEndpoint
+public sealed class GetAllPotsEndpoint
 {
     public static async Task<Ok<List<GetAllPotsResponse>>> GetAll(
         [FromBody] GetAllPotsRequest query,
