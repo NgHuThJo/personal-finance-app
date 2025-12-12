@@ -13,7 +13,7 @@ export default defineConfig(({ command }) => ({
     react(),
     // ...,
   ],
-  base: command === "serve" ? "/" : "/weather-app/",
+  base: command === "serve" ? "/" : "/personal-finance-app/",
   resolve: {
     alias: {
       "#frontend": path.resolve(__dirname, "src"),
