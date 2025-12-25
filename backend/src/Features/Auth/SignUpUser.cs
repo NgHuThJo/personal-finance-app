@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Numerics;
 using backend.Models;
 using backend.Shared;
 using FluentValidation;
@@ -10,53 +9,60 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Features;
 
-public abstract record GetUserResult;
+public abstract record SignUpUserResult;
 
-public record UserCreated(CreateUserResponse User) : GetUserResult;
+public record SignupSuccessful(SignUpUserResponse User) : SignUpUserResult;
 
-public record EmailAlreadyInUse(string Email) : GetUserResult;
+public record EmailAlreadyInUse(string Email) : SignUpUserResult;
 
-public record CreateUserRequest
+public record SignUpUserRequest
 {
     [EmailAddress(ErrorMessage = "Invalid email address")]
     public required string Email { get; init; }
 
     [MinLength(8, ErrorMessage = "Password has minimum length of 8 characters")]
     public required string Password { get; init; }
+
+    [MinLength(1)]
+    public required string Name { get; init; }
 }
 
-public record CreateUserResponse
+public record SignUpUserResponse
 {
     [Range(0, int.MaxValue)]
     public required int Id { get; init; }
 
     [EmailAddress]
     public required string Email { get; init; }
+
+    [MinLength(1)]
+    public required string Name { get; init; }
 }
 
-public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
+public class SignUpUserRequestValidator : AbstractValidator<SignUpUserRequest>
 {
-    public CreateUserRequestValidator()
+    public SignUpUserRequestValidator()
     {
         RuleFor(u => u.Email).NotEmpty().EmailAddress();
         RuleFor(u => u.Password).NotEmpty().MinimumLength(8);
+        RuleFor(u => u.Name).NotEmpty();
     }
 }
 
-public sealed class CreateUserEndpoint
+public sealed class SignUpUserEndpoint
 {
     public static async Task<
-        Results<Created<CreateUserResponse>, Conflict<string>>
+        Results<Created<SignUpUserResponse>, Conflict<string>>
     > Create(
-        [FromServices] CreateUserHandler handler,
-        [FromBody] CreateUserRequest command
+        [FromServices] SignUpUserHandler handler,
+        [FromBody] SignUpUserRequest command
     )
     {
         var newUser = await handler.Handle(command);
 
         return newUser switch
         {
-            UserCreated(var user) => TypedResults.Created(
+            SignupSuccessful(var user) => TypedResults.Created(
                 $"/api/users/{user.Id}",
                 user
             ),
@@ -64,21 +70,21 @@ public sealed class CreateUserEndpoint
                 $"Email address \"{email}\" is already in use"
             ),
             _ => throw new NotSupportedException(
-                "An unknown error has occurred in CreateUser endpoint"
+                "An unknown error has occurred in SignUpUser endpoint"
             ),
         };
     }
 }
 
-public sealed class CreateUserHandler(
+public sealed class SignUpUserHandler(
     AppDbContext context,
-    ILogger<CreateUserHandler> logger
+    ILogger<SignUpUserHandler> logger
 )
 {
     private readonly AppDbContext _context = context;
-    private readonly ILogger<CreateUserHandler> _logger = logger;
+    private readonly ILogger<SignUpUserHandler> _logger = logger;
 
-    public async Task<GetUserResult> Handle(CreateUserRequest command)
+    public async Task<SignUpUserResult> Handle(SignUpUserRequest command)
     {
         var emailLower = command.Email.ToLower();
         var isEmailNotAvailable = await _context
@@ -96,14 +102,20 @@ public sealed class CreateUserHandler(
         {
             Email = command.Email,
             Password = hashedPassword,
+            Name = command.Name,
             Balance = new Balance(),
         };
         _context.Users.Add(newUser);
 
         await _context.SaveChangesAsync();
 
-        return new UserCreated(
-            new CreateUserResponse { Id = newUser.Id, Email = newUser.Email }
+        return new SignupSuccessful(
+            new SignUpUserResponse
+            {
+                Id = newUser.Id,
+                Email = newUser.Email,
+                Name = newUser.Name,
+            }
         );
     }
 }

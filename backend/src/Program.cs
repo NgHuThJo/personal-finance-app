@@ -1,12 +1,15 @@
+using System.Text;
 using System.Text.Json.Serialization;
 using backend.Features;
 using backend.Models;
 using backend.Shared;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var jwt = builder.Configuration.GetSection("Jwt");
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -28,6 +31,8 @@ foreach (var interceptorType in intercepterTypes)
     builder.Services.AddScoped(interceptorType);
 }
 
+// Register JwtTokenProvider
+builder.Services.AddSingleton<JwtTokenProvider>();
 builder.Services.AddProblemDetails(options =>
 {
     options.CustomizeProblemDetails = context =>
@@ -59,6 +64,25 @@ builder.Services.AddCors(options =>
         }
     );
 });
+builder
+    .Services.AddAuthentication("Bearer")
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwt["Issuer"],
+            ValidAudience = jwt["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwt["Key"]!)
+            ),
+            ClockSkew = TimeSpan.Zero,
+        };
+    });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -74,8 +98,11 @@ else
     app.UseHttpsRedirection();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseExceptionHandler();
 app.UseStatusCodePages();
-app.MapUserApi().MapPotApi();
+app.MapUserApi().MapPotApi().MapAuthApi();
 
 app.Run();

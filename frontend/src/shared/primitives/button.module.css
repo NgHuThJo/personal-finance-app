@@ -312,7 +312,12 @@
   background-color: var(--bgc-bookmark-button);
 }
 
-.log {
+.logout {
   color: var(--c-logout-button);
   background-color: var(--bgc-logout-button);
+}
+
+.login {
+  color: var(--c-login-button);
+  background-color: var(--bgc-login-button);
 }

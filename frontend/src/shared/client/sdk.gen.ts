@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetApiPotsData, GetApiPotsResponses, GetApiUsersByUserIdData, GetApiUsersByUserIdErrors, GetApiUsersByUserIdResponses, PostApiPotsData, PostApiPotsResponses, PostApiUsersData, PostApiUsersErrors, PostApiUsersResponses } from './types.gen';
+import type { GetApiPotsData, GetApiPotsResponses, GetApiUsersByUserIdData, GetApiUsersByUserIdErrors, GetApiUsersByUserIdResponses, PostApiAuthLoginData, PostApiAuthLoginErrors, PostApiAuthLoginResponses, PostApiAuthSignupData, PostApiAuthSignupErrors, PostApiAuthSignupResponses, PostApiPotsData, PostApiPotsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -18,15 +18,6 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const postApiUsers = <ThrowOnError extends boolean = false>(options: Options<PostApiUsersData, ThrowOnError>) => (options.client ?? client).post<PostApiUsersResponses, PostApiUsersErrors, ThrowOnError>({
-    url: '/api/users',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
 export const getApiUsersByUserId = <ThrowOnError extends boolean = false>(options: Options<GetApiUsersByUserIdData, ThrowOnError>) => (options.client ?? client).get<GetApiUsersByUserIdResponses, GetApiUsersByUserIdErrors, ThrowOnError>({ url: '/api/users/{userId}', ...options });
 
 export const getApiPots = <ThrowOnError extends boolean = false>(options: Options<GetApiPotsData, ThrowOnError>) => (options.client ?? client).get<GetApiPotsResponses, unknown, ThrowOnError>({
@@ -40,6 +31,24 @@ export const getApiPots = <ThrowOnError extends boolean = false>(options: Option
 
 export const postApiPots = <ThrowOnError extends boolean = false>(options: Options<PostApiPotsData, ThrowOnError>) => (options.client ?? client).post<PostApiPotsResponses, unknown, ThrowOnError>({
     url: '/api/pots',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const postApiAuthSignup = <ThrowOnError extends boolean = false>(options: Options<PostApiAuthSignupData, ThrowOnError>) => (options.client ?? client).post<PostApiAuthSignupResponses, PostApiAuthSignupErrors, ThrowOnError>({
+    url: '/api/auth/signup',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const postApiAuthLogin = <ThrowOnError extends boolean = false>(options: Options<PostApiAuthLoginData, ThrowOnError>) => (options.client ?? client).post<PostApiAuthLoginResponses, PostApiAuthLoginErrors, ThrowOnError>({
+    url: '/api/auth/login',
     ...options,
     headers: {
         'Content-Type': 'application/json',

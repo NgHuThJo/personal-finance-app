@@ -1,0 +1,35 @@
+.form {
+  display: grid;
+  gap: 2rem;
+  max-width: 35rem;
+  padding: 2rem;
+  border-radius: var(--border-radius-6);
+  background-color: var(--bgc-dialog);
+
+  label {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-rows: repeat(3, auto);
+
+    & > :first-child {
+      grid-row: 1 / 2;
+    }
+  }
+}
+
+.error {
+  color: var(--c-error);
+}
+
+.stack {
+  display: grid;
+  align-items: center;
+
+  > * {
+    grid-area: 1 / -1;
+  }
+
+  button {
+    justify-self: end;
+  }
+}

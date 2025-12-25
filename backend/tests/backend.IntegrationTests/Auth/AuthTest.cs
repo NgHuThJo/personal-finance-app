@@ -7,66 +7,81 @@ using Xunit;
 
 namespace backend.IntegrationTests;
 
-public class UserApiTest(SetupTestFixture fixture)
+public class AuthApiTest(SetupTestFixture fixture)
     : IClassFixture<SetupTestFixture>
 {
     private readonly SetupTestFixture _fixture = fixture;
 
     // Pay attention to the missing trailing slash
-    private readonly string _baseApiUrl = "/api/users";
+    private const string _baseApiUrl = "/api/auth/signup";
 
     [Fact]
-    public async Task CreateUser_WhenSuccessful_ReturnsUser()
+    public async Task SignUpUser_WhenSuccessful_ReturnsUser()
     {
         // Arrange
-        var fakeData = UserFaker.CreateUser();
+        var fakeData = AuthFaker.CreateSignUpUser();
         // Act
         var postResponse = await _fixture.Client.PostAsJsonAsync(
             _baseApiUrl,
-            fakeData
+            fakeData,
+            TestContext.Current.CancellationToken
         );
         var createdUser =
-            await postResponse.Content.ReadFromJsonAsync<GetUserByIdResponse>();
+            await postResponse.Content.ReadFromJsonAsync<SignUpUserResponse>(
+                TestContext.Current.CancellationToken
+            );
         // Assert
         postResponse.StatusCode.Should().Be(HttpStatusCode.Created);
         createdUser.Should().NotBeNull();
     }
 
     [Fact]
-    public async Task CreateUser_WhenValidationFails_ReturnStatusCode400()
+    public async Task SignUpUser_WhenValidationFails_ReturnStatusCode400()
     {
         // Arrange
-        var fakeData = new CreateUserRequest { Email = "", Password = "" };
+        var fakeData = new SignUpUserRequest
+        {
+            Email = "",
+            Password = "",
+            Name = "",
+        };
         // Act
         var postResponse = await _fixture.Client.PostAsJsonAsync(
             _baseApiUrl,
-            fakeData
+            fakeData,
+            TestContext.Current.CancellationToken
         );
         var validationResult =
-            await postResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+            await postResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>(
+                TestContext.Current.CancellationToken
+            );
         // Assert
         postResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         validationResult?.Errors.Should().ContainKey("Email");
     }
 
     [Fact]
-    public async Task CreateUser_WhenEmailAlreadyExists_ReturnStatusCode409()
+    public async Task SignUpUser_WhenEmailAlreadyExists_ReturnStatusCode409()
     {
-        var fakeData = UserFaker.CreateUser();
+        var fakeData = AuthFaker.CreateSignUpUser();
 
         var postResponse = await _fixture.Client.PostAsJsonAsync(
             _baseApiUrl,
-            fakeData
+            fakeData,
+            TestContext.Current.CancellationToken
         );
         var newUser =
-            await postResponse.Content.ReadFromJsonAsync<GetUserByIdResponse>();
+            await postResponse.Content.ReadFromJsonAsync<SignUpUserResponse>(
+                TestContext.Current.CancellationToken
+            );
 
         postResponse.StatusCode.Should().Be(HttpStatusCode.Created);
         newUser.Should().NotBeNull();
 
         postResponse = await _fixture.Client.PostAsJsonAsync(
             _baseApiUrl,
-            fakeData
+            fakeData,
+            TestContext.Current.CancellationToken
         );
         postResponse.StatusCode.Should().Be(HttpStatusCode.Conflict);
     }

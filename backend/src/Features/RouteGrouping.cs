@@ -14,9 +14,7 @@ public static class RouteGrouper
     public static WebApplication MapUserApi(this WebApplication app)
     {
         var group = app.MapGroup("/api/users");
-        group
-            .MapPost("", CreateUserEndpoint.Create)
-            .AddValidationFilter<CreateUserRequest>();
+        group.RequireAuthorization();
         group
             .MapGet("{userId:int}", GetUserByIdEndpoint.GetById)
             .AddEndpointFilter<UserIdValidationFilter>();
@@ -27,12 +25,26 @@ public static class RouteGrouper
     public static WebApplication MapPotApi(this WebApplication app)
     {
         var group = app.MapGroup("/api/pots");
+        group.RequireAuthorization();
         group
             .MapPost("", CreatePotEndpoint.Create)
             .AddValidationFilter<CreatePotRequest>();
         group
             .MapGet("", GetAllPotsEndpoint.GetAll)
             .AddValidationFilter<GetAllPotsRequest>();
+
+        return app;
+    }
+
+    public static WebApplication MapAuthApi(this WebApplication app)
+    {
+        var group = app.MapGroup("/api/auth");
+        group
+            .MapPost("signup", SignUpUserEndpoint.Create)
+            .AddValidationFilter<SignUpUserRequest>();
+        group
+            .MapPost("login", LoginUserEndpoint.Login)
+            .AddValidationFilter<LoginUserRequest>();
 
         return app;
     }

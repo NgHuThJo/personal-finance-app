@@ -17,6 +17,8 @@
 
   --c-logout-button: var(--white);
   --bgc-logout-button: var(--grey-900);
+  --c-login-button: var(--white);
+  --bgc-login-button: var(--grey-900);
 
   --c-dashboard-link: var(--grey-500);
   --c-dashboard-top-summary-balance: var(--white);
@@ -24,4 +26,8 @@
   --bgc-dashboard-top-summary-rest: var(--white);
 
   --bgc-dashboard-bottom-summary: var(--white);
+
+  --bgc-dialog: var(--white);
+
+  --c-error: var(--red);
 }

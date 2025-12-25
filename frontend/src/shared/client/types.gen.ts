@@ -18,16 +18,6 @@ export type CreatePotResponse = {
     userId: number;
 };
 
-export type CreateUserRequest = {
-    email: string;
-    password: string;
-};
-
-export type CreateUserResponse = {
-    id: number;
-    email: string;
-};
-
 export type GetAllPotsRequest = {
     userId: number;
 };
@@ -44,30 +34,26 @@ export type GetUserByIdResponse = {
     name: null | string;
 };
 
-export type PostApiUsersData = {
-    body: CreateUserRequest;
-    path?: never;
-    query?: never;
-    url: '/api/users';
+export type LoginUserRequest = {
+    email: string;
+    password: string;
 };
 
-export type PostApiUsersErrors = {
-    /**
-     * Conflict
-     */
-    409: string;
+export type LoginUserResponse = {
+    token: string;
 };
 
-export type PostApiUsersError = PostApiUsersErrors[keyof PostApiUsersErrors];
-
-export type PostApiUsersResponses = {
-    /**
-     * Created
-     */
-    201: CreateUserResponse;
+export type SignUpUserRequest = {
+    email: string;
+    password: string;
+    name: string;
 };
 
-export type PostApiUsersResponse = PostApiUsersResponses[keyof PostApiUsersResponses];
+export type SignUpUserResponse = {
+    id: number;
+    email: string;
+    name: string;
+};
 
 export type GetApiUsersByUserIdData = {
     body?: never;
@@ -127,3 +113,53 @@ export type PostApiPotsResponses = {
 };
 
 export type PostApiPotsResponse = PostApiPotsResponses[keyof PostApiPotsResponses];
+
+export type PostApiAuthSignupData = {
+    body: SignUpUserRequest;
+    path?: never;
+    query?: never;
+    url: '/api/auth/signup';
+};
+
+export type PostApiAuthSignupErrors = {
+    /**
+     * Conflict
+     */
+    409: string;
+};
+
+export type PostApiAuthSignupError = PostApiAuthSignupErrors[keyof PostApiAuthSignupErrors];
+
+export type PostApiAuthSignupResponses = {
+    /**
+     * Created
+     */
+    201: SignUpUserResponse;
+};
+
+export type PostApiAuthSignupResponse = PostApiAuthSignupResponses[keyof PostApiAuthSignupResponses];
+
+export type PostApiAuthLoginData = {
+    body: LoginUserRequest;
+    path?: never;
+    query?: never;
+    url: '/api/auth/login';
+};
+
+export type PostApiAuthLoginErrors = {
+    /**
+     * Conflict
+     */
+    409: string;
+};
+
+export type PostApiAuthLoginError = PostApiAuthLoginErrors[keyof PostApiAuthLoginErrors];
+
+export type PostApiAuthLoginResponses = {
+    /**
+     * OK
+     */
+    200: LoginUserResponse;
+};
+
+export type PostApiAuthLoginResponse = PostApiAuthLoginResponses[keyof PostApiAuthLoginResponses];

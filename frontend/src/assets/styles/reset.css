@@ -33,6 +33,10 @@ label {
   cursor: pointer;
 }
 
+input {
+  background-color: transparent;
+}
+
 a {
   display: inline-block;
   font-weight: var(--fw-link);

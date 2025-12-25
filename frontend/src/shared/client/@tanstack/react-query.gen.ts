@@ -3,22 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { getApiPots, getApiUsersByUserId, type Options, postApiPots, postApiUsers } from '../sdk.gen';
-import type { GetApiPotsData, GetApiPotsResponse, GetApiUsersByUserIdData, GetApiUsersByUserIdError, GetApiUsersByUserIdResponse, PostApiPotsData, PostApiPotsResponse, PostApiUsersData, PostApiUsersError, PostApiUsersResponse } from '../types.gen';
-
-export const postApiUsersMutation = (options?: Partial<Options<PostApiUsersData>>): UseMutationOptions<PostApiUsersResponse, PostApiUsersError, Options<PostApiUsersData>> => {
-    const mutationOptions: UseMutationOptions<PostApiUsersResponse, PostApiUsersError, Options<PostApiUsersData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await postApiUsers({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
+import { getApiPots, getApiUsersByUserId, type Options, postApiAuthLogin, postApiAuthSignup, postApiPots } from '../sdk.gen';
+import type { GetApiPotsData, GetApiPotsResponse, GetApiUsersByUserIdData, GetApiUsersByUserIdError, GetApiUsersByUserIdResponse, PostApiAuthLoginData, PostApiAuthLoginError, PostApiAuthLoginResponse, PostApiAuthSignupData, PostApiAuthSignupError, PostApiAuthSignupResponse, PostApiPotsData, PostApiPotsResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -87,6 +73,34 @@ export const postApiPotsMutation = (options?: Partial<Options<PostApiPotsData>>)
     const mutationOptions: UseMutationOptions<PostApiPotsResponse, DefaultError, Options<PostApiPotsData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await postApiPots({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const postApiAuthSignupMutation = (options?: Partial<Options<PostApiAuthSignupData>>): UseMutationOptions<PostApiAuthSignupResponse, PostApiAuthSignupError, Options<PostApiAuthSignupData>> => {
+    const mutationOptions: UseMutationOptions<PostApiAuthSignupResponse, PostApiAuthSignupError, Options<PostApiAuthSignupData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postApiAuthSignup({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const postApiAuthLoginMutation = (options?: Partial<Options<PostApiAuthLoginData>>): UseMutationOptions<PostApiAuthLoginResponse, PostApiAuthLoginError, Options<PostApiAuthLoginData>> => {
+    const mutationOptions: UseMutationOptions<PostApiAuthLoginResponse, PostApiAuthLoginError, Options<PostApiAuthLoginData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postApiAuthLogin({
                 ...options,
                 ...fnOptions,
                 throwOnError: true

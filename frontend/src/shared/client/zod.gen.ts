@@ -16,16 +16,6 @@ export const zCreatePotResponse = z.object({
     userId: z.int().gte(0).lte(2147483647)
 });
 
-export const zCreateUserRequest = z.object({
-    email: z.string(),
-    password: z.string().min(8)
-});
-
-export const zCreateUserResponse = z.object({
-    id: z.int().gte(0).lte(2147483647),
-    email: z.string()
-});
-
 export const zGetAllPotsRequest = z.object({
     userId: z.int().gte(0).lte(2147483647)
 });
@@ -45,16 +35,26 @@ export const zGetUserByIdResponse = z.object({
     ])
 });
 
-export const zPostApiUsersData = z.object({
-    body: zCreateUserRequest,
-    path: z.optional(z.never()),
-    query: z.optional(z.never())
+export const zLoginUserRequest = z.object({
+    email: z.string(),
+    password: z.string().min(8)
 });
 
-/**
- * Created
- */
-export const zPostApiUsersResponse = zCreateUserResponse;
+export const zLoginUserResponse = z.object({
+    token: z.string()
+});
+
+export const zSignUpUserRequest = z.object({
+    email: z.string(),
+    password: z.string().min(8),
+    name: z.string().min(1)
+});
+
+export const zSignUpUserResponse = z.object({
+    id: z.int().gte(0).lte(2147483647),
+    email: z.string(),
+    name: z.string().min(1)
+});
 
 export const zGetApiUsersByUserIdData = z.object({
     body: z.optional(z.never()),
@@ -90,3 +90,25 @@ export const zPostApiPotsData = z.object({
  * Created
  */
 export const zPostApiPotsResponse = zCreatePotResponse;
+
+export const zPostApiAuthSignupData = z.object({
+    body: zSignUpUserRequest,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+/**
+ * Created
+ */
+export const zPostApiAuthSignupResponse = zSignUpUserResponse;
+
+export const zPostApiAuthLoginData = z.object({
+    body: zLoginUserRequest,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+/**
+ * OK
+ */
+export const zPostApiAuthLoginResponse = zLoginUserResponse;
