@@ -1,9 +1,11 @@
+using System.Net.Http.Headers;
 using backend.IntegrationTests;
 using backend.Models;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Configurations;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.PostgreSql;
@@ -31,6 +33,8 @@ public class SetupTestFixture : IAsyncLifetime
         DbContainer = new PostgreSqlBuilder()
             .WithImage("postgres:latest")
             .WithDatabase("testdb")
+            .WithReuse(true)
+            .WithLabel("reuse-id", "personal-finance-app-integration-test")
             .Build();
         await DbContainer.StartAsync();
 
@@ -39,6 +43,16 @@ public class SetupTestFixture : IAsyncLifetime
         Factory = new WebApplicationFactory<Program>().WithWebHostBuilder(
             builder =>
             {
+                builder.ConfigureTestServices(services =>
+                {
+                    services
+                        .AddAuthentication("TestScheme")
+                        .AddScheme<
+                            AuthenticationSchemeOptions,
+                            TestAuthHandler
+                        >("TestScheme", options => { });
+                });
+
                 builder.ConfigureServices(services =>
                 {
                     var dbContextService = services.SingleOrDefault(d =>
@@ -50,21 +64,15 @@ public class SetupTestFixture : IAsyncLifetime
                         services.Remove(dbContextService);
                     }
 
-                    services
-                        .AddAuthorizationBuilder()
-                        .SetDefaultPolicy(
-                            new AuthorizationPolicyBuilder()
-                                .AddAuthenticationSchemes("Test")
-                                .RequireAuthenticatedUser()
-                                .Build()
-                        );
-
                     services.AddDbContext<AppDbContext>(options =>
                         options
                             .UseNpgsql(connectionString)
                             .UseAsyncSeeding(
                                 async (context, _, cancellationToken) =>
                                 {
+                                    // await context.Database.EnsureDeletedAsync();
+                                    // await context.Database.EnsureCreatedAsync();
+
                                     var fakeUsers = UserFaker
                                         .CreateUserFaker()
                                         .UseSeed(TestConstants.TESTDATA_SEED);
@@ -96,11 +104,15 @@ public class SetupTestFixture : IAsyncLifetime
             }
         );
 
-        Client = Factory.CreateClient();
-
+        // Ensure that you can access any endpoint
+        Client = Factory.CreateClient(new() { AllowAutoRedirect = false });
+        Client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("TestScheme");
         // Ensure that db is created
+
         using var scope = Factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await db.Database.EnsureDeletedAsync();
         await db.Database.EnsureCreatedAsync();
     }
 

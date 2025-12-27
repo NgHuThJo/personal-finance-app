@@ -14,7 +14,7 @@ public class JwtTokenProvider(IConfiguration config)
     {
         var jwtConfig = _config.GetSection("Jwt:Schemas:Bearer");
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtConfig["Key"]!)
+            Encoding.UTF8.GetBytes(jwtConfig["SecretKey"]!)
         );
         var credentials = new SigningCredentials(
             key,
@@ -45,7 +45,7 @@ public class JwtTokenProvider(IConfiguration config)
     {
         var jwtConfig = _config.GetSection("Jwt:Schemas:Test");
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtConfig["Key"]!)
+            Encoding.UTF8.GetBytes(jwtConfig["SecretKey"]!)
         );
         var credentials = new SigningCredentials(
             key,

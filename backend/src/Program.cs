@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
-var jwt = builder.Configuration.GetSection("Jwt");
+var defaultJwt = builder.Configuration.GetSection("Jwt:Schemas:Bearer");
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -74,10 +74,10 @@ builder
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = jwt["Issuer"],
-            ValidAudience = jwt["Audience"],
+            ValidIssuer = defaultJwt["Issuer"],
+            ValidAudience = defaultJwt["Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwt["Key"]!)
+                Encoding.UTF8.GetBytes(defaultJwt["SecretKey"]!)
             ),
             ClockSkew = TimeSpan.Zero,
         };
