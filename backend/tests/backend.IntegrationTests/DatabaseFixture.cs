@@ -49,6 +49,7 @@ public class DatabaseFixture : IAsyncLifetime
 
         await db.Database.MigrateAsync();
 
+        // Seed database here
         var fakeUsers = UserFaker
             .CreateUserFaker()
             .UseSeed(TestConstants.TESTDATA_SEED);
