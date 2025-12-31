@@ -1,5 +1,8 @@
+using backend.IntegrationTests;
 using Testcontainers.PostgreSql;
 using Xunit;
+
+[assembly: AssemblyFixture(typeof(PostgresContainerFixture))]
 
 namespace backend.IntegrationTests;
 
@@ -18,8 +21,8 @@ public class PostgresContainerFixture : IAsyncLifetime
         await Container.StartAsync();
     }
 
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
-        return ValueTask.CompletedTask;
+        await Container.DisposeAsync();
     }
 }

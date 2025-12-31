@@ -7,11 +7,9 @@ using Xunit;
 
 namespace backend.IntegrationTests;
 
-public class AuthApiTest(SetupTestFixture fixture)
-    : IClassFixture<SetupTestFixture>
+public class AuthApiTest(DatabaseFixture dbFixture)
+    : IntegrationTestBase(dbFixture)
 {
-    private readonly SetupTestFixture _fixture = fixture;
-
     // Pay attention to the missing trailing slash
     private const string _baseApiUrl = "/api/auth/signup";
 
@@ -21,7 +19,7 @@ public class AuthApiTest(SetupTestFixture fixture)
         // Arrange
         var fakeData = AuthFaker.CreateSignUpUser();
         // Act
-        var postResponse = await _fixture.Client.PostAsJsonAsync(
+        var postResponse = await Client.PostAsJsonAsync(
             _baseApiUrl,
             fakeData,
             TestContext.Current.CancellationToken
@@ -46,7 +44,7 @@ public class AuthApiTest(SetupTestFixture fixture)
             Name = "",
         };
         // Act
-        var postResponse = await _fixture.Client.PostAsJsonAsync(
+        var postResponse = await Client.PostAsJsonAsync(
             _baseApiUrl,
             fakeData,
             TestContext.Current.CancellationToken
@@ -65,7 +63,7 @@ public class AuthApiTest(SetupTestFixture fixture)
     {
         var fakeData = AuthFaker.CreateSignUpUser();
 
-        var postResponse = await _fixture.Client.PostAsJsonAsync(
+        var postResponse = await Client.PostAsJsonAsync(
             _baseApiUrl,
             fakeData,
             TestContext.Current.CancellationToken
@@ -78,7 +76,7 @@ public class AuthApiTest(SetupTestFixture fixture)
         postResponse.StatusCode.Should().Be(HttpStatusCode.Created);
         newUser.Should().NotBeNull();
 
-        postResponse = await _fixture.Client.PostAsJsonAsync(
+        postResponse = await Client.PostAsJsonAsync(
             _baseApiUrl,
             fakeData,
             TestContext.Current.CancellationToken
