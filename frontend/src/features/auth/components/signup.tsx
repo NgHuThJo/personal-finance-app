@@ -18,7 +18,7 @@ export function Signup() {
   } = useForm<SignUpUserRequest>();
   const { isOpen: isPasswordVisible, toggle: togglePasswordVisibility } =
     useToggle(false);
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     ...postApiAuthSignupMutation(),
     onSuccess: () => {
       route.navigate({
@@ -94,7 +94,7 @@ export function Signup() {
         </div>
         <span className={styles.error}>{errors.password?.message}</span>
       </label>
-      <Button type="submit" variant="login">
+      <Button type="submit" variant="login" disabled={isPending}>
         Create Account
       </Button>
       <p>

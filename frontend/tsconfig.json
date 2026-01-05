@@ -28,13 +28,12 @@
     "paths": {
       "#frontend/*": ["./src/*"]
     },
-    "plugins": [
-      {
-        "transform": "typia/lib/transform",
-        "functional": true
-      }
-    ],
     "strictNullChecks": true
   },
-  "include": ["./src/**/*", "./scripts/**/*", "./vite/client.d.ts"]
+  "include": [
+    "./src/**/*",
+    "./tests/**/*",
+    "./scripts/**/*",
+    "./vite/client.d.ts"
+  ]
 }
