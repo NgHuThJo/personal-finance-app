@@ -96,10 +96,9 @@ public class LoginUserHandler(
             return new EmailDoesNotExist(command.Email);
         }
 
-        var hashedPassword = PasswordHasher.HashPassword(command.Password);
         var passwordVerificationResult = PasswordHasher.VerifyHashedPassword(
-            hashedPassword,
-            userInfo.Password
+            userInfo.Password,
+            command.Password
         );
 
         if (passwordVerificationResult == PasswordVerificationResult.Failed)

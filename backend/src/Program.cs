@@ -7,6 +7,8 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 var defaultJwt = builder.Configuration.GetSection("Jwt:Schemas:Bearer");
@@ -83,6 +85,14 @@ builder
         };
     });
 builder.Services.AddAuthorization();
+
+// Configure Serilog logger
+// .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
+// .WriteTo.File("Logs/log.txt")
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+builder.Services.AddSerilog(Log.Logger);
 
 var app = builder.Build();
 

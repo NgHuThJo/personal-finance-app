@@ -1,0 +1,49 @@
+2026-01-07 22:51:02.836 +01:00 [INF] User profile is available. Using 'C:\Users\J-Fu9\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-01-07 22:51:03.041 +01:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert
+2026-01-07 22:51:03.066 +01:00 [INF] Now listening on: https://localhost:7111
+2026-01-07 22:51:03.067 +01:00 [INF] Now listening on: http://localhost:5096
+2026-01-07 22:51:03.068 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-01-07 22:51:03.069 +01:00 [INF] Hosting environment: Development
+2026-01-07 22:51:03.069 +01:00 [INF] Content root path: C:\Dev\FrontEndMentorChallenges_2.0\Guru\personal-finance-app\backend\src
+2026-01-07 22:52:08.751 +01:00 [INF] Request starting HTTP/1.1 GET http://localhost:5096/scalar - null null
+2026-01-07 22:52:08.818 +01:00 [INF] Executing endpoint 'HTTP: GET /scalar/{documentName?}'
+2026-01-07 22:52:08.820 +01:00 [INF] Executing RedirectResult, redirecting to scalar/.
+2026-01-07 22:52:08.820 +01:00 [INF] Executed endpoint 'HTTP: GET /scalar/{documentName?}'
+2026-01-07 22:52:08.827 +01:00 [INF] Request finished HTTP/1.1 GET http://localhost:5096/scalar - 302 0 null 77.2214ms
+2026-01-07 22:52:08.836 +01:00 [INF] Request starting HTTP/1.1 GET http://localhost:5096/scalar/ - null null
+2026-01-07 22:52:08.837 +01:00 [INF] Executing endpoint 'HTTP: GET /scalar/{documentName?}'
+2026-01-07 22:52:08.918 +01:00 [INF] Write content with HTTP Response ContentType of text/html
+2026-01-07 22:52:08.919 +01:00 [INF] Executed endpoint 'HTTP: GET /scalar/{documentName?}'
+2026-01-07 22:52:08.919 +01:00 [INF] Request finished HTTP/1.1 GET http://localhost:5096/scalar/ - 200 618 text/html 82.9676ms
+2026-01-07 22:52:08.925 +01:00 [INF] Request starting HTTP/1.1 GET http://localhost:5096/scalar/scalar.js - null null
+2026-01-07 22:52:08.925 +01:00 [INF] Request starting HTTP/1.1 GET http://localhost:5096/scalar/scalar.aspnetcore.js - null null
+2026-01-07 22:52:08.927 +01:00 [INF] CORS policy execution successful.
+2026-01-07 22:52:08.928 +01:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2026-01-07 22:52:08.928 +01:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.js'
+2026-01-07 22:52:08.940 +01:00 [INF] Sending file with download name ''.
+2026-01-07 22:52:08.940 +01:00 [INF] Sending file with download name ''.
+2026-01-07 22:52:08.942 +01:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2026-01-07 22:52:08.943 +01:00 [INF] Request finished HTTP/1.1 GET http://localhost:5096/scalar/scalar.aspnetcore.js - 200 1046 text/javascript 17.047ms
+2026-01-07 22:52:08.956 +01:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.js'
+2026-01-07 22:52:08.958 +01:00 [INF] Request finished HTTP/1.1 GET http://localhost:5096/scalar/scalar.js - 200 939279 text/javascript 32.3319ms
+2026-01-07 22:52:09.109 +01:00 [INF] Request starting HTTP/1.1 GET http://localhost:5096/openapi/v1.json - null null
+2026-01-07 22:52:09.110 +01:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2026-01-07 22:52:09.232 +01:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2026-01-07 22:52:09.232 +01:00 [INF] Request finished HTTP/1.1 GET http://localhost:5096/openapi/v1.json - 200 null application/json;charset=utf-8 122.8051ms
+2026-01-07 22:52:37.294 +01:00 [INF] Request starting HTTP/1.1 POST http://localhost:5096/api/auth/login - application/json 60
+2026-01-07 22:52:37.294 +01:00 [INF] CORS policy execution successful.
+2026-01-07 22:52:37.294 +01:00 [INF] Executing endpoint 'HTTP: POST /api/auth/login => Login'
+2026-01-07 22:52:38.755 +01:00 [INF] Executed DbCommand (54ms) [Parameters=[@ToLower='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT u."Email", u."Password", u."Id"
+FROM "Users" AS u
+WHERE lower(u."Email") = @ToLower
+LIMIT 2
+2026-01-07 22:52:38.775 +01:00 [INF] Setting HTTP status code 409.
+2026-01-07 22:52:38.776 +01:00 [INF] Writing value of type 'String' as Json.
+2026-01-07 22:52:38.778 +01:00 [INF] Executed endpoint 'HTTP: POST /api/auth/login => Login'
+2026-01-07 22:52:38.784 +01:00 [INF] Request finished HTTP/1.1 POST http://localhost:5096/api/auth/login - 409 null application/json; charset=utf-8 1490.0816ms
+2026-01-07 22:53:36.893 +01:00 [INF] Request starting HTTP/1.1 GET http://localhost:5096/api/users/3000 - null null
+2026-01-07 22:53:36.899 +01:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-01-07 22:53:36.902 +01:00 [INF] AuthenticationScheme: Bearer was challenged.
+2026-01-07 22:53:36.902 +01:00 [INF] Request finished HTTP/1.1 GET http://localhost:5096/api/users/3000 - 401 0 null 9.2832ms

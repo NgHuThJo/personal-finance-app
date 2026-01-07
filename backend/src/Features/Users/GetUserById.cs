@@ -65,7 +65,7 @@ public sealed class GetUserByIdHandler(
 
         if (user is null)
         {
-            Log.LogUserIdNotFound(_logger, userId);
+            Logger.LogUserIdNotFound(_logger, userId);
             return new UserNotFound(userId);
         }
 

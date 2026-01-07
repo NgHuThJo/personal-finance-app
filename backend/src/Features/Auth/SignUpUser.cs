@@ -93,7 +93,7 @@ public sealed class SignUpUserHandler(
 
         if (isEmailNotAvailable)
         {
-            Log.LogEmailOfUser(_logger, command.Email);
+            Logger.LogEmailOfUser(_logger, command.Email);
             return new EmailAlreadyInUse(command.Email);
         }
 

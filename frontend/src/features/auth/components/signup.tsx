@@ -44,7 +44,7 @@ export function Signup() {
   return (
     <form onSubmit={onSubmit} className={styles.form}>
       <h1>Sign up</h1>
-      <label htmlFor="name">
+      <label data-testid="label-name" htmlFor="name">
         <span>Name</span>
         <input
           {...register("name", {
@@ -55,9 +55,11 @@ export function Signup() {
           })}
           id="name"
         />
-        <span className={styles.error}>{errors.name?.message}</span>
+        <span data-testid="error" className={styles.error}>
+          {errors.name?.message}
+        </span>
       </label>
-      <label htmlFor="email">
+      <label data-testid="label-email" htmlFor="email">
         <span>Email address</span>
         <input
           {...register("email", {
@@ -68,10 +70,14 @@ export function Signup() {
           })}
           id="email"
         />
-        <span className={styles.error}>{errors.email?.message}</span>
-        <span className={styles.error}>{errors["root"]?.server?.message}</span>
+        <span data-testid="error" className={styles.error}>
+          {errors.email?.message}
+        </span>
+        <span data-testid="server-error" className={styles.error}>
+          {errors["root"]?.server?.message}
+        </span>
       </label>
-      <label htmlFor="password">
+      <label data-testid="label-password" htmlFor="password">
         <span>Password</span>
         <div className={styles.stack}>
           <input
@@ -92,7 +98,9 @@ export function Signup() {
             <IconEye />
           </Button>
         </div>
-        <span className={styles.error}>{errors.password?.message}</span>
+        <span data-testid="error" className={styles.error}>
+          {errors.password?.message}
+        </span>
       </label>
       <Button type="submit" variant="login" disabled={isPending}>
         Create Account

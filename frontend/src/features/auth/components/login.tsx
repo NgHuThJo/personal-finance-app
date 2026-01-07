@@ -1,7 +1,9 @@
+import { useMutation } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import styles from "./login.module.css";
 import type { LoginUserRequest } from "#frontend/shared/client";
+import { postApiAuthLoginMutation } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { Button } from "#frontend/shared/primitives/button";
 
 export function Login() {
@@ -10,10 +12,17 @@ export function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginUserRequest>();
+  const { mutate } = useMutation({
+    ...postApiAuthLoginMutation,
+    onSuccess: async () => {},
+    onError: (error) => {},
+  });
 
   const onSubmit = handleSubmit(
     (data) => {
-      console.log(data.email);
+      console.table(data);
+
+      mutate(data);
     },
     (error) => {
       console.table(error);

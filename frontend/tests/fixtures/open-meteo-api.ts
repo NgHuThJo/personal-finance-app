@@ -21,32 +21,6 @@ export const test = base.extend<Api>({
         },
       }),
     );
-    // await context.route("https://api.geoapify.com/v1/geocode/reverse**", (r) =>
-    //   r.fulfill({
-    //     json: {
-    //       ...zocker(reverseGeocodingResponseSchema)
-    //         .array({ min, max })
-    //         .override(z.ZodNumber, () => {
-    //           return Math.floor(Math.random() * -20);
-    //         })
-    //         .generate(),
-    //     },
-    //   }),
-    // );
-    // await context.route(
-    //   "https://geocoding-api.open-meteo.com/v1/search**",
-    //   (r) =>
-    //     r.fulfill({
-    //       json: {
-    //         ...zocker(geocodingSchema)
-    //           .array({ min, max })
-    //           .override(z.ZodNumber, () => {
-    //             return Math.floor(Math.random() * 20);
-    //           })
-    //           .generate(),
-    //       },
-    //     }),
-    // );
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(context);
