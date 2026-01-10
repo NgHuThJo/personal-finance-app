@@ -11,6 +11,7 @@ import { routeTree } from "#frontend/routeTree.gen";
 import { ErrorBoundary } from "#frontend/shared/app/error-boundary";
 import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 import "#frontend/assets/styles";
+import { Logger } from "#frontend/shared/app/logging";
 
 z.config({
   customError: (issue) => {
@@ -50,8 +51,11 @@ const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError(error, query) {
       if (query.state.data !== undefined) {
-        console.error(`Something went wrong: ${error.message}`);
+        Logger.error("Background update failed:", error);
+        return;
       }
+
+      Logger.error("Something went wrong:", error);
     },
   }),
 });

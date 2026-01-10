@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import styles from "./login.module.css";
+import { Logger } from "#frontend/shared/app/logging";
 import type { LoginUserRequest } from "#frontend/shared/client";
 import { postApiAuthLoginMutation } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { Button } from "#frontend/shared/primitives/button";
@@ -13,8 +14,10 @@ export function Login() {
     formState: { errors },
   } = useForm<LoginUserRequest>();
   const { mutate } = useMutation({
-    ...postApiAuthLoginMutation,
-    onSuccess: async () => {},
+    ...postApiAuthLoginMutation(),
+    onSuccess: async (data) => {
+      Logger.debug(`Login successful`, data);
+    },
     onError: (error) => {},
   });
 
@@ -22,7 +25,9 @@ export function Login() {
     (data) => {
       console.table(data);
 
-      mutate(data);
+      mutate({
+        body: data,
+      });
     },
     (error) => {
       console.table(error);

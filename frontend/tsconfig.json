@@ -31,6 +31,7 @@
     "strictNullChecks": true
   },
   "include": [
+    "./node_modules/@types",
     "./src/**/*",
     "./tests/**/*",
     "./scripts/**/*",
