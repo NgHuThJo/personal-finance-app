@@ -13,4 +13,10 @@ public static partial class Logger
         Message = "User{Id} does not exist"
     )]
     public static partial void LogUserIdNotFound(ILogger logger, int id);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Unhandled error")]
+    public static partial void LogUnhandledException(
+        ILogger logger,
+        Exception exception
+    );
 }

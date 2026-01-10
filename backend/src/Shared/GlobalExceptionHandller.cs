@@ -1,12 +1,16 @@
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Shared;
 
 internal sealed class GlobalExceptionHandler(
-    IProblemDetailsService problemDetailsService
+    IProblemDetailsService problemDetailsService,
+    ILogger<GlobalExceptionHandler> logger
 ) : IExceptionHandler
 {
+    private readonly ILogger<GlobalExceptionHandler> _logger = logger;
+
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
         Exception exception,
@@ -17,6 +21,8 @@ internal sealed class GlobalExceptionHandler(
         {
             _ => StatusCodes.Status500InternalServerError,
         };
+
+        Logger.LogUnhandledException(_logger, exception);
 
         return await problemDetailsService.TryWriteAsync(
             new ProblemDetailsContext
