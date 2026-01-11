@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import styles from "./login.module.css";
 import { Logger } from "#frontend/shared/app/logging";
@@ -8,17 +8,28 @@ import { postApiAuthLoginMutation } from "#frontend/shared/client/@tanstack/reac
 import { Button } from "#frontend/shared/primitives/button";
 
 export function Login() {
+  const route = useRouter();
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginUserRequest>();
   const { mutate } = useMutation({
     ...postApiAuthLoginMutation(),
     onSuccess: async (data) => {
-      Logger.debug(`Login successful`, data);
+      Logger.info(`Login successful`, data);
+      route.navigate({
+        to: "/dashboard",
+      });
     },
-    onError: (error) => {},
+    onError: (error) => {
+      Logger.info(`Login failed`, error);
+      setError("email", {
+        type: "400",
+        message: error, 
+      })
+    },
   });
 
   const onSubmit = handleSubmit(

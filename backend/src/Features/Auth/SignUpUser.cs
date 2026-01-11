@@ -52,7 +52,7 @@ public class SignUpUserRequestValidator : AbstractValidator<SignUpUserRequest>
 public sealed class SignUpUserEndpoint
 {
     public static async Task<
-        Results<Created<SignUpUserResponse>, Conflict<string>>
+        Results<Created<SignUpUserResponse>, ProblemHttpResult>
     > Create(
         [FromServices] SignUpUserHandler handler,
         [FromBody] SignUpUserRequest command
@@ -66,7 +66,7 @@ public sealed class SignUpUserEndpoint
                 $"/api/users/{user.Id}",
                 user
             ),
-            EmailAlreadyInUse(var email) => TypedResults.Conflict(
+            EmailAlreadyInUse(var email) => TypedResultsProblemDetails.Conflict(
                 $"Email address \"{email}\" is already in use"
             ),
             _ => throw new NotSupportedException(

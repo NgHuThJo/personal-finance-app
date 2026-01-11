@@ -30,7 +30,7 @@ public record GetUserByIdResponse
 public sealed class GetUserByIdEndpoint
 {
     public static async Task<
-        Results<Ok<GetUserByIdResponse>, NotFound<string>>
+        Results<Ok<GetUserByIdResponse>, ProblemHttpResult>
     > GetById([FromRoute] int userId, [FromServices] GetUserByIdHandler handler)
     {
         var foundUser = await handler.Handle(userId);
@@ -38,7 +38,7 @@ public sealed class GetUserByIdEndpoint
         return foundUser switch
         {
             UserFound(var user) => TypedResults.Ok(user),
-            UserNotFound(var id) => TypedResults.NotFound(
+            UserNotFound(var id) => TypedResultsProblemDetails.NotFound(
                 $"UserId \"{id}\" does not exist"
             ),
             _ => throw new NotSupportedException(

@@ -4,6 +4,7 @@ using backend.Features;
 using backend.Models;
 using backend.Shared;
 using FluentValidation;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
@@ -40,6 +41,14 @@ builder.Services.AddProblemDetails(options =>
     {
         context.ProblemDetails.Instance =
             $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+        context.ProblemDetails.Extensions.Add(
+            "requestId",
+            context.HttpContext.TraceIdentifier
+        );
+        var activity = context
+            .HttpContext.Features.Get<IHttpActivityFeature>()
+            ?.Activity;
+        context.ProblemDetails.Extensions.Add("traceId", activity?.Id);
     };
 });
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -94,6 +103,9 @@ Log.Logger = new LoggerConfiguration()
 builder.Services.AddSerilog(Log.Logger);
 
 var app = builder.Build();
+
+// Use Serilog middleware, add this before any other middleware for ordering reasons
+app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

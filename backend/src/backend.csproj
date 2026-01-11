@@ -8,8 +8,14 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" />
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" VersionOverride="12.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" VersionOverride="10.0.1" />
+    <PackageReference
+      Include="FluentValidation.DependencyInjectionExtensions"
+      VersionOverride="12.1.1"
+    />
+    <PackageReference
+      Include="Microsoft.AspNetCore.Authentication.JwtBearer"
+      VersionOverride="10.0.1"
+    />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" VersionOverride="10.0.1" />
     <PackageReference Include="microsoft.entityframeworkcore.design" VersionOverride="10.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

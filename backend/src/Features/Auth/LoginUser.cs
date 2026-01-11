@@ -1,6 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
-using System.Text;
 using backend.Models;
 using backend.Shared;
 using FluentValidation;
@@ -8,9 +6,6 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Tokens;
-using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
 namespace backend.Features;
 
@@ -48,7 +43,11 @@ public class LoginUserValidator : AbstractValidator<LoginUserRequest>
 public sealed class LoginUserEndpoint
 {
     public static async Task<
-        Results<Ok<LoginUserResponse>, UnauthorizedHttpResult, Conflict<string>>
+        Results<
+            Ok<LoginUserResponse>,
+            UnauthorizedHttpResult,
+            ProblemHttpResult
+        >
     > Login(
         [FromBody] LoginUserRequest command,
         [FromServices] LoginUserHandler handler
@@ -59,7 +58,7 @@ public sealed class LoginUserEndpoint
         return handlerResult switch
         {
             PasswordsDoNotMatch => TypedResults.Unauthorized(),
-            EmailDoesNotExist(var email) => TypedResults.Conflict(
+            EmailDoesNotExist(var email) => TypedResultsProblemDetails.Conflict(
                 $"Email address {email} does not exist"
             ),
             LoginSuccessful(var token) => TypedResults.Ok(token),

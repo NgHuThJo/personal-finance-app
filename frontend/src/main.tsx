@@ -9,9 +9,9 @@ import ReactDOM from "react-dom/client";
 import { z } from "zod";
 import { routeTree } from "#frontend/routeTree.gen";
 import { ErrorBoundary } from "#frontend/shared/app/error-boundary";
+import { Logger } from "#frontend/shared/app/logging";
 import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 import "#frontend/assets/styles";
-import { Logger } from "#frontend/shared/app/logging";
 
 z.config({
   customError: (issue) => {
@@ -81,7 +81,7 @@ if (!root) {
   throw new ReferenceError("DOM root not found");
 }
 
-ReactDOM.createRoot(root).render(
+ReactDOM.createRoot(root, {}).render(
   <StrictMode>
     <ErrorBoundary fallback={<div>Some error happened.</div>}>
       <QueryClientProvider client={queryClient}>

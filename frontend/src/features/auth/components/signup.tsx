@@ -3,6 +3,7 @@ import { Link, useRouter } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import styles from "./signup.module.css";
 import { IconEye } from "#frontend/assets/icons/icons";
+import { Logger } from "#frontend/shared/app/logging";
 import { postApiAuthSignupMutation } from "#frontend/shared/client/@tanstack/react-query.gen";
 import type { SignUpUserRequest } from "#frontend/shared/client/types.gen";
 import { useToggle } from "#frontend/shared/hooks/use-toggle";
@@ -20,12 +21,14 @@ export function Signup() {
     useToggle(false);
   const { mutate, isPending } = useMutation({
     ...postApiAuthSignupMutation(),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      Logger.info("Signup successful", data);
       route.navigate({
         to: "/login",
       });
     },
     onError: (error) => {
+      Logger.info("Signup failed", error);
       setError("root.server", {
         type: "409",
         message: error,

@@ -14,8 +14,9 @@ const LogLevels: LogLevels = {
   ERROR: 3,
 };
 
-let currentLogLevel: LogLevelValues =
-  process.env.NODE_ENV === "production" ? LogLevels.ERROR : LogLevels.DEBUG;
+let currentLogLevel: LogLevelValues = import.meta.env.PROD
+  ? LogLevels.WARN
+  : LogLevels.DEBUG;
 
 export class Logger {
   public static setLevel(level: LogLevelValues) {
@@ -24,22 +25,22 @@ export class Logger {
 
   public static debug(message: string, ...args: any[]) {
     if (currentLogLevel <= LogLevels.DEBUG) {
-      console.trace(`[DEBUG] ${message}`, ...args);
+      console.trace(`[${Date.now().toString()} DEBUG] ${message}`, ...args);
     }
   }
   public static info(message: string, ...args: any[]) {
     if (currentLogLevel <= LogLevels.INFO) {
-      console.info(`[INFO] ${message}`, ...args);
+      console.info(`[${Date.now().toString()} INFO] ${message}`, ...args);
     }
   }
   public static warn(message: string, ...args: any[]) {
     if (currentLogLevel <= LogLevels.WARN) {
-      console.warn(`[WARN] ${message}`, ...args);
+      console.warn(`[${Date.now().toString()} WARN] ${message}`, ...args);
     }
   }
   public static error(message: string, ...args: any[]) {
     if (currentLogLevel <= LogLevels.ERROR) {
-      console.error(`[ERROR] ${message}`, ...args);
+      console.error(`[${Date.now().toString()} ERROR] ${message}`, ...args);
     }
   }
 }
