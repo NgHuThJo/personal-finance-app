@@ -27,8 +27,8 @@ export function Login() {
       Logger.info(`Login failed`, error);
       setError("email", {
         type: "400",
-        message: error, 
-      })
+        message: error,
+      });
     },
   });
 

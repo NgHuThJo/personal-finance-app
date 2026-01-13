@@ -1,3 +1,4 @@
+using System.Net;
 using backend.Shared;
 
 namespace backend.Features;
@@ -17,6 +18,7 @@ public static class RouteGrouper
         group.RequireAuthorization();
         group
             .MapGet("{userId:int}", GetUserByIdEndpoint.GetById)
+            .ProducesProblem((int)HttpStatusCode.NotFound)
             .AddEndpointFilter<UserIdValidationFilter>();
 
         return app;
@@ -41,9 +43,12 @@ public static class RouteGrouper
         var group = app.MapGroup("/api/auth");
         group
             .MapPost("signup", SignUpUserEndpoint.Create)
+            .ProducesProblem((int)HttpStatusCode.Conflict)
             .AddValidationFilter<SignUpUserRequest>();
         group
             .MapPost("login", LoginUserEndpoint.Login)
+            .ProducesProblem((int)HttpStatusCode.Conflict)
+            .ProducesProblem((int)HttpStatusCode.Unauthorized)
             .AddValidationFilter<LoginUserRequest>();
 
         return app;

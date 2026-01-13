@@ -30,8 +30,8 @@ export function Signup() {
     onError: (error) => {
       Logger.info("Signup failed", error);
       setError("root.server", {
-        type: "409",
-        message: error,
+        type: String(error.status),
+        message: String(error.detail),
       });
     },
   });

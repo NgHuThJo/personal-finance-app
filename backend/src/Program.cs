@@ -45,10 +45,6 @@ builder.Services.AddProblemDetails(options =>
             "requestId",
             context.HttpContext.TraceIdentifier
         );
-        var activity = context
-            .HttpContext.Features.Get<IHttpActivityFeature>()
-            ?.Activity;
-        context.ProblemDetails.Extensions.Add("traceId", activity?.Id);
     };
 });
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();

@@ -44,6 +44,29 @@ export const zLoginUserResponse = z.object({
     token: z.string()
 });
 
+export const zProblemDetails = z.object({
+    type: z.optional(z.union([
+        z.null(),
+        z.string()
+    ])),
+    title: z.optional(z.union([
+        z.null(),
+        z.string()
+    ])),
+    status: z.optional(z.union([
+        z.null(),
+        z.int()
+    ])),
+    detail: z.optional(z.union([
+        z.null(),
+        z.string()
+    ])),
+    instance: z.optional(z.union([
+        z.null(),
+        z.string()
+    ]))
+});
+
 export const zSignUpUserRequest = z.object({
     email: z.string(),
     password: z.string().min(8),

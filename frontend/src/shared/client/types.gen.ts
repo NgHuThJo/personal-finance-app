@@ -43,6 +43,14 @@ export type LoginUserResponse = {
     token: string;
 };
 
+export type ProblemDetails = {
+    type?: null | string;
+    title?: null | string;
+    status?: null | number;
+    detail?: null | string;
+    instance?: null | string;
+};
+
 export type SignUpUserRequest = {
     email: string;
     password: string;
@@ -68,7 +76,7 @@ export type GetApiUsersByUserIdErrors = {
     /**
      * Not Found
      */
-    404: string;
+    404: ProblemDetails;
 };
 
 export type GetApiUsersByUserIdError = GetApiUsersByUserIdErrors[keyof GetApiUsersByUserIdErrors];
@@ -125,7 +133,7 @@ export type PostApiAuthSignupErrors = {
     /**
      * Conflict
      */
-    409: string;
+    409: ProblemDetails;
 };
 
 export type PostApiAuthSignupError = PostApiAuthSignupErrors[keyof PostApiAuthSignupErrors];
@@ -148,9 +156,13 @@ export type PostApiAuthLoginData = {
 
 export type PostApiAuthLoginErrors = {
     /**
+     * Unauthorized
+     */
+    401: ProblemDetails;
+    /**
      * Conflict
      */
-    409: string;
+    409: ProblemDetails;
 };
 
 export type PostApiAuthLoginError = PostApiAuthLoginErrors[keyof PostApiAuthLoginErrors];
