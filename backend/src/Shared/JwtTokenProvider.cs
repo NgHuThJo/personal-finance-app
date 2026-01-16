@@ -40,35 +40,4 @@ public class JwtTokenProvider(IConfiguration config)
 
         return new JsonWebTokenHandler().CreateToken(tokenDescriptor);
     }
-
-    public string GenerateTestToken(int userId)
-    {
-        var jwtConfig = _config.GetSection("Jwt:Schemas:Test");
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtConfig["SecretKey"]!)
-        );
-        var credentials = new SigningCredentials(
-            key,
-            SecurityAlgorithms.HmacSha256
-        );
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity([
-                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-                new Claim(
-                    JwtRegisteredClaimNames.Jti,
-                    Guid.NewGuid().ToString()
-                ),
-            ]),
-            Issuer = jwtConfig["Issuer"]!,
-            Audience = jwtConfig["Audience"]!,
-            Expires = DateTime.UtcNow.AddMinutes(
-                jwtConfig.GetValue<int>(jwtConfig["Expires"]!)
-            ),
-            SigningCredentials = credentials,
-        };
-
-        return new JsonWebTokenHandler().CreateToken(tokenDescriptor);
-    }
 }
