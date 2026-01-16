@@ -29,7 +29,8 @@ export function Signup() {
     },
     onError: (error) => {
       Logger.info("Signup failed", error);
-      setError("root.server", {
+
+      setError("root.server-conflict", {
         type: String(error.status),
         message: String(error.detail),
       });
@@ -50,6 +51,7 @@ export function Signup() {
       <label data-testid="label-name" htmlFor="name">
         <span>Name</span>
         <input
+          className={styles.input}
           {...register("name", {
             required: {
               value: true,
@@ -65,6 +67,7 @@ export function Signup() {
       <label data-testid="label-email" htmlFor="email">
         <span>Email address</span>
         <input
+          className={styles.input}
           {...register("email", {
             required: {
               value: true,
@@ -76,14 +79,15 @@ export function Signup() {
         <span data-testid="error" className={styles.error}>
           {errors.email?.message}
         </span>
-        <span data-testid="server-error" className={styles.error}>
-          {errors["root"]?.server?.message}
+        <span data-testid="server-conflict" className={styles.error}>
+          {errors["root"]?.["server-conflict"]?.message}
         </span>
       </label>
       <label data-testid="label-password" htmlFor="password">
         <span>Password</span>
         <div className={styles.stack}>
           <input
+            className={styles.input}
             {...register("password", {
               required: {
                 value: true,

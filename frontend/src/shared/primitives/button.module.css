@@ -318,6 +318,7 @@
 }
 
 .login {
+  padding: var(--spacing-6);
   color: var(--c-login-button);
   background-color: var(--bgc-login-button);
 }

@@ -57,9 +57,11 @@ public sealed class LoginUserEndpoint
 
         return handlerResult switch
         {
-            PasswordsDoNotMatch => TypedResults.Unauthorized(),
             EmailDoesNotExist(var email) => TypedResultsProblemDetails.Conflict(
                 $"Email address {email} does not exist"
+            ),
+            PasswordsDoNotMatch => TypedResultsProblemDetails.Unauthorized(
+                "Passwords do not match"
             ),
             LoginSuccessful(var token) => TypedResults.Ok(token),
             _ => throw new NotSupportedException(

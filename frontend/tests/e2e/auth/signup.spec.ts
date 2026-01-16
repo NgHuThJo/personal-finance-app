@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { test } from "../../fixtures/open-meteo-api";
+import { test } from "../../fixtures/api";
 
 test.describe("signup", () => {
   test("sign up and redirect to login route", async ({ page }) => {
@@ -33,9 +33,9 @@ test.describe("signup", () => {
 
     await submitButton.click();
 
-    await expect(name.getByTestId("error")).not.toBeEmpty();
-    await expect(email.getByTestId("error")).not.toBeEmpty();
-    await expect(password.getByTestId("error")).not.toBeEmpty();
+    await expect(name.getByTestId("error")).toHaveText(/.+/i);
+    await expect(email.getByTestId("error")).toHaveText(/.+/i);
+    await expect(password.getByTestId("error")).toHaveText(/.+/i);
   });
 
   test("show server error message if email already exists after submit", async ({
@@ -46,7 +46,10 @@ test.describe("signup", () => {
     await page.route("**/api/auth/signup", (r) =>
       r.fulfill({
         status: 409,
-        body: JSON.stringify("some error message with email"),
+        body: JSON.stringify({
+          detail: "email is already in use",
+          status: 401,
+        }),
       }),
     );
 
@@ -59,10 +62,10 @@ test.describe("signup", () => {
 
     await name.getByLabel("name").fill("somevalidname");
     await email.getByLabel("email").fill("email@email.com");
-    await password.getByLabel("password").fill("password");
+    await password.getByLabel("password").fill("validpassword");
 
     await submitButton.click();
 
-    await expect(email.getByTestId("server-error")).not.toBeEmpty();
+    await expect(email.getByTestId("server-conflict")).toHaveText(/.+/i);
   });
 });

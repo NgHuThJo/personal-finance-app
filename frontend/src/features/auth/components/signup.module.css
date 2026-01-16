@@ -1,7 +1,6 @@
 .form {
   display: grid;
   gap: 2rem;
-  max-width: 35rem;
   padding: 2rem;
   border-radius: var(--border-radius-6);
   background-color: var(--bgc-dialog);
@@ -10,10 +9,25 @@
     display: grid;
     gap: 0.5rem;
     grid-template-rows: repeat(3, auto);
+    font-weight: var(--fw-medium);
+    color: var(--c-label);
 
     & > :first-child {
       grid-row: 1 / 2;
     }
+  }
+
+  p:last-child {
+    text-align: center;
+  }
+
+  h1 {
+    font-size: var(--fs-4);
+    font-weight: var(--fw-bold);
+  }
+
+  a {
+    text-decoration: underline;
   }
 }
 
@@ -31,5 +45,17 @@
 
   button {
     justify-self: end;
+  }
+}
+
+.input {
+  padding: var(--spacing-3);
+  border-radius: var(--border-radius-4);
+  font-weight: var(--fw-bold);
+  font-size: 1rem;
+
+  &:focus-visible {
+    outline: 0.125rem solid var(--c-outline-input);
+    outline-offset: 0.125rem;
   }
 }

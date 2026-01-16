@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import styles from "./index.module.css";
+import styles from "./dashboard.module.css";
 import { Logout } from "#frontend/assets/icons/icons";
 import { BottomSummary } from "#frontend/features/dashboard/components/bottom-summary";
 import { TopSummary } from "#frontend/features/dashboard/components/top-summary";

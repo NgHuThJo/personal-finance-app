@@ -30,4 +30,9 @@
   --bgc-dialog: var(--white);
 
   --c-error: var(--red);
+
+  --c-outline-input: var(--grey-900);
+
+  --c-hero-description: var(--white);
+  --c-label: var(--grey-500);
 }
