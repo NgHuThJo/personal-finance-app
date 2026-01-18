@@ -11,15 +11,12 @@ public class AppDbContext(
     private readonly TimestampInterceptor _timeStampInterceptor =
         timestampInterceptor;
 
-    // public DbSet<Board> Boards { get; set; }
-    // public DbSet<BoardColumn> BoardColumns { get; set; }
-    // public DbSet<KanbanTask> KanbanTasks { get; set; }
-    // public DbSet<Subtask> SubTasks { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Balance> Balances { get; set; }
     public DbSet<Pot> Pots { get; set; }
     public DbSet<Budget> Budgets { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnConfiguring(
         DbContextOptionsBuilder optionsBuilder
@@ -55,6 +52,11 @@ public class AppDbContext(
             .WithMany(u => u.ReceivedTransactions)
             .OnDelete(DeleteBehavior.SetNull);
 
+        modelBuilder
+            .Entity<RefreshToken>()
+            .Property(r => r.Token)
+            .HasMaxLength(200);
+        modelBuilder.Entity<RefreshToken>().HasIndex(r => r.Token).IsUnique();
         // modelBuilder.Entity<Board>().HasIndex(b => b.Name).IsUnique();
 
         // modelBuilder

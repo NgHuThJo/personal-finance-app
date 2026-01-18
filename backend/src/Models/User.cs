@@ -11,4 +11,5 @@ public class User
     public List<Transaction> ReceivedTransactions { get; set; } = [];
     public List<Budget> Budgets { get; set; } = [];
     public List<Pot> Pots { get; set; } = [];
+    public List<RefreshToken> RefreshTokens { get; set; } = [];
 }
