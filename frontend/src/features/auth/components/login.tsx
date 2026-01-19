@@ -8,6 +8,7 @@ import type { LoginUserRequest } from "#frontend/shared/client";
 import { postApiAuthLoginMutation } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { useToggle } from "#frontend/shared/hooks/use-toggle";
 import { Button } from "#frontend/shared/primitives/button";
+import { setLocalStorageItem } from "#frontend/shared/utils/localstorage";
 
 export function Login() {
   const { isOpen: isPasswordVisible, toggle: togglePasswordVisibility } =
@@ -23,6 +24,8 @@ export function Login() {
     ...postApiAuthLoginMutation(),
     onSuccess: async (data) => {
       Logger.info(`Login successful`, data);
+      setLocalStorageItem("jwt", data.token);
+
       route.navigate({
         to: "/dashboard",
       });
@@ -61,6 +64,7 @@ export function Login() {
       });
     },
     (error) => {
+      Logger.error("Submission failed", error);
       console.table(error);
     },
   );
