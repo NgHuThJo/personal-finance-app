@@ -48,6 +48,15 @@ public sealed class GetUserByIdEndpoint
     }
 }
 
+public partial class Logger
+{
+    [LoggerMessage(
+        Level = LogLevel.Information,
+        Message = "User{Id} does not exist"
+    )]
+    public static partial void LogUserIdNotFound(ILogger logger, int id);
+}
+
 public sealed class GetUserByIdHandler(
     AppDbContext context,
     ILogger<GetUserByIdHandler> logger

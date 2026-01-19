@@ -76,6 +76,15 @@ public sealed class SignUpUserEndpoint
     }
 }
 
+partial class Logger
+{
+    [LoggerMessage(
+        Level = LogLevel.Information,
+        Message = "{Email} is already in use"
+    )]
+    public static partial void LogEmailOfUser(ILogger logger, string email);
+}
+
 public sealed class SignUpUserHandler(
     AppDbContext context,
     ILogger<SignUpUserHandler> logger
