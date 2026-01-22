@@ -40,12 +40,6 @@ public class CreateRefreshTokenEndpoint
     }
 }
 
-// public partial class  Logger
-// {
-//     [LoggerMessage(Level = LogLevel.Information)]
-//     public partial void LogNoRefreshTokenSent()
-// }
-
 public class CreateRefreshTokenHandler(
     AppDbContext context,
     JwtTokenProvider provider,

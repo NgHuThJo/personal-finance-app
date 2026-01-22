@@ -11,7 +11,7 @@ public class JwtTokenProvider(IConfiguration config)
 {
     private readonly IConfiguration _config = config;
 
-    public string GenerateToken(int userId)
+    public string GenerateAccessToken(int userId)
     {
         var jwtConfig = _config.GetSection("Jwt:Schemas:Bearer");
         var key = new SymmetricSecurityKey(

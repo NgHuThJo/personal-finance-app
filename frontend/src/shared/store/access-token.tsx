@@ -1,42 +1,48 @@
-import { createContext, use, useState, type PropsWithChildren } from "react";
-import { createStore, useStore } from "zustand";
-import { type StoreApi } from "zustand";
+import { createStore } from "zustand";
 
 type AccessTokenStore = {
   accessToken: string | null;
   setAcessToken: (newAccessToken: string) => void;
 };
 
-export const useAccessTokenStore = <T,>(
-  selector: (state: AccessTokenStore) => T,
-) => {
-  const store = use(AccessTokenContext);
+// export const useAccessTokenStore = <T,>(
+//   selector: (state: AccessTokenStore) => T,
+// ) => {
+//   const store = use(AccessTokenContext);
 
-  if (store === null) {
-    throw new Error("AccessTokenContext is not set");
-  }
+//   if (store === null) {
+//     throw new Error("AccessTokenContext is not set");
+//   }
 
-  return useStore(store, selector);
-};
+//   return useStore(store, selector);
+// };
 
-export const useAcceesToken = () => {
-  useAccessTokenStore((state) => state.accessToken);
-};
+// export const getAccessTokenStore = () => {};
 
-const AccessTokenContext = createContext<StoreApi<AccessTokenStore> | null>(
-  null,
-);
+export const useAccessToken = () => accessTokenStore.getState().accessToken;
 
-export function AccessTokenProvider({ children }: PropsWithChildren) {
-  const [store] = useState(
-    createStore<AccessTokenStore>((set) => ({
-      accessToken: null,
-      setAcessToken: (newAccessToken: string) =>
-        set(() => ({
-          accessToken: newAccessToken,
-        })),
+// const AccessTokenContext = createContext<StoreApi<AccessTokenStore> | null>(
+//   null,
+// );
+
+export const accessTokenStore = createStore<AccessTokenStore>((set) => ({
+  accessToken: null,
+  setAcessToken: (newAccessToken: string) =>
+    set(() => ({
+      accessToken: newAccessToken,
     })),
-  );
+}));
 
-  return <AccessTokenContext value={store}>{children}</AccessTokenContext>;
-}
+// export function AccessTokenProvider({ children }: PropsWithChildren) {
+//   const [store] = useState(
+//     createStore<AccessTokenStore>((set) => ({
+//       accessToken: null,
+//       setAcessToken: (newAccessToken: string) =>
+//         set(() => ({
+//           accessToken: newAccessToken,
+//         })),
+//     })),
+//   );
+
+//   return <AccessTokenContext value={store}>{children}</AccessTokenContext>;
+// }

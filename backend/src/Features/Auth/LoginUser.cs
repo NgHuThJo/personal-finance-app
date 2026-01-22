@@ -28,7 +28,8 @@ public record LoginUserRequest
 
 public record LoginUserResponse
 {
-    public required string Token { get; init; }
+    public required string AccessToken { get; init; }
+    public required string RefreshToken { get; init; }
 }
 
 public class LoginUserValidator : AbstractValidator<LoginUserRequest>
@@ -107,8 +108,24 @@ public class LoginUserHandler(
             return new PasswordsDoNotMatch();
         }
 
-        var token = _tokenProvider.GenerateToken(userInfo.Id);
+        var accessToken = _tokenProvider.GenerateAccessToken(userInfo.Id);
+        var refreshToken = new RefreshToken
+        {
+            Token = _tokenProvider.GenerateRefreshToken(),
+            UserId = userInfo.Id,
+            ExpiresAtUtc = DateTime.UtcNow.AddDays(7),
+        };
 
-        return new LoginSuccessful(new LoginUserResponse { Token = token });
+        _context.Add(refreshToken);
+
+        await _context.SaveChangesAsync();
+
+        return new LoginSuccessful(
+            new LoginUserResponse
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken.Token,
+            }
+        );
     }
 }
