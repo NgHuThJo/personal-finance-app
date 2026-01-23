@@ -5,6 +5,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Features;
 
+public static partial class CreateRefreshToken
+{
+    [LoggerMessage(
+        Level = LogLevel.Information,
+        Message = "No refresh token sent"
+    )]
+    public static partial void NoRefreshTokenSent(ILogger logger);
+
+    [LoggerMessage(
+        Level = LogLevel.Information,
+        Message = "Refresh token has not expired"
+    )]
+    public static partial void RefreshTokenHasNotExpired(ILogger logger);
+
+    [LoggerMessage(
+        Level = LogLevel.Information,
+        Message = "Refresh token revoked"
+    )]
+    public static partial void RefreshTokenRevoked(ILogger logger);
+}
+
 public abstract record CreateRefreshTokenResult;
 
 public record NoRefreshTokenSent : CreateRefreshTokenResult;
@@ -59,16 +80,19 @@ public class CreateRefreshTokenHandler(
 
         if (tokenFromDb is null)
         {
+            CreateRefreshToken.NoRefreshTokenSent(_logger);
             return new NoRefreshTokenSent();
         }
 
         if (tokenFromDb.IsRevoked)
         {
+            CreateRefreshToken.RefreshTokenRevoked(_logger);
             return new RefreshTokenRevoked();
         }
 
         if (tokenFromDb.ExpiresAtUtc > DateTime.UtcNow)
         {
+            CreateRefreshToken.RefreshTokenHasNotExpired(_logger);
             return new RefreshTokenHasNotExpired();
         }
 

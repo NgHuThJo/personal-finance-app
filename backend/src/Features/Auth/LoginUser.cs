@@ -9,6 +9,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Features;
 
+public static partial class LoginUserLogger
+{
+    [LoggerMessage(
+        Level = LogLevel.Information,
+        Message = "Passwords do not match"
+    )]
+    public static partial void PasswordsDoNotMatch(ILogger logger);
+
+    [LoggerMessage(
+        Level = LogLevel.Information,
+        Message = "Email address {Email} does not exist"
+    )]
+    public static partial void EmailDoesNotExist(ILogger logger, string email);
+}
+
 public abstract record LoginUserResult;
 
 public record PasswordsDoNotMatch : LoginUserResult;
@@ -74,11 +89,13 @@ public sealed class LoginUserEndpoint
 
 public class LoginUserHandler(
     AppDbContext context,
-    JwtTokenProvider tokenProvider
+    JwtTokenProvider tokenProvider,
+    ILogger<LoginUserHandler> logger
 )
 {
     private readonly AppDbContext _context = context;
     private readonly JwtTokenProvider _tokenProvider = tokenProvider;
+    private readonly ILogger<LoginUserHandler> _logger = logger;
 
     public async Task<LoginUserResult> Handle(LoginUserRequest command)
     {
@@ -95,6 +112,7 @@ public class LoginUserHandler(
 
         if (userInfo is null)
         {
+            LoginUserLogger.EmailDoesNotExist(_logger, command.Email);
             return new EmailDoesNotExist(command.Email);
         }
 
@@ -105,6 +123,7 @@ public class LoginUserHandler(
 
         if (passwordVerificationResult == PasswordVerificationResult.Failed)
         {
+            LoginUserLogger.PasswordsDoNotMatch(_logger);
             return new PasswordsDoNotMatch();
         }
 

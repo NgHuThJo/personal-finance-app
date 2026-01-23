@@ -9,6 +9,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Features;
 
+public static partial class GetUserByIdLogger
+{
+    [LoggerMessage(
+        Level = LogLevel.Information,
+        Message = "User{Id} does not exist"
+    )]
+    public static partial void UserIdNotFound(ILogger logger, int id);
+}
+
 public abstract record GetUserByIdResult;
 
 public record UserFound(GetUserByIdResponse User) : GetUserByIdResult;
@@ -48,15 +57,6 @@ public sealed class GetUserByIdEndpoint
     }
 }
 
-public partial class Logger
-{
-    [LoggerMessage(
-        Level = LogLevel.Information,
-        Message = "User{Id} does not exist"
-    )]
-    public static partial void LogUserIdNotFound(ILogger logger, int id);
-}
-
 public sealed class GetUserByIdHandler(
     AppDbContext context,
     ILogger<GetUserByIdHandler> logger
@@ -74,7 +74,7 @@ public sealed class GetUserByIdHandler(
 
         if (user is null)
         {
-            Logger.LogUserIdNotFound(_logger, userId);
+            GetUserByIdLogger.UserIdNotFound(_logger, userId);
             return new UserNotFound(userId);
         }
 

@@ -9,6 +9,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Features;
 
+public static partial class SignUpUserLogger
+{
+    [LoggerMessage(
+        Level = LogLevel.Information,
+        Message = "{Email} is already in use"
+    )]
+    public static partial void EmailNotAvailable(ILogger logger, string email);
+}
+
 public abstract record SignUpUserResult;
 
 public record SignupSuccessful(SignUpUserResponse User) : SignUpUserResult;
@@ -76,15 +85,6 @@ public sealed class SignUpUserEndpoint
     }
 }
 
-partial class Logger
-{
-    [LoggerMessage(
-        Level = LogLevel.Information,
-        Message = "{Email} is already in use"
-    )]
-    public static partial void LogEmailOfUser(ILogger logger, string email);
-}
-
 public sealed class SignUpUserHandler(
     AppDbContext context,
     ILogger<SignUpUserHandler> logger
@@ -102,7 +102,7 @@ public sealed class SignUpUserHandler(
 
         if (isEmailNotAvailable)
         {
-            Logger.LogEmailOfUser(_logger, command.Email);
+            SignUpUserLogger.EmailNotAvailable(_logger, command.Email);
             return new EmailAlreadyInUse(command.Email);
         }
 

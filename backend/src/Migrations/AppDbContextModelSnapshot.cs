@@ -102,11 +102,6 @@ namespace backend.Migrations
                     b.ToTable("Pots");
                 });
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
             modelBuilder.Entity("backend.Models.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
@@ -118,12 +113,9 @@ namespace backend.Migrations
                     b.Property<DateTime>("ExpiresAtUtc")
                         .HasColumnType("timestamp with time zone");
 
-<<<<<<< Updated upstream
-=======
                     b.Property<bool>("IsRevoked")
                         .HasColumnType("boolean");
 
->>>>>>> Stashed changes
                     b.Property<string>("Token")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -142,10 +134,6 @@ namespace backend.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
             modelBuilder.Entity("backend.Models.Transaction", b =>
                 {
                     b.Property<int>("Id")
