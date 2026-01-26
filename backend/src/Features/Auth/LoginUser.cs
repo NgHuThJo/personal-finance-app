@@ -59,11 +59,7 @@ public class LoginUserValidator : AbstractValidator<LoginUserRequest>
 public sealed class LoginUserEndpoint
 {
     public static async Task<
-        Results<
-            Ok<LoginUserResponse>,
-            UnauthorizedHttpResult,
-            ProblemHttpResult
-        >
+        Results<Ok<LoginUserResponse>, ProblemHttpResult>
     > Login(
         [FromBody] LoginUserRequest command,
         [FromServices] LoginUserHandler handler

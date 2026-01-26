@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetApiPotsData, GetApiPotsResponses, GetApiUsersByUserIdData, GetApiUsersByUserIdErrors, GetApiUsersByUserIdResponses, PostApiAuthLoginData, PostApiAuthLoginErrors, PostApiAuthLoginResponses, PostApiAuthSignupData, PostApiAuthSignupErrors, PostApiAuthSignupResponses, PostApiPotsData, PostApiPotsResponses } from './types.gen';
+import type { GetApiAuthRefreshData, GetApiAuthRefreshErrors, GetApiAuthRefreshResponses, GetApiPotsData, GetApiPotsResponses, GetApiUsersByUserIdData, GetApiUsersByUserIdErrors, GetApiUsersByUserIdResponses, PostApiAuthLoginData, PostApiAuthLoginErrors, PostApiAuthLoginResponses, PostApiAuthSignupData, PostApiAuthSignupErrors, PostApiAuthSignupResponses, PostApiPotsData, PostApiPotsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -55,3 +55,5 @@ export const postApiAuthLogin = <ThrowOnError extends boolean = false>(options: 
         ...options.headers
     }
 });
+
+export const getApiAuthRefresh = <ThrowOnError extends boolean = false>(options?: Options<GetApiAuthRefreshData, ThrowOnError>) => (options?.client ?? client).get<GetApiAuthRefreshResponses, GetApiAuthRefreshErrors, ThrowOnError>({ url: '/api/auth/refresh', ...options });

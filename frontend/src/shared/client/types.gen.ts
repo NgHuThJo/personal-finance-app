@@ -18,6 +18,10 @@ export type CreatePotResponse = {
     userId: number;
 };
 
+export type CreateRefreshTokenResponse = {
+    accessToken: string;
+};
+
 export type GetAllPotsRequest = {
     userId: number;
 };
@@ -40,7 +44,8 @@ export type LoginUserRequest = {
 };
 
 export type LoginUserResponse = {
-    token: string;
+    accessToken: string;
+    refreshToken: string;
 };
 
 export type ProblemDetails = {
@@ -175,3 +180,28 @@ export type PostApiAuthLoginResponses = {
 };
 
 export type PostApiAuthLoginResponse = PostApiAuthLoginResponses[keyof PostApiAuthLoginResponses];
+
+export type GetApiAuthRefreshData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/auth/refresh';
+};
+
+export type GetApiAuthRefreshErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ProblemDetails;
+};
+
+export type GetApiAuthRefreshError = GetApiAuthRefreshErrors[keyof GetApiAuthRefreshErrors];
+
+export type GetApiAuthRefreshResponses = {
+    /**
+     * OK
+     */
+    200: CreateRefreshTokenResponse;
+};
+
+export type GetApiAuthRefreshResponse = GetApiAuthRefreshResponses[keyof GetApiAuthRefreshResponses];

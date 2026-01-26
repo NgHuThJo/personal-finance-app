@@ -24,7 +24,7 @@ export function Login() {
     ...postApiAuthLoginMutation(),
     onSuccess: async (data) => {
       Logger.info(`Login successful`, data);
-      setLocalStorageItem("jwt", data.token);
+      setLocalStorageItem("jwt", data.accessToken);
 
       route.navigate({
         to: "/dashboard",
@@ -49,7 +49,7 @@ export function Login() {
           break;
         }
         default: {
-          Logger.error("Unexpected server error in Signup component", error);
+          Logger.error("Unexpected server error in Login component", error);
         }
       }
     },

@@ -1,5 +1,6 @@
 using backend.Models;
 using backend.Shared;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,9 +10,9 @@ public static partial class CreateRefreshToken
 {
     [LoggerMessage(
         Level = LogLevel.Information,
-        Message = "No refresh token sent"
+        Message = "User has no active refresh token"
     )]
-    public static partial void NoRefreshTokenSent(ILogger logger);
+    public static partial void UserHasNoActiveRefreshToken(ILogger logger);
 
     [LoggerMessage(
         Level = LogLevel.Information,
@@ -28,24 +29,25 @@ public static partial class CreateRefreshToken
 
 public abstract record CreateRefreshTokenResult;
 
-public record NoRefreshTokenSent : CreateRefreshTokenResult;
+public record UserHasNoActiveRefreshToken : CreateRefreshTokenResult;
 
 public record RefreshTokenHasNotExpired : CreateRefreshTokenResult;
 
 public record RefreshTokenRevoked : CreateRefreshTokenResult;
 
-public record NewTokenPairCreated(CreateRefreshTokenResponse Tokens)
+public record NewTokenPairCreated(string AccessToken, string RefreshToken)
     : CreateRefreshTokenResult;
 
 public record CreateRefreshTokenResponse
 {
     public required string AccessToken { get; set; }
-    public required string RefreshToken { get; set; }
 }
 
 public class CreateRefreshTokenEndpoint
 {
-    public async Task Create(
+    public static async Task<
+        Results<ProblemHttpResult, Ok<CreateRefreshTokenResponse>>
+    > Get(
         HttpContext httpContext,
         [FromServices] CreateRefreshTokenHandler handler
     )
@@ -54,10 +56,49 @@ public class CreateRefreshTokenEndpoint
 
         if (refreshToken is null)
         {
-            return;
+            return TypedResultsProblemDetails.Unauthorized(
+                "No refresh token found in request header"
+            );
         }
 
-        await handler.Handle(refreshToken);
+        var tokens = await handler.Handle(refreshToken);
+
+        switch (tokens)
+        {
+            case UserHasNoActiveRefreshToken:
+            {
+                return TypedResultsProblemDetails.Unauthorized(
+                    "User has no active  refresh token"
+                );
+            }
+            case RefreshTokenHasNotExpired:
+            {
+                return TypedResultsProblemDetails.Unauthorized(
+                    "Refresh token has not expired"
+                );
+            }
+            case RefreshTokenRevoked:
+            {
+                return TypedResultsProblemDetails.Unauthorized(
+                    "Refresh token revoked"
+                );
+            }
+            case NewTokenPairCreated(var access, var refresh):
+            {
+                httpContext.Response.Cookies.Append("refresh_token", refresh);
+
+                return TypedResults.Ok(
+                    new CreateRefreshTokenResponse { AccessToken = access }
+                );
+            }
+            default:
+            {
+                throw new NotSupportedException(
+                    $"An unknown error occurred in {typeof(CreateRefreshTokenEndpoint).Name}"
+                );
+            }
+        }
+        ;
     }
 }
 
@@ -80,8 +121,8 @@ public class CreateRefreshTokenHandler(
 
         if (tokenFromDb is null)
         {
-            CreateRefreshToken.NoRefreshTokenSent(_logger);
-            return new NoRefreshTokenSent();
+            CreateRefreshToken.UserHasNoActiveRefreshToken(_logger);
+            return new UserHasNoActiveRefreshToken();
         }
 
         if (tokenFromDb.IsRevoked)
@@ -108,11 +149,8 @@ public class CreateRefreshTokenHandler(
             .ExecuteDeleteAsync();
 
         return new NewTokenPairCreated(
-            new CreateRefreshTokenResponse
-            {
-                AccessToken = newAccessToken,
-                RefreshToken = tokenFromDb.Token,
-            }
+            AccessToken: newAccessToken,
+            RefreshToken: tokenFromDb.Token
         );
     }
 }

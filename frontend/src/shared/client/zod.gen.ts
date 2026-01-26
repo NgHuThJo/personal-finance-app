@@ -16,6 +16,10 @@ export const zCreatePotResponse = z.object({
     userId: z.int().gte(0).lte(2147483647)
 });
 
+export const zCreateRefreshTokenResponse = z.object({
+    accessToken: z.string()
+});
+
 export const zGetAllPotsRequest = z.object({
     userId: z.int().gte(0).lte(2147483647)
 });
@@ -41,7 +45,8 @@ export const zLoginUserRequest = z.object({
 });
 
 export const zLoginUserResponse = z.object({
-    token: z.string()
+    accessToken: z.string(),
+    refreshToken: z.string()
 });
 
 export const zProblemDetails = z.object({
@@ -135,3 +140,14 @@ export const zPostApiAuthLoginData = z.object({
  * OK
  */
 export const zPostApiAuthLoginResponse = zLoginUserResponse;
+
+export const zGetApiAuthRefreshData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+/**
+ * OK
+ */
+export const zGetApiAuthRefreshResponse = zCreateRefreshTokenResponse;

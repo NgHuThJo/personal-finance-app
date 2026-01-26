@@ -50,6 +50,9 @@ public static class RouteGrouper
             .ProducesProblem((int)HttpStatusCode.Conflict)
             .ProducesProblem((int)HttpStatusCode.Unauthorized)
             .AddValidationFilter<LoginUserRequest>();
+        group
+            .MapGet("refresh", CreateRefreshTokenEndpoint.Get)
+            .ProducesProblem((int)HttpStatusCode.Unauthorized);
 
         return app;
     }

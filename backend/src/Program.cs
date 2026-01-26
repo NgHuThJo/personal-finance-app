@@ -4,7 +4,6 @@ using backend.Features;
 using backend.Models;
 using backend.Shared;
 using FluentValidation;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
@@ -66,7 +65,11 @@ builder.Services.AddCors(options =>
         "DevCorsPolicy",
         policy =>
         {
-            policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
+            policy
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .WithOrigins("http://localhost:5173");
         }
     );
 });

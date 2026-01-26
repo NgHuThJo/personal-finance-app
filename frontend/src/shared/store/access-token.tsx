@@ -31,6 +31,10 @@ export const accessTokenStore = createStore<AccessTokenStore>((set) => ({
     set(() => ({
       accessToken: newAccessToken,
     })),
+  logout: () =>
+    set(() => ({
+      accessToken: null,
+    })),
 }));
 
 // export function AccessTokenProvider({ children }: PropsWithChildren) {

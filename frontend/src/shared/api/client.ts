@@ -13,6 +13,7 @@
   return data;
 } */
 
+import { getApiAuthRefresh } from "#frontend/shared/client";
 import { client } from "#frontend/shared/client/client.gen";
 import { useAccessToken } from "#frontend/shared/store/access-token";
 
@@ -28,20 +29,34 @@ clientWithAuth.interceptors.request.use(async (request) => {
   return request;
 });
 
-client.interceptors.response.use(async (response, options) => {
+clientWithAuth.interceptors.response.use(async (response, request, options) => {
   let refreshResponse;
   let retryResponse;
 
-  if (response.status === 401) {
-    refreshResponse = await client.post({
-      url: `${import.meta.env.VITE_BACKEND_BASE_URL}/api/auth/refresh`,
-      credentials: "include",
-    });
+  if (response.status < 400) {
+    return response;
   }
 
-  // if (refreshResponse?.response.status !== 401) {
-  //   retryResponse = await client.
-  // }
+  if (response.status === 401) {
+    refreshResponse = await getApiAuthRefresh({
+      credentials: "include",
+    });
 
-  return response;
+    const accessToken = refreshResponse.data?.accessToken;
+
+    if (accessToken) {
+      const newRequest = new Request({
+        ...request,
+      });
+      newRequest.headers.set("Authorization", `Beaer ${accessToken}`);
+
+      retryResponse = await fetch(newRequest);
+
+      return retryResponse;
+    }
+  }
+
+  throw new Error("Some error happened", {
+    cause: response.statusText,
+  });
 });

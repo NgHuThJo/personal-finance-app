@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { getApiPots, getApiUsersByUserId, type Options, postApiAuthLogin, postApiAuthSignup, postApiPots } from '../sdk.gen';
-import type { GetApiPotsData, GetApiPotsResponse, GetApiUsersByUserIdData, GetApiUsersByUserIdError, GetApiUsersByUserIdResponse, PostApiAuthLoginData, PostApiAuthLoginError, PostApiAuthLoginResponse, PostApiAuthSignupData, PostApiAuthSignupError, PostApiAuthSignupResponse, PostApiPotsData, PostApiPotsResponse } from '../types.gen';
+import { getApiAuthRefresh, getApiPots, getApiUsersByUserId, type Options, postApiAuthLogin, postApiAuthSignup, postApiPots } from '../sdk.gen';
+import type { GetApiAuthRefreshData, GetApiAuthRefreshError, GetApiAuthRefreshResponse, GetApiPotsData, GetApiPotsResponse, GetApiUsersByUserIdData, GetApiUsersByUserIdError, GetApiUsersByUserIdResponse, PostApiAuthLoginData, PostApiAuthLoginError, PostApiAuthLoginResponse, PostApiAuthSignupData, PostApiAuthSignupError, PostApiAuthSignupResponse, PostApiPotsData, PostApiPotsResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -110,3 +110,18 @@ export const postApiAuthLoginMutation = (options?: Partial<Options<PostApiAuthLo
     };
     return mutationOptions;
 };
+
+export const getApiAuthRefreshQueryKey = (options?: Options<GetApiAuthRefreshData>) => createQueryKey('getApiAuthRefresh', options);
+
+export const getApiAuthRefreshOptions = (options?: Options<GetApiAuthRefreshData>) => queryOptions<GetApiAuthRefreshResponse, GetApiAuthRefreshError, GetApiAuthRefreshResponse, ReturnType<typeof getApiAuthRefreshQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getApiAuthRefresh({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiAuthRefreshQueryKey(options)
+});
