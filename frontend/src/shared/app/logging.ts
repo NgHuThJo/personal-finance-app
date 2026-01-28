@@ -15,7 +15,7 @@ const LogLevels: LogLevels = {
 };
 
 let currentLogLevel: LogLevelValues = import.meta.env.PROD
-  ? LogLevels.WARN
+  ? LogLevels.INFO
   : LogLevels.DEBUG;
 
 export class Logger {

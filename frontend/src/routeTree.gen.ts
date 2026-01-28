@@ -9,74 +9,83 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PathlessDashboardLayoutRouteImport } from './routes/_pathless-dashboard-layout'
-import { Route as PathlessAuthLayoutRouteImport } from './routes/_pathless-auth-layout'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as PathlessDashboardLayoutPotsRouteImport } from './routes/_pathless-dashboard-layout/pots'
-import { Route as PathlessDashboardLayoutDashboardRouteImport } from './routes/_pathless-dashboard-layout/dashboard'
-import { Route as PathlessAuthLayoutSignupRouteImport } from './routes/_pathless-auth-layout/signup'
-import { Route as PathlessAuthLayoutLoginRouteImport } from './routes/_pathless-auth-layout/login'
+import { Route as Pathless_root_layoutRouteImport } from './routes/_pathless_root_layout'
+import { Route as PathlessRootLayoutIndexRouteImport } from './routes/_pathless-root-layout/index'
+import { Route as PathlessRootLayoutPathlessDashboardLayoutRouteImport } from './routes/_pathless-root-layout/_pathless-dashboard-layout'
+import { Route as PathlessRootLayoutPathlessAuthLayoutRouteImport } from './routes/_pathless-root-layout/_pathless-auth-layout'
+import { Route as PathlessRootLayoutPathlessDashboardLayoutPotsRouteImport } from './routes/_pathless-root-layout/_pathless-dashboard-layout/pots'
+import { Route as PathlessRootLayoutPathlessDashboardLayoutDashboardRouteImport } from './routes/_pathless-root-layout/_pathless-dashboard-layout/dashboard'
+import { Route as PathlessRootLayoutPathlessAuthLayoutSignupRouteImport } from './routes/_pathless-root-layout/_pathless-auth-layout/signup'
+import { Route as PathlessRootLayoutPathlessAuthLayoutLoginRouteImport } from './routes/_pathless-root-layout/_pathless-auth-layout/login'
 
-const PathlessDashboardLayoutRoute = PathlessDashboardLayoutRouteImport.update({
-  id: '/_pathless-dashboard-layout',
+const Pathless_root_layoutRoute = Pathless_root_layoutRouteImport.update({
+  id: '/_pathless_root_layout',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PathlessAuthLayoutRoute = PathlessAuthLayoutRouteImport.update({
-  id: '/_pathless-auth-layout',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
+const PathlessRootLayoutIndexRoute = PathlessRootLayoutIndexRouteImport.update({
+  id: '/_pathless-root-layout/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PathlessDashboardLayoutPotsRoute =
-  PathlessDashboardLayoutPotsRouteImport.update({
+const PathlessRootLayoutPathlessDashboardLayoutRoute =
+  PathlessRootLayoutPathlessDashboardLayoutRouteImport.update({
+    id: '/_pathless-root-layout/_pathless-dashboard-layout',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PathlessRootLayoutPathlessAuthLayoutRoute =
+  PathlessRootLayoutPathlessAuthLayoutRouteImport.update({
+    id: '/_pathless-root-layout/_pathless-auth-layout',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PathlessRootLayoutPathlessDashboardLayoutPotsRoute =
+  PathlessRootLayoutPathlessDashboardLayoutPotsRouteImport.update({
     id: '/pots',
     path: '/pots',
-    getParentRoute: () => PathlessDashboardLayoutRoute,
+    getParentRoute: () => PathlessRootLayoutPathlessDashboardLayoutRoute,
   } as any)
-const PathlessDashboardLayoutDashboardRoute =
-  PathlessDashboardLayoutDashboardRouteImport.update({
+const PathlessRootLayoutPathlessDashboardLayoutDashboardRoute =
+  PathlessRootLayoutPathlessDashboardLayoutDashboardRouteImport.update({
     id: '/dashboard',
     path: '/dashboard',
-    getParentRoute: () => PathlessDashboardLayoutRoute,
+    getParentRoute: () => PathlessRootLayoutPathlessDashboardLayoutRoute,
   } as any)
-const PathlessAuthLayoutSignupRoute =
-  PathlessAuthLayoutSignupRouteImport.update({
+const PathlessRootLayoutPathlessAuthLayoutSignupRoute =
+  PathlessRootLayoutPathlessAuthLayoutSignupRouteImport.update({
     id: '/signup',
     path: '/signup',
-    getParentRoute: () => PathlessAuthLayoutRoute,
+    getParentRoute: () => PathlessRootLayoutPathlessAuthLayoutRoute,
   } as any)
-const PathlessAuthLayoutLoginRoute = PathlessAuthLayoutLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => PathlessAuthLayoutRoute,
-} as any)
+const PathlessRootLayoutPathlessAuthLayoutLoginRoute =
+  PathlessRootLayoutPathlessAuthLayoutLoginRouteImport.update({
+    id: '/login',
+    path: '/login',
+    getParentRoute: () => PathlessRootLayoutPathlessAuthLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/login': typeof PathlessAuthLayoutLoginRoute
-  '/signup': typeof PathlessAuthLayoutSignupRoute
-  '/dashboard': typeof PathlessDashboardLayoutDashboardRoute
-  '/pots': typeof PathlessDashboardLayoutPotsRoute
+  '/': typeof PathlessRootLayoutIndexRoute
+  '/login': typeof PathlessRootLayoutPathlessAuthLayoutLoginRoute
+  '/signup': typeof PathlessRootLayoutPathlessAuthLayoutSignupRoute
+  '/dashboard': typeof PathlessRootLayoutPathlessDashboardLayoutDashboardRoute
+  '/pots': typeof PathlessRootLayoutPathlessDashboardLayoutPotsRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/login': typeof PathlessAuthLayoutLoginRoute
-  '/signup': typeof PathlessAuthLayoutSignupRoute
-  '/dashboard': typeof PathlessDashboardLayoutDashboardRoute
-  '/pots': typeof PathlessDashboardLayoutPotsRoute
+  '/': typeof PathlessRootLayoutIndexRoute
+  '/login': typeof PathlessRootLayoutPathlessAuthLayoutLoginRoute
+  '/signup': typeof PathlessRootLayoutPathlessAuthLayoutSignupRoute
+  '/dashboard': typeof PathlessRootLayoutPathlessDashboardLayoutDashboardRoute
+  '/pots': typeof PathlessRootLayoutPathlessDashboardLayoutPotsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/_pathless-auth-layout': typeof PathlessAuthLayoutRouteWithChildren
-  '/_pathless-dashboard-layout': typeof PathlessDashboardLayoutRouteWithChildren
-  '/_pathless-auth-layout/login': typeof PathlessAuthLayoutLoginRoute
-  '/_pathless-auth-layout/signup': typeof PathlessAuthLayoutSignupRoute
-  '/_pathless-dashboard-layout/dashboard': typeof PathlessDashboardLayoutDashboardRoute
-  '/_pathless-dashboard-layout/pots': typeof PathlessDashboardLayoutPotsRoute
+  '/_pathless_root_layout': typeof Pathless_root_layoutRoute
+  '/_pathless-root-layout/_pathless-auth-layout': typeof PathlessRootLayoutPathlessAuthLayoutRouteWithChildren
+  '/_pathless-root-layout/_pathless-dashboard-layout': typeof PathlessRootLayoutPathlessDashboardLayoutRouteWithChildren
+  '/_pathless-root-layout/': typeof PathlessRootLayoutIndexRoute
+  '/_pathless-root-layout/_pathless-auth-layout/login': typeof PathlessRootLayoutPathlessAuthLayoutLoginRoute
+  '/_pathless-root-layout/_pathless-auth-layout/signup': typeof PathlessRootLayoutPathlessAuthLayoutSignupRoute
+  '/_pathless-root-layout/_pathless-dashboard-layout/dashboard': typeof PathlessRootLayoutPathlessDashboardLayoutDashboardRoute
+  '/_pathless-root-layout/_pathless-dashboard-layout/pots': typeof PathlessRootLayoutPathlessDashboardLayoutPotsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -85,109 +94,127 @@ export interface FileRouteTypes {
   to: '/' | '/login' | '/signup' | '/dashboard' | '/pots'
   id:
     | '__root__'
-    | '/'
-    | '/_pathless-auth-layout'
-    | '/_pathless-dashboard-layout'
-    | '/_pathless-auth-layout/login'
-    | '/_pathless-auth-layout/signup'
-    | '/_pathless-dashboard-layout/dashboard'
-    | '/_pathless-dashboard-layout/pots'
+    | '/_pathless_root_layout'
+    | '/_pathless-root-layout/_pathless-auth-layout'
+    | '/_pathless-root-layout/_pathless-dashboard-layout'
+    | '/_pathless-root-layout/'
+    | '/_pathless-root-layout/_pathless-auth-layout/login'
+    | '/_pathless-root-layout/_pathless-auth-layout/signup'
+    | '/_pathless-root-layout/_pathless-dashboard-layout/dashboard'
+    | '/_pathless-root-layout/_pathless-dashboard-layout/pots'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  PathlessAuthLayoutRoute: typeof PathlessAuthLayoutRouteWithChildren
-  PathlessDashboardLayoutRoute: typeof PathlessDashboardLayoutRouteWithChildren
+  Pathless_root_layoutRoute: typeof Pathless_root_layoutRoute
+  PathlessRootLayoutPathlessAuthLayoutRoute: typeof PathlessRootLayoutPathlessAuthLayoutRouteWithChildren
+  PathlessRootLayoutPathlessDashboardLayoutRoute: typeof PathlessRootLayoutPathlessDashboardLayoutRouteWithChildren
+  PathlessRootLayoutIndexRoute: typeof PathlessRootLayoutIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_pathless-dashboard-layout': {
-      id: '/_pathless-dashboard-layout'
+    '/_pathless_root_layout': {
+      id: '/_pathless_root_layout'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof PathlessDashboardLayoutRouteImport
+      preLoaderRoute: typeof Pathless_root_layoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_pathless-auth-layout': {
-      id: '/_pathless-auth-layout'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof PathlessAuthLayoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
+    '/_pathless-root-layout/': {
+      id: '/_pathless-root-layout/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof PathlessRootLayoutIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_pathless-dashboard-layout/pots': {
-      id: '/_pathless-dashboard-layout/pots'
+    '/_pathless-root-layout/_pathless-dashboard-layout': {
+      id: '/_pathless-root-layout/_pathless-dashboard-layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PathlessRootLayoutPathlessDashboardLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_pathless-root-layout/_pathless-auth-layout': {
+      id: '/_pathless-root-layout/_pathless-auth-layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PathlessRootLayoutPathlessAuthLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_pathless-root-layout/_pathless-dashboard-layout/pots': {
+      id: '/_pathless-root-layout/_pathless-dashboard-layout/pots'
       path: '/pots'
       fullPath: '/pots'
-      preLoaderRoute: typeof PathlessDashboardLayoutPotsRouteImport
-      parentRoute: typeof PathlessDashboardLayoutRoute
+      preLoaderRoute: typeof PathlessRootLayoutPathlessDashboardLayoutPotsRouteImport
+      parentRoute: typeof PathlessRootLayoutPathlessDashboardLayoutRoute
     }
-    '/_pathless-dashboard-layout/dashboard': {
-      id: '/_pathless-dashboard-layout/dashboard'
+    '/_pathless-root-layout/_pathless-dashboard-layout/dashboard': {
+      id: '/_pathless-root-layout/_pathless-dashboard-layout/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
-      preLoaderRoute: typeof PathlessDashboardLayoutDashboardRouteImport
-      parentRoute: typeof PathlessDashboardLayoutRoute
+      preLoaderRoute: typeof PathlessRootLayoutPathlessDashboardLayoutDashboardRouteImport
+      parentRoute: typeof PathlessRootLayoutPathlessDashboardLayoutRoute
     }
-    '/_pathless-auth-layout/signup': {
-      id: '/_pathless-auth-layout/signup'
+    '/_pathless-root-layout/_pathless-auth-layout/signup': {
+      id: '/_pathless-root-layout/_pathless-auth-layout/signup'
       path: '/signup'
       fullPath: '/signup'
-      preLoaderRoute: typeof PathlessAuthLayoutSignupRouteImport
-      parentRoute: typeof PathlessAuthLayoutRoute
+      preLoaderRoute: typeof PathlessRootLayoutPathlessAuthLayoutSignupRouteImport
+      parentRoute: typeof PathlessRootLayoutPathlessAuthLayoutRoute
     }
-    '/_pathless-auth-layout/login': {
-      id: '/_pathless-auth-layout/login'
+    '/_pathless-root-layout/_pathless-auth-layout/login': {
+      id: '/_pathless-root-layout/_pathless-auth-layout/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof PathlessAuthLayoutLoginRouteImport
-      parentRoute: typeof PathlessAuthLayoutRoute
+      preLoaderRoute: typeof PathlessRootLayoutPathlessAuthLayoutLoginRouteImport
+      parentRoute: typeof PathlessRootLayoutPathlessAuthLayoutRoute
     }
   }
 }
 
-interface PathlessAuthLayoutRouteChildren {
-  PathlessAuthLayoutLoginRoute: typeof PathlessAuthLayoutLoginRoute
-  PathlessAuthLayoutSignupRoute: typeof PathlessAuthLayoutSignupRoute
+interface PathlessRootLayoutPathlessAuthLayoutRouteChildren {
+  PathlessRootLayoutPathlessAuthLayoutLoginRoute: typeof PathlessRootLayoutPathlessAuthLayoutLoginRoute
+  PathlessRootLayoutPathlessAuthLayoutSignupRoute: typeof PathlessRootLayoutPathlessAuthLayoutSignupRoute
 }
 
-const PathlessAuthLayoutRouteChildren: PathlessAuthLayoutRouteChildren = {
-  PathlessAuthLayoutLoginRoute: PathlessAuthLayoutLoginRoute,
-  PathlessAuthLayoutSignupRoute: PathlessAuthLayoutSignupRoute,
-}
-
-const PathlessAuthLayoutRouteWithChildren =
-  PathlessAuthLayoutRoute._addFileChildren(PathlessAuthLayoutRouteChildren)
-
-interface PathlessDashboardLayoutRouteChildren {
-  PathlessDashboardLayoutDashboardRoute: typeof PathlessDashboardLayoutDashboardRoute
-  PathlessDashboardLayoutPotsRoute: typeof PathlessDashboardLayoutPotsRoute
-}
-
-const PathlessDashboardLayoutRouteChildren: PathlessDashboardLayoutRouteChildren =
+const PathlessRootLayoutPathlessAuthLayoutRouteChildren: PathlessRootLayoutPathlessAuthLayoutRouteChildren =
   {
-    PathlessDashboardLayoutDashboardRoute:
-      PathlessDashboardLayoutDashboardRoute,
-    PathlessDashboardLayoutPotsRoute: PathlessDashboardLayoutPotsRoute,
+    PathlessRootLayoutPathlessAuthLayoutLoginRoute:
+      PathlessRootLayoutPathlessAuthLayoutLoginRoute,
+    PathlessRootLayoutPathlessAuthLayoutSignupRoute:
+      PathlessRootLayoutPathlessAuthLayoutSignupRoute,
   }
 
-const PathlessDashboardLayoutRouteWithChildren =
-  PathlessDashboardLayoutRoute._addFileChildren(
-    PathlessDashboardLayoutRouteChildren,
+const PathlessRootLayoutPathlessAuthLayoutRouteWithChildren =
+  PathlessRootLayoutPathlessAuthLayoutRoute._addFileChildren(
+    PathlessRootLayoutPathlessAuthLayoutRouteChildren,
+  )
+
+interface PathlessRootLayoutPathlessDashboardLayoutRouteChildren {
+  PathlessRootLayoutPathlessDashboardLayoutDashboardRoute: typeof PathlessRootLayoutPathlessDashboardLayoutDashboardRoute
+  PathlessRootLayoutPathlessDashboardLayoutPotsRoute: typeof PathlessRootLayoutPathlessDashboardLayoutPotsRoute
+}
+
+const PathlessRootLayoutPathlessDashboardLayoutRouteChildren: PathlessRootLayoutPathlessDashboardLayoutRouteChildren =
+  {
+    PathlessRootLayoutPathlessDashboardLayoutDashboardRoute:
+      PathlessRootLayoutPathlessDashboardLayoutDashboardRoute,
+    PathlessRootLayoutPathlessDashboardLayoutPotsRoute:
+      PathlessRootLayoutPathlessDashboardLayoutPotsRoute,
+  }
+
+const PathlessRootLayoutPathlessDashboardLayoutRouteWithChildren =
+  PathlessRootLayoutPathlessDashboardLayoutRoute._addFileChildren(
+    PathlessRootLayoutPathlessDashboardLayoutRouteChildren,
   )
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  PathlessAuthLayoutRoute: PathlessAuthLayoutRouteWithChildren,
-  PathlessDashboardLayoutRoute: PathlessDashboardLayoutRouteWithChildren,
+  Pathless_root_layoutRoute: Pathless_root_layoutRoute,
+  PathlessRootLayoutPathlessAuthLayoutRoute:
+    PathlessRootLayoutPathlessAuthLayoutRouteWithChildren,
+  PathlessRootLayoutPathlessDashboardLayoutRoute:
+    PathlessRootLayoutPathlessDashboardLayoutRouteWithChildren,
+  PathlessRootLayoutIndexRoute: PathlessRootLayoutIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

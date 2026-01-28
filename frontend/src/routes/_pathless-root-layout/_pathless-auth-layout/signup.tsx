@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Signup } from "#frontend/features/auth/components/signup";
 
-export const Route = createFileRoute("/_pathless-auth-layout/signup")({
+export const Route = createFileRoute("/_pathless-root-layout/_pathless-auth-layout/signup")({
   component: RouteComponent,
 });
 

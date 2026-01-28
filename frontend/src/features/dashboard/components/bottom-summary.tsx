@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import styles from "./bottom-summary.module.css";
 import { CaretRight } from "#frontend/assets/icons/icons";
 
+// Ensure that key is unique
 const options = [
   {
     name: "Pots",
@@ -25,7 +26,7 @@ export function BottomSummary() {
   return (
     <ul className={styles.layout}>
       {options.map(({ name, to }) => (
-        <li className={styles["list-item"]}>
+        <li className={styles["list-item"]} key={name}>
           <div className={styles["list-item-top"]}>
             <h2>{name}</h2>
             <Link to={to} className={styles.link}>

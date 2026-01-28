@@ -8,12 +8,13 @@ import type { LoginUserRequest } from "#frontend/shared/client";
 import { postApiAuthLoginMutation } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { useToggle } from "#frontend/shared/hooks/use-toggle";
 import { Button } from "#frontend/shared/primitives/button";
-import { setLocalStorageItem } from "#frontend/shared/utils/localstorage";
+import { accessTokenStore } from "#frontend/shared/store/access-token";
 
 export function Login() {
   const { isOpen: isPasswordVisible, toggle: togglePasswordVisibility } =
     useToggle(false);
   const route = useRouter();
+  const setAccessToken = accessTokenStore.getState().setAcessToken;
   const {
     register,
     handleSubmit,
@@ -23,15 +24,16 @@ export function Login() {
   const { mutate } = useMutation({
     ...postApiAuthLoginMutation(),
     onSuccess: async (data) => {
-      Logger.info(`Login successful`, data);
-      setLocalStorageItem("jwt", data.accessToken);
+      Logger.debug(`Login successful`, data);
+      setAccessToken(data.accessToken);
 
       route.navigate({
         to: "/dashboard",
+        replace: true,
       });
     },
     onError: (error) => {
-      Logger.info(`Login failed`, error.status, typeof error.status);
+      Logger.debug(`Login failed`, error);
 
       switch (error.status) {
         case 401: {
@@ -57,15 +59,12 @@ export function Login() {
 
   const onSubmit = handleSubmit(
     (data) => {
-      console.table(data);
-
       mutate({
         body: data,
       });
     },
     (error) => {
       Logger.error("Submission failed", error);
-      console.table(error);
     },
   );
 
