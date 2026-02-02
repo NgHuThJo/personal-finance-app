@@ -51,7 +51,7 @@ public static class RouteGrouper
             .ProducesProblem((int)HttpStatusCode.Unauthorized)
             .AddValidationFilter<LoginUserRequest>();
         group
-            .MapGet("logout", LogoutUserEndpoint.Logout)
+            .MapPost("logout", LogoutUserEndpoint.Logout)
             .ProducesProblem((int)HttpStatusCode.Forbidden);
         group
             .MapGet("refresh", CreateRefreshTokenEndpoint.Get)

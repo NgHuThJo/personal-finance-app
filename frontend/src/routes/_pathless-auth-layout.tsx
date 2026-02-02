@@ -1,23 +1,19 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
 import styles from "./_pathless-auth-layout.module.css";
 import { Logo } from "#frontend/assets/icons/icons";
-import { accessTokenStore } from "#frontend/shared/store/access-token";
+import { useAccessToken } from "#frontend/shared/store/access-token";
 
 export const Route = createFileRoute("/_pathless-auth-layout")({
-  beforeLoad: () => {
-    const accessToken = accessTokenStore.getState().accessToken;
-
-    if (accessToken) {
-      throw Route.redirect({
-        to: "./dashboard",
-        replace: true,
-      });
-    }
-  },
   component: AuthLayout,
 });
 
 function AuthLayout() {
+  const accessToken = useAccessToken();
+
+  if (accessToken) {
+    return <Navigate to={"/dashboard"} />;
+  }
+
   return (
     <main className={styles.layout}>
       <div className={styles.heading}>

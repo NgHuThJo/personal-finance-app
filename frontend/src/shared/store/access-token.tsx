@@ -1,4 +1,4 @@
-import { createStore } from "zustand";
+import { createStore, useStore } from "zustand";
 
 type AccessTokenStore = {
   accessToken: string | null;
@@ -18,4 +18,5 @@ export const accessTokenStore = createStore<AccessTokenStore>((set) => ({
     })),
 }));
 
-export const useAccessToken = () => accessTokenStore.getState().accessToken;
+export const useAccessToken = () =>
+  useStore(accessTokenStore, (state) => state.accessToken);

@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetApiAuthLogoutData, GetApiAuthLogoutErrors, GetApiAuthLogoutResponses, GetApiAuthRefreshData, GetApiAuthRefreshErrors, GetApiAuthRefreshResponses, GetApiPotsData, GetApiPotsResponses, GetApiUsersByUserIdData, GetApiUsersByUserIdErrors, GetApiUsersByUserIdResponses, PostApiAuthLoginData, PostApiAuthLoginErrors, PostApiAuthLoginResponses, PostApiAuthSignupData, PostApiAuthSignupErrors, PostApiAuthSignupResponses, PostApiPotsData, PostApiPotsResponses } from './types.gen';
+import type { GetApiAuthRefreshData, GetApiAuthRefreshErrors, GetApiAuthRefreshResponses, GetApiPotsData, GetApiPotsResponses, GetApiUsersByUserIdData, GetApiUsersByUserIdErrors, GetApiUsersByUserIdResponses, PostApiAuthLoginData, PostApiAuthLoginErrors, PostApiAuthLoginResponses, PostApiAuthLogoutData, PostApiAuthLogoutErrors, PostApiAuthLogoutResponses, PostApiAuthSignupData, PostApiAuthSignupErrors, PostApiAuthSignupResponses, PostApiPotsData, PostApiPotsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -56,6 +56,6 @@ export const postApiAuthLogin = <ThrowOnError extends boolean = false>(options: 
     }
 });
 
-export const getApiAuthLogout = <ThrowOnError extends boolean = false>(options?: Options<GetApiAuthLogoutData, ThrowOnError>) => (options?.client ?? client).get<GetApiAuthLogoutResponses, GetApiAuthLogoutErrors, ThrowOnError>({ url: '/api/auth/logout', ...options });
+export const postApiAuthLogout = <ThrowOnError extends boolean = false>(options?: Options<PostApiAuthLogoutData, ThrowOnError>) => (options?.client ?? client).post<PostApiAuthLogoutResponses, PostApiAuthLogoutErrors, ThrowOnError>({ url: '/api/auth/logout', ...options });
 
 export const getApiAuthRefresh = <ThrowOnError extends boolean = false>(options?: Options<GetApiAuthRefreshData, ThrowOnError>) => (options?.client ?? client).get<GetApiAuthRefreshResponses, GetApiAuthRefreshErrors, ThrowOnError>({ url: '/api/auth/refresh', ...options });

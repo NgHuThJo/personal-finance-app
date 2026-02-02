@@ -176,30 +176,30 @@ export type PostApiAuthLoginResponses = {
 
 export type PostApiAuthLoginResponse = PostApiAuthLoginResponses[keyof PostApiAuthLoginResponses];
 
-export type GetApiAuthLogoutData = {
+export type PostApiAuthLogoutData = {
     body?: never;
     path?: never;
     query?: never;
     url: '/api/auth/logout';
 };
 
-export type GetApiAuthLogoutErrors = {
+export type PostApiAuthLogoutErrors = {
     /**
      * Forbidden
      */
     403: ProblemDetails;
 };
 
-export type GetApiAuthLogoutError = GetApiAuthLogoutErrors[keyof GetApiAuthLogoutErrors];
+export type PostApiAuthLogoutError = PostApiAuthLogoutErrors[keyof PostApiAuthLogoutErrors];
 
-export type GetApiAuthLogoutResponses = {
+export type PostApiAuthLogoutResponses = {
     /**
      * No Content
      */
     204: void;
 };
 
-export type GetApiAuthLogoutResponse = GetApiAuthLogoutResponses[keyof GetApiAuthLogoutResponses];
+export type PostApiAuthLogoutResponse = PostApiAuthLogoutResponses[keyof PostApiAuthLogoutResponses];
 
 export type GetApiAuthRefreshData = {
     body?: never;
