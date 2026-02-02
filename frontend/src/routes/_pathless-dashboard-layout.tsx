@@ -2,23 +2,20 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import styles from "./_pathless-dashboard-layout.module.css";
 import { accessTokenStore } from "#frontend/shared/store/access-token";
 
-export const Route = createFileRoute(
-  "/_pathless-root-layout/_pathless-dashboard-layout",
-)({
-  beforeLoad: () => {
+export const Route = createFileRoute("/_pathless-dashboard-layout")({
+  beforeLoad: async () => {
     const accessToken = accessTokenStore.getState().accessToken;
 
     if (!accessToken) {
       throw redirect({
         to: "/login",
-        replace: true,
       });
     }
   },
-  component: RouteComponent,
+  component: DashboardLayout,
 });
 
-function RouteComponent() {
+function DashboardLayout() {
   return (
     <>
       <main className={styles.layout}>

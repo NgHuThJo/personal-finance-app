@@ -14,7 +14,7 @@ export function Login() {
   const { isOpen: isPasswordVisible, toggle: togglePasswordVisibility } =
     useToggle(false);
   const route = useRouter();
-  const setAccessToken = accessTokenStore.getState().setAcessToken;
+  const setAccessToken = accessTokenStore.getState().setAccessToken;
   const {
     register,
     handleSubmit,
@@ -22,10 +22,12 @@ export function Login() {
     formState: { errors },
   } = useForm<LoginUserRequest>();
   const { mutate } = useMutation({
-    ...postApiAuthLoginMutation(),
-    onSuccess: async (data) => {
-      Logger.debug(`Login successful`, data);
-      setAccessToken(data.accessToken);
+    ...postApiAuthLoginMutation({
+      credentials: "include",
+    }),
+    onSuccess: async (accessToken) => {
+      Logger.info(`Login successful, access token:`, accessToken);
+      setAccessToken(accessToken);
 
       route.navigate({
         to: "/dashboard",
@@ -33,7 +35,7 @@ export function Login() {
       });
     },
     onError: (error) => {
-      Logger.debug(`Login failed`, error);
+      Logger.info(`Login failed`, error);
 
       switch (error.status) {
         case 401: {

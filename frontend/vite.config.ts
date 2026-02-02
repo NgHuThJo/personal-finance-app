@@ -1,4 +1,5 @@
 // vite.config.ts
+import fs from "fs";
 import path from "path";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
@@ -13,6 +14,12 @@ export default defineConfig(({ command }) => ({
     react(),
     // ...,
   ],
+  server: {
+    https: {
+      key: fs.readFileSync("./certs/localhost+1-key.pem"),
+      cert: fs.readFileSync("./certs/localhost+1.pem"),
+    },
+  },
   base: command === "serve" ? "/" : "/personal-finance-app/",
   resolve: {
     alias: {

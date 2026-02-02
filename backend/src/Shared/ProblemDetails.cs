@@ -74,6 +74,26 @@ public static class TypedResultsProblemDetails
         return TypedResults.Problem(problem);
     }
 
+    public static ProblemHttpResult Forbidden(
+        string detail,
+        string title = "Forbidden",
+        string? type = null,
+        string? instance = null,
+        IDictionary<string, object?>? extensions = null
+    )
+    {
+        var problem = ProblemDetailsHelper.Create(
+            statusCode: StatusCodes.Status403Forbidden,
+            detail: detail,
+            title: title,
+            type: type,
+            instance: instance,
+            extensions: extensions
+        );
+
+        return TypedResults.Problem(problem);
+    }
+
     public static ProblemHttpResult NotFound(
         string detail,
         string title = "Not Found",

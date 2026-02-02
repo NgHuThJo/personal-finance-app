@@ -56,7 +56,7 @@ clientWithAuth.interceptors.response.use(async (response, request, options) => {
     }
   }
 
-  throw new Error("Some error happened", {
+  throw new Error("Some fetch error occurred", {
     cause: response.statusText,
   });
 });

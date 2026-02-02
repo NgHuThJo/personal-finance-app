@@ -15,7 +15,7 @@
     "check-for-errors": "npx tsc --noEmit",
     "lint": "npx eslint ./src --ignore-pattern ./src/types/generated",
     "prettier": "npx prettier . --write",
-    "openapi-ts": "openapi-ts"
+    "openapi-ts": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 openapi-ts"
   },
   "keywords": [],
   "author": "",
@@ -45,6 +45,7 @@
     "@types/react": "19.2.8",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
+    "cross-env": "^10.1.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",

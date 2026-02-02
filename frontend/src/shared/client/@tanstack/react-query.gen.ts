@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { getApiAuthRefresh, getApiPots, getApiUsersByUserId, type Options, postApiAuthLogin, postApiAuthSignup, postApiPots } from '../sdk.gen';
-import type { GetApiAuthRefreshData, GetApiAuthRefreshError, GetApiAuthRefreshResponse, GetApiPotsData, GetApiPotsResponse, GetApiUsersByUserIdData, GetApiUsersByUserIdError, GetApiUsersByUserIdResponse, PostApiAuthLoginData, PostApiAuthLoginError, PostApiAuthLoginResponse, PostApiAuthSignupData, PostApiAuthSignupError, PostApiAuthSignupResponse, PostApiPotsData, PostApiPotsResponse } from '../types.gen';
+import { getApiAuthLogout, getApiAuthRefresh, getApiPots, getApiUsersByUserId, type Options, postApiAuthLogin, postApiAuthSignup, postApiPots } from '../sdk.gen';
+import type { GetApiAuthLogoutData, GetApiAuthLogoutError, GetApiAuthLogoutResponse, GetApiAuthRefreshData, GetApiAuthRefreshError, GetApiAuthRefreshResponse, GetApiPotsData, GetApiPotsResponse, GetApiUsersByUserIdData, GetApiUsersByUserIdError, GetApiUsersByUserIdResponse, PostApiAuthLoginData, PostApiAuthLoginError, PostApiAuthLoginResponse, PostApiAuthSignupData, PostApiAuthSignupError, PostApiAuthSignupResponse, PostApiPotsData, PostApiPotsResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -110,6 +110,21 @@ export const postApiAuthLoginMutation = (options?: Partial<Options<PostApiAuthLo
     };
     return mutationOptions;
 };
+
+export const getApiAuthLogoutQueryKey = (options?: Options<GetApiAuthLogoutData>) => createQueryKey('getApiAuthLogout', options);
+
+export const getApiAuthLogoutOptions = (options?: Options<GetApiAuthLogoutData>) => queryOptions<GetApiAuthLogoutResponse, GetApiAuthLogoutError, GetApiAuthLogoutResponse, ReturnType<typeof getApiAuthLogoutQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getApiAuthLogout({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiAuthLogoutQueryKey(options)
+});
 
 export const getApiAuthRefreshQueryKey = (options?: Options<GetApiAuthRefreshData>) => createQueryKey('getApiAuthRefresh', options);
 

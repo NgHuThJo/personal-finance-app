@@ -44,11 +44,6 @@ export const zLoginUserRequest = z.object({
     password: z.string().min(8)
 });
 
-export const zLoginUserResponse = z.object({
-    accessToken: z.string(),
-    refreshToken: z.string()
-});
-
 export const zProblemDetails = z.object({
     type: z.optional(z.union([
         z.null(),
@@ -60,7 +55,7 @@ export const zProblemDetails = z.object({
     ])),
     status: z.optional(z.union([
         z.null(),
-        z.int()
+        z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })
     ])),
     detail: z.optional(z.union([
         z.null(),
@@ -87,7 +82,7 @@ export const zSignUpUserResponse = z.object({
 export const zGetApiUsersByUserIdData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        userId: z.int()
+        userId: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })
     }),
     query: z.optional(z.never())
 });
@@ -139,7 +134,18 @@ export const zPostApiAuthLoginData = z.object({
 /**
  * OK
  */
-export const zPostApiAuthLoginResponse = zLoginUserResponse;
+export const zPostApiAuthLoginResponse = z.string();
+
+export const zGetApiAuthLogoutData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+/**
+ * No Content
+ */
+export const zGetApiAuthLogoutResponse = z.void();
 
 export const zGetApiAuthRefreshData = z.object({
     body: z.optional(z.never()),

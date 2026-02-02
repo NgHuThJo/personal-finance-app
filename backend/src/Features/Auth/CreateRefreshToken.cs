@@ -18,7 +18,7 @@ public static partial class CreateRefreshToken
         Level = LogLevel.Information,
         Message = "Refresh token has not expired"
     )]
-    public static partial void RefreshTokenHasNotExpired(ILogger logger);
+    public static partial void RefreshTokenHasExpired(ILogger logger);
 
     [LoggerMessage(
         Level = LogLevel.Information,
@@ -31,7 +31,7 @@ public abstract record CreateRefreshTokenResult;
 
 public record UserHasNoActiveRefreshToken : CreateRefreshTokenResult;
 
-public record RefreshTokenHasNotExpired : CreateRefreshTokenResult;
+public record RefreshTokenHasExpired : CreateRefreshTokenResult;
 
 public record RefreshTokenRevoked : CreateRefreshTokenResult;
 
@@ -62,6 +62,8 @@ public class CreateRefreshTokenEndpoint
         }
 
         var tokens = await handler.Handle(refreshToken);
+        // Delete refresh token for cases where user is not authenticated
+        httpContext.Response.Cookies.Delete("refresh_token");
 
         switch (tokens)
         {
@@ -71,7 +73,7 @@ public class CreateRefreshTokenEndpoint
                     "User has no active  refresh token"
                 );
             }
-            case RefreshTokenHasNotExpired:
+            case RefreshTokenHasExpired:
             {
                 return TypedResultsProblemDetails.Unauthorized(
                     "Refresh token has not expired"
@@ -85,7 +87,17 @@ public class CreateRefreshTokenEndpoint
             }
             case NewTokenPairCreated(var access, var refresh):
             {
-                httpContext.Response.Cookies.Append("refresh_token", refresh);
+                httpContext.Response.Cookies.Append(
+                    "refresh_token",
+                    refresh,
+                    new CookieOptions
+                    {
+                        MaxAge = TimeSpan.FromDays(7),
+                        Secure = true,
+                        HttpOnly = true,
+                        SameSite = SameSiteMode.None,
+                    }
+                );
 
                 return TypedResults.Ok(
                     new CreateRefreshTokenResponse { AccessToken = access }
@@ -131,10 +143,10 @@ public class CreateRefreshTokenHandler(
             return new RefreshTokenRevoked();
         }
 
-        if (tokenFromDb.ExpiresAtUtc > DateTime.UtcNow)
+        if (tokenFromDb.ExpiresAtUtc < DateTime.UtcNow)
         {
-            CreateRefreshToken.RefreshTokenHasNotExpired(_logger);
-            return new RefreshTokenHasNotExpired();
+            CreateRefreshToken.RefreshTokenHasExpired(_logger);
+            return new RefreshTokenHasExpired();
         }
 
         var newAccessToken = _provider.GenerateAccessToken(tokenFromDb.UserId);

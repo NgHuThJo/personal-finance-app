@@ -8,7 +8,7 @@ import { Button } from "#frontend/shared/primitives/button";
 import { accessTokenStore } from "#frontend/shared/store/access-token";
 
 export const Route = createFileRoute(
-  "/_pathless-root-layout/_pathless-dashboard-layout/dashboard",
+  "/_pathless-dashboard-layout/dashboard",
 )({
   component: Index,
 });

@@ -30,7 +30,7 @@ public record PasswordsDoNotMatch : LoginUserResult;
 
 public record EmailDoesNotExist(string Email) : LoginUserResult;
 
-public record LoginSuccessful(LoginUserResponse Token) : LoginUserResult;
+public record LoginSuccessful(LoginUserResponse Tokens) : LoginUserResult;
 
 public record LoginUserRequest
 {
@@ -58,28 +58,52 @@ public class LoginUserValidator : AbstractValidator<LoginUserRequest>
 
 public sealed class LoginUserEndpoint
 {
-    public static async Task<
-        Results<Ok<LoginUserResponse>, ProblemHttpResult>
-    > Login(
+    public static async Task<Results<Ok<string>, ProblemHttpResult>> Login(
+        HttpContext httpContext,
         [FromBody] LoginUserRequest command,
         [FromServices] LoginUserHandler handler
     )
     {
         var handlerResult = await handler.Handle(command);
 
-        return handlerResult switch
+        switch (handlerResult)
         {
-            EmailDoesNotExist(var email) => TypedResultsProblemDetails.Conflict(
-                $"Email address {email} does not exist"
-            ),
-            PasswordsDoNotMatch => TypedResultsProblemDetails.Unauthorized(
-                "Passwords do not match"
-            ),
-            LoginSuccessful(var token) => TypedResults.Ok(token),
-            _ => throw new NotSupportedException(
-                "An unknown error has occurred in LoginUserEndPoint"
-            ),
-        };
+            case LoginSuccessful(var tokens):
+            {
+                httpContext.Response.Cookies.Append(
+                    "refresh_token",
+                    tokens.RefreshToken,
+                    new CookieOptions
+                    {
+                        MaxAge = TimeSpan.FromDays(7),
+                        Secure = true,
+                        HttpOnly = true,
+                        SameSite = SameSiteMode.None,
+                    }
+                );
+
+                return TypedResults.Ok(tokens.AccessToken);
+            }
+            case EmailDoesNotExist(var email):
+            {
+                return TypedResultsProblemDetails.Conflict(
+                    $"Email address {email} does not exist"
+                );
+            }
+            case PasswordsDoNotMatch:
+            {
+                return TypedResultsProblemDetails.Unauthorized(
+                    "Passwords do not match"
+                );
+            }
+            default:
+            {
+                throw new NotSupportedException(
+                    "An unknown error has occurred in LoginUserEndPoint"
+                );
+            }
+        }
+        ;
     }
 }
 
