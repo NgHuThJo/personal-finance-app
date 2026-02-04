@@ -7,7 +7,7 @@
 .list-item {
   padding: var(--spacing-6);
   border-radius: var(--border-radius-4);
-  background-color: var(--bgc-dashboard-bottom-summary);
+  background-color: var(--color-background-surface-2);
 
   @media screen and (width >= 768px) {
     padding: var(--spacing-8);
@@ -28,6 +28,6 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: var(--c-dashboard-link);
+  color: var(--color-text-action-link-1);
   font-size: var(--fs-2);
 }

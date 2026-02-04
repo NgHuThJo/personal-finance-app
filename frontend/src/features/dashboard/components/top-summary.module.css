@@ -11,11 +11,11 @@
 .list-item {
   padding: 1.5rem;
   border-radius: var(--border-radius-4);
-  background-color: var(--bgc-dashboard-top-summary-rest);
+  background-color: var(--color-background-surface-2);
 
   &:first-child {
-    background-color: var(--bgc-dashboard-top-summary-balance);
-    color: var(--c-dashboard-top-summary-balance);
+    background-color: var(--color-background-surface-1);
+    color: var(--color-text-1);
   }
 
   h3 {

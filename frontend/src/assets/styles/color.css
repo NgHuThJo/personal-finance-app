@@ -13,26 +13,21 @@
   --yellow: #f2cdac;
   --red: #c94736;
 
-  --bgc-body: var(--beige-100);
+  /* Pattern for names: --<property>-<role>-[<variant>]-[<state>] */
+  /* Text */
+  --color-text-1: var(--white);
+  --color-text-2: var(--grey-500);
+  --color-text-inverse: var(--white);
+  --color-border-action-input-1: var(--grey-900);
+  --color-text-action-link-1: var(--grey-500);
 
-  --c-logout-button: var(--white);
-  --bgc-logout-button: var(--grey-900);
-  --c-login-button: var(--white);
-  --bgc-login-button: var(--grey-900);
+  /* Background */
+  --color-background-canvas-1: var(--beige-100);
+  --color-background-surface-1: var(--grey-900);
+  --color-background-surface-2: var(--white);
+  --color-background-surface-raised-1: var(--white);
+  --color-background-action-cta-1: var(--grey-900);
 
-  --c-dashboard-link: var(--grey-500);
-  --c-dashboard-top-summary-balance: var(--white);
-  --bgc-dashboard-top-summary-balance: var(--grey-900);
-  --bgc-dashboard-top-summary-rest: var(--white);
-
-  --bgc-dashboard-bottom-summary: var(--white);
-
-  --bgc-dialog: var(--white);
-
-  --c-error: var(--red);
-
-  --c-outline-input: var(--grey-900);
-
-  --c-hero-description: var(--white);
-  --c-label: var(--grey-500);
+  /* Status */
+  --color-status-error: var(--red);
 }

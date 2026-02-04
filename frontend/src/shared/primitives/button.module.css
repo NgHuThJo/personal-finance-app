@@ -27,8 +27,8 @@
   }
 
   &[aria-invalid="true"] {
-    border-color: var(--c-error);
-    box-shadow: 0 0 0 3px var(--c-error);
+    border-color: var(--color-status-error);
+    box-shadow: 0 0 0 3px var(--color-status-error);
   }
 
   &:focus-visible {
@@ -215,14 +215,14 @@
 
 @media (prefers-reduced-motion) {
   .button[aria-invalid="true"] {
-    box-shadow: 0 0 0 3px var(--c-error);
+    box-shadow: 0 0 0 3px var(--color-status-error);
   }
 
   .destructive {
-    background-color: var(--c-error);
+    background-color: var(--color-status-error);
 
     &:focus-visible {
-      box-shadow: 0 0 0 3px var(--c-error);
+      box-shadow: 0 0 0 3px var(--color-status-error);
     }
   }
 
@@ -313,12 +313,12 @@
 }
 
 .logout {
-  color: var(--c-logout-button);
-  background-color: var(--bgc-logout-button);
+  color: var(--color-text-1);
+  background-color: var(--color-background-action-cta-1);
 }
 
 .login {
   padding: var(--spacing-6);
-  color: var(--c-login-button);
-  background-color: var(--bgc-login-button);
+  color: var(--color-text-1);
+  background-color: var(--color-background-action-cta-1);
 }

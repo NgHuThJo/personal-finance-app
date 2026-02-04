@@ -22,8 +22,8 @@ body {
   font-weight: var(--fw-body);
   font-size: var(--fs-body);
   color: var(--c-body);
-  /* spec recommends settings background stuff on body */
-  background-color: var(--bgc-body);
+  /* Spec recommends setting background stuff on body */
+  background-color: var(--color-background-canvas-1);
 }
 
 a,
@@ -94,7 +94,7 @@ textarea {
   overflow: auto;
 }
 
-/* root styles */
+/* Root styles */
 #root {
   display: grid;
   grid-template-rows: 1fr;

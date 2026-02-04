@@ -24,7 +24,7 @@
 }
 
 .form-message {
-  color: var(--c-error);
+  color: var(--color-status-error);
 }
 
 .form-control {
@@ -50,7 +50,7 @@
 
 .form-control::selection {
   background-color: var(--c-primary);
-  color: var(--c-error);
+  color: var(--color-status-error);
 }
 
 .form-control:disabled {

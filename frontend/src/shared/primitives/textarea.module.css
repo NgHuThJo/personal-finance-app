@@ -31,7 +31,7 @@
 
   /* ARIA pseudo-class emulation using attribute selectors */
   &[aria-invalid="true"] {
-    border-color: var(--c-error);
+    border-color: var(--color-status-error);
     box-shadow: 0 0 0 3px var(--c-bg-error);
   }
 }
