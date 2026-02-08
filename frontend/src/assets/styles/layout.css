@@ -1,10 +1,14 @@
 :root {
-  --auto-grid-column-w: 15rem;
-  --macro-grid-breakout-max-w: 90rem;
-  --macro-grid-content-max-w: 70rem;
-  --macro-grid-p-inline: 2rem;
-  --macro-grid-breakout-column-w: calc(
-    (var(--macro-grid-breakout-max-w) - var(--macro-grid-content-max-w)) / 2
+  --width-column-auto-grid: 15rem;
+  --width-max-macro-grid-breakout: 90rem;
+  --width-max-macro-grid-content: 70rem;
+  --padding-inline-macro-grid: 2rem;
+  --width-column-macro-grid-breakout: calc(
+    (
+        var(--width-max-macro-grid-breakout) -
+          var(--width-max-macro-grid-content)
+      ) /
+      2
   );
 }
 
@@ -76,14 +80,14 @@
     )
     [breakout-start breakout-right-start] minmax(
       0,
-      var(--macro-grid-breakout-column-w)
+      var(--width-column-macro-grid-breakout)
     )
     [content-start] min(
       100% - 2 * var(--macro-grid-p-inline),
-      var(--macro-grid-content-max-w)
+      var(--width-max-macro-grid-content)
     )
     [content-end]
-    minmax(0, var(--macro-grid-breakout-column-w))
+    minmax(0, var(--width-column-macro-grid-breakout))
     [breakout-end breakout-left-end]
     minmax(var(--macro-grid-p-inline), 1fr)
     [full-width-end breakout-right-end];

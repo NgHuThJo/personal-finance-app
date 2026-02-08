@@ -208,8 +208,8 @@
 
 /* === DialogTitle === */
 .dialog-title {
-  font-size: var(--fs-h4);
-  font-weight: var(--fw-heading);
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-heading);
   line-height: 1;
   color: var(--c-heading);
 }
@@ -225,5 +225,5 @@
 
 /* === DialogDescription === */
 .dialog-description {
-  font-size: var(--fs-root);
+  font-size: var(--font-size-root);
 }

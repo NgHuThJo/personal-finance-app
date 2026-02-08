@@ -18,12 +18,12 @@ html {
 
 body {
   flex-grow: 1;
-  font-family: var(--ff-body);
-  font-weight: var(--fw-body);
-  font-size: var(--fs-body);
-  color: var(--c-body);
+  font-family: var(--font-family-content);
+  font-weight: var(--font-weight-general-primary);
+  font-size: var(--font-size-content);
+  color: var(--color-text-primary);
   /* Spec recommends setting background stuff on body */
-  background-color: var(--color-background-canvas-1);
+  background-color: var(--color-background-canvas-primary);
 }
 
 a,
@@ -39,7 +39,7 @@ input {
 
 a {
   display: inline-block;
-  font-weight: var(--fw-link);
+  font-weight: var(--font-weight-action);
   text-decoration: none;
 
   &:hover {
@@ -49,7 +49,7 @@ a {
 
 button {
   border: none;
-  font-weight: var(--fw-button);
+  font-weight: var(--font-weight-action);
   background-color: transparent;
   transition: opacity var(--transition-duration);
 
@@ -65,7 +65,7 @@ h4,
 h5,
 h6 {
   font-size: revert;
-  font-weight: var(--fw-heading);
+  font-weight: var(--font-weight-heading);
   text-wrap: balance;
 }
 

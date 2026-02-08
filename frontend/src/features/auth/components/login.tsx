@@ -21,7 +21,7 @@ export function Login() {
     setError,
     formState: { errors },
   } = useForm<LoginUserRequest>();
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     ...postApiAuthLoginMutation({
       credentials: "include",
     }),
@@ -73,27 +73,35 @@ export function Login() {
   return (
     <form onSubmit={onSubmit} className={styles.form}>
       <h1>Login</h1>
-      <label htmlFor="email" data-testid="email">
+      <label
+        className={styles["field-label"]}
+        htmlFor="email"
+        data-testid="email"
+      >
         <span>Email</span>
         <input
-          className={styles.input}
+          className={styles["field-input"]}
           {...register("email", {
             required: { value: true, message: "Email is required" },
           })}
           id="email"
         />
-        <span className={styles.error} data-testid="error">
+        <span className={styles["field-error"]} data-testid="error">
           {errors.email?.message}
         </span>
-        <span className={styles.error} data-testid="server-conflict">
+        <span className={styles["field-error"]} data-testid="server-conflict">
           {errors.root?.["server-conflict"]?.message}
         </span>
       </label>
-      <label htmlFor="password" data-testid="password">
+      <label
+        className={styles["field-label"]}
+        htmlFor="password"
+        data-testid="password"
+      >
         <span>Password</span>
-        <div className={styles.stack}>
+        <div className={styles["field-group"]}>
           <input
-            className={styles.input}
+            className={styles["field-input"]}
             {...register("password", {
               required: {
                 value: true,
@@ -111,17 +119,20 @@ export function Login() {
             <IconEye />
           </Button>
         </div>
-        <span className={styles.error} data-testid="error">
+        <span className={styles["field-error"]} data-testid="error">
           {errors.password?.message}
         </span>
-        <span className={styles.error} data-testid="server-unauthorized">
+        <span
+          className={styles["field-error"]}
+          data-testid="server-unauthorized"
+        >
           {errors.root?.["server-unauthorized"]?.message}
         </span>
       </label>
-      <Button type="submit" variant="login">
+      <Button type="submit" variant="login" disabled={isPending}>
         Login
       </Button>
-      <p>
+      <p className={styles["cta-link"]}>
         Need to create an account? <Link to="/signup">Sign up</Link>
       </p>
     </form>

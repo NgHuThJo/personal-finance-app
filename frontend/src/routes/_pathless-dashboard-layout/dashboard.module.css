@@ -1,14 +1,14 @@
-.fallback {
-  grid-column: breakout-start / breakout-end;
+.page {
+  display: grid;
+  /* grid-template-rows: auto auto 1fr; */
 }
 
 .header {
-  grid-column: breakout-start / breakout-end;
   display: flex;
   justify-content: space-between;
 
   h1 {
-    font-weight: var(--fw-bold);
-    font-size: var(--fs-4);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-subheading);
   }
 }

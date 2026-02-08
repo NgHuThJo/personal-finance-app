@@ -15,18 +15,19 @@
 
   /* Pattern for names: --<property>-<role>-[<variant>]-[<state>] */
   /* Text */
-  --color-text-1: var(--white);
-  --color-text-2: var(--grey-500);
+  --color-border-input-primary: var(--grey-900);
+  --color-text-primary: var(--grey-900);
+  --color-text-secondary: var(--grey-500);
   --color-text-inverse: var(--white);
-  --color-border-action-input-1: var(--grey-900);
-  --color-text-action-link-1: var(--grey-500);
+  --color-text-link-primary: var(--grey-500);
+  --color-text-cta-primary: var(--white);
 
   /* Background */
-  --color-background-canvas-1: var(--beige-100);
-  --color-background-surface-1: var(--grey-900);
-  --color-background-surface-2: var(--white);
-  --color-background-surface-raised-1: var(--white);
-  --color-background-action-cta-1: var(--grey-900);
+  --color-background-canvas-primary: var(--beige-100);
+  --color-background-surface-primary: var(--grey-900);
+  --color-background-surface-secondary: var(--white);
+  --color-background-surface-raised-primary: var(--white);
+  --color-background-cta-primary: var(--grey-900);
 
   /* Status */
   --color-status-error: var(--red);

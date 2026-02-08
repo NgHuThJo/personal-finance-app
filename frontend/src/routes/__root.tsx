@@ -2,6 +2,7 @@ import { useQuery, type QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { useEffect } from "react";
+import styles from "./__root.module.css";
 import { Logger } from "#frontend/shared/app/logging";
 import { getApiAuthRefreshOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { accessTokenStore } from "#frontend/shared/store/access-token";
@@ -40,7 +41,11 @@ function Root() {
   }, [data, setAccessToken, isPending, error]);
 
   if (isPending) {
-    return <p>Root is pending...</p>;
+    return (
+      <div className={styles["page-loader"]}>
+        <h1 className={styles["loading-text"]}></h1>
+      </div>
+    );
   }
 
   return (

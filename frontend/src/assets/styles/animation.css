@@ -1,6 +1,6 @@
 :root {
   --transition-duration: 0.3s;
-  --fade-transition-duration: 1s;
+  --transition-duration-fade: 1s;
 }
 
 @keyframes slideIn {

@@ -47,11 +47,15 @@ export function Signup() {
 
   return (
     <form onSubmit={onSubmit} className={styles.form}>
-      <h1>Sign up</h1>
-      <label data-testid="label-name" htmlFor="name">
+      <h1 className={styles.heading}>Sign up</h1>
+      <label
+        className={styles["field-label"]}
+        data-testid="label-name"
+        htmlFor="name"
+      >
         <span>Name</span>
         <input
-          className={styles.input}
+          className={styles["field-input"]}
           {...register("name", {
             required: {
               value: true,
@@ -60,14 +64,18 @@ export function Signup() {
           })}
           id="name"
         />
-        <span data-testid="error" className={styles.error}>
+        <span data-testid="error" className={styles["field-error"]}>
           {errors.name?.message}
         </span>
       </label>
-      <label data-testid="label-email" htmlFor="email">
+      <label
+        className={styles["field-label"]}
+        data-testid="label-email"
+        htmlFor="email"
+      >
         <span>Email address</span>
         <input
-          className={styles.input}
+          className={styles["field-input"]}
           {...register("email", {
             required: {
               value: true,
@@ -76,18 +84,22 @@ export function Signup() {
           })}
           id="email"
         />
-        <span data-testid="error" className={styles.error}>
+        <span data-testid="error" className={styles["field-error"]}>
           {errors.email?.message}
         </span>
-        <span data-testid="server-conflict" className={styles.error}>
+        <span data-testid="server-conflict" className={styles["field-error"]}>
           {errors["root"]?.["server-conflict"]?.message}
         </span>
       </label>
-      <label data-testid="label-password" htmlFor="password">
+      <label
+        className={styles["field-label"]}
+        data-testid="label-password"
+        htmlFor="password"
+      >
         <span>Password</span>
-        <div className={styles.stack}>
+        <div className={styles["field-group"]}>
           <input
-            className={styles.input}
+            className={styles["field-input"]}
             {...register("password", {
               required: {
                 value: true,
@@ -105,14 +117,14 @@ export function Signup() {
             <IconEye />
           </Button>
         </div>
-        <span data-testid="error" className={styles.error}>
+        <span data-testid="error" className={styles["field-error"]}>
           {errors.password?.message}
         </span>
       </label>
       <Button type="submit" variant="login" disabled={isPending}>
         Create Account
       </Button>
-      <p>
+      <p className={styles["cta-link"]}>
         Already have an account? <Link to="/login">Login</Link>
       </p>
     </form>

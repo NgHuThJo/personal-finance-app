@@ -2,8 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import styles from "./dashboard.module.css";
 import { Logout } from "#frontend/assets/icons/icons";
-import { BottomSummary } from "#frontend/features/dashboard/components/bottom-summary";
-import { TopSummary } from "#frontend/features/dashboard/components/top-summary";
+import { AccountSummary } from "#frontend/features/dashboard/components/account-summary";
+import { BalanceSummary } from "#frontend/features/dashboard/components/balance-summary";
 import { Logger } from "#frontend/shared/app/logging";
 import { postApiAuthLogoutMutation } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { Button } from "#frontend/shared/primitives/button";
@@ -39,7 +39,7 @@ function Index() {
   };
 
   return (
-    <>
+    <div className={styles.page}>
       <header className={styles.header}>
         <h1>Overview</h1>
         <Button variant="logout" onClick={onClickLogout}>
@@ -47,8 +47,8 @@ function Index() {
           Logout
         </Button>
       </header>
-      <TopSummary />
-      <BottomSummary />
-    </>
+      <BalanceSummary />
+      <AccountSummary />
+    </div>
   );
 }

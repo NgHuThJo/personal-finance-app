@@ -102,9 +102,9 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: var(--fs-label);
+  font-size: var(--font-size-label);
   line-height: 1;
-  font-weight: var(--fw-label);
+  font-weight: var(--font-weight-label);
   user-select: none;
 }
 

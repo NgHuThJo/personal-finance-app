@@ -3,39 +3,35 @@
   gap: 2rem;
   padding: 2rem;
   border-radius: var(--border-radius-6);
-  background-color: var(--color-background-surface-raised-1);
+  background-color: var(--color-background-surface-raised-primary);
+}
 
-  label {
-    display: grid;
-    gap: 0.5rem;
-    grid-template-rows: repeat(3, auto);
-    font-weight: var(--fw-medium);
-    color: var(--color-text-2);
+.heading {
+  font-size: var(--font-size-subheading);
+  font-weight: var(--font-weight-bold);
+}
 
-    & > :first-child {
-      grid-row: 1 / 2;
-    }
-  }
-
-  p:last-child {
-    text-align: center;
-  }
-
-  h1 {
-    font-size: var(--fs-4);
-    font-weight: var(--fw-bold);
-  }
+.cta-link {
+  text-align: center;
 
   a {
     text-decoration: underline;
   }
 }
 
-.error {
-  color: var(--color-status-error);
+.field-label {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-rows: repeat(3, auto);
+  font-weight: var(--font-weight-label);
+  color: var(--color-text-secondary);
+
+  & > :first-child {
+    grid-row: 1 / 2;
+  }
 }
 
-.stack {
+.field-group {
   display: grid;
   align-items: center;
 
@@ -48,14 +44,19 @@
   }
 }
 
-.input {
+.field-error {
+  color: var(--color-status-error);
+}
+
+.field-input {
   padding: var(--spacing-3);
+  border: 0.0625rem solid var(--color-border-input-primary);
   border-radius: var(--border-radius-4);
-  font-weight: var(--fw-bold);
+  font-weight: var(--font-weight-action);
   font-size: 1rem;
 
   &:focus-visible {
-    outline: 0.125rem solid var(--color-border-action-input-1);
+    outline: 0.125rem solid var(--color-border-input-primary);
     outline-offset: 0.125rem;
   }
 }

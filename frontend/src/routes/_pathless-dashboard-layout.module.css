@@ -1,26 +1,26 @@
 .layout {
-  --macro-grid-padding-inline: var(--spacing-10);
-  --macro-grid-breakout-column-width: 20rem;
-  --macro-grid-content-max-width: 50rem;
+  --padding-inline-macro-grid: var(--spacing-10);
+  --width-column-macro-grid-breakout: 20rem;
+  --width-max-macro-grid-content: 50rem;
 
   display: grid;
   grid-template-columns:
     [full-width-start breakout-left-start] minmax(
-      var(--macro-grid-padding-inline),
+      var(--padding-inline-macro-grid),
       1fr
     )
     [breakout-start breakout-right-start] minmax(
       0,
-      var(--macro-grid-breakout-column-width)
+      var(--width-column-macro-grid-breakout)
     )
     [content-start] min(
-      100% - 2 * var(--macro-grid-padding-inline),
-      var(--macro-grid-content-max-width)
+      100% - 2 * var(--padding-inline-macro-grid),
+      var(--width-max-macro-grid-content)
     )
     [content-end]
-    minmax(0, var(--macro-grid-breakout-column-width))
+    minmax(0, var(--width-column-macro-grid-breakout))
     [breakout-end breakout-left-end]
-    minmax(var(--macro-grid-padding-inline), 1fr)
+    minmax(var(--padding-inline-macro-grid), 1fr)
     [full-width-end breakout-right-end];
   row-gap: var(--spacing-8);
   min-height: 100%;

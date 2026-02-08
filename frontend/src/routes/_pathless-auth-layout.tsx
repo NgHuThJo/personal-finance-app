@@ -15,15 +15,19 @@ function AuthLayout() {
   }
 
   return (
-    <main className={styles.layout}>
-      <div className={styles.heading}>
+    <main className={styles.page}>
+      <div className={styles["page-header"]}>
         <Logo />
       </div>
-      <div className={styles["grid-stack"]}>
-        <img src="/hero-login.png" alt="hero image" className={styles.img} />
-        <div className={styles["top-stack"]}>
+      <div className={styles["hero"]}>
+        <img
+          src="/hero-login.png"
+          alt="hero image"
+          className={styles["hero-image"]}
+        />
+        <div className={styles["hero-content"]}>
           <Logo />
-          <div className={styles.description}>
+          <div className={styles["hero-description"]}>
             <h2>Keep track of your money and save for your future</h2>
             <p>
               Personal finance app puts you in control of your spending. Track
@@ -32,7 +36,7 @@ function AuthLayout() {
           </div>
         </div>
       </div>
-      <div className={styles.right}>
+      <div className={styles["auth-panel"]}>
         <Outlet />
       </div>
     </main>

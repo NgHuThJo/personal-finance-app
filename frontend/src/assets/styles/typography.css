@@ -1,35 +1,33 @@
 :root {
-  --ff-root:
+  /* Values */
+
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Primitives */
+  --font-family-content:
     ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji,
     Segoe UI Symbol, Noto Color Emoji;
 
-  --fw-light: 300;
-  --fw-normal: 400;
-  --fw-medium: 500;
-  --fw-semibold: 600;
-  --fw-bold: 700;
+  --font-weight-content: var(--font-weight-normal);
+  --font-weight-label: var(--font-weight-medium);
+  --font-weight-action: var(--font-weight-semibold);
+  --font-weight-heading: var(--font-weight-bold);
 
-  --fw-body: var(--fw-normal);
+  --font-size-content-primary: 0.875rem;
+  --font-size-content-secondary: 1.5rem;
+  --font-size-action: 1.25rem;
+  --font-size-subheading: 2rem;
+  --font-size-heading: 3.25rem;
 
-  --fs-1: 0.875rem;
-  --fs-2: 1.25rem;
-  --fs-3: 1.5rem;
-  --fs-4: 2rem;
-  --fs-5: 3.25rem;
-
-  --fs-body: var(--fs-1);
-
-  /* --fw-root: 400;
-  --fw-label: 500;
-  --fw-link: 500;
-  --fw-button: 600; */
-  --fw-heading: var(--fw-bold);
-
-  /* --fs-root: 1rem;
-  --fs-h1: clamp(3rem, 2rem + 5vw, 5rem);
-  --fs-h2: clamp(2rem, 1.5rem + 2.5vw, 3rem);
-  --fs-h3: clamp(1.5rem, 1rem + 2.5vw, 2.5rem);
-  --fs-h4: clamp(1.125rem, 0.6875rem + 2.1875vw, 2rem);
-  --fs-button: 1.25rem;
-  --fs-label: 1rem; */
+  /* 
+  --font-size-root: 1rem;
+  --font-size-h1: clamp(3rem, 2rem + 5vw, 5rem);
+  --font-size-h2: clamp(2rem, 1.5rem + 2.5vw, 3rem);
+  --font-size-h3: clamp(1.5rem, 1rem + 2.5vw, 2.5rem);
+  --font-size-h4: clamp(1.125rem, 0.6875rem + 2.1875vw, 2rem); 
+  */
 }

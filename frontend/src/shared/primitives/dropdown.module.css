@@ -117,7 +117,7 @@
   border-radius: calc(var(--border-radius-4) * 1px);
   border: 1px solid var(--c-dropdown-border);
   padding: 0.5rem 0.625rem;
-  box-shadow: var(--box-shadow);
+  box-shadow: var(--shadow);
 
   &[data-state="open"] {
     animation:
