@@ -53,7 +53,7 @@
   }
 
   h2 {
-    font-size: var(--font-size-subheading);
+    font-size: var(--font-size-heading);
   }
 }
 

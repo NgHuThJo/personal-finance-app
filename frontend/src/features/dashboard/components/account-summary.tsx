@@ -24,17 +24,17 @@ const options = [
 
 export function AccountSummary() {
   return (
-    <ul className={styles.layout}>
+    <ul className={styles["list"]}>
       {options.map(({ name, to }) => (
         <li className={styles["list-item"]} key={name}>
-          <div className={styles["list-item-top"]}>
-            <h2>{name}</h2>
+          <div className={styles["list-item-header"]}>
+            <h2 className={styles["list-heading"]}>{name}</h2>
             <Link to={to} className={styles.link}>
               See Details
               <CaretRight />
             </Link>
           </div>
-          <div>
+          <div className={styles["list-item-content"]}>
             <p>No data provided.</p>
           </div>
         </li>

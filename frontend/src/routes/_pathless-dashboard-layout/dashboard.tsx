@@ -21,20 +21,20 @@ function Index() {
       credentials: "include",
     }),
     onSuccess: () => {
-      Logger.info("User successfully logged out");
+      Logger.debug("User successfully logged out");
     },
     onError: (error) => {
-      Logger.error("Some error while trying to log out user", error);
+      Logger.error("Error while trying to log out user", error);
     },
     onSettled: () => {
-      Logger.info("User logout settled");
+      Logger.debug("User logout settled");
       logout();
       router.invalidate();
     },
   });
 
   const onClickLogout = () => {
-    Logger.info("User logs out");
+    Logger.debug("User logs out");
     mutate({});
   };
 

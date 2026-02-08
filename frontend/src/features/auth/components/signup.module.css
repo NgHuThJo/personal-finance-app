@@ -7,7 +7,7 @@
 }
 
 .heading {
-  font-size: var(--font-size-subheading);
+  font-size: var(--font-size-heading);
   font-weight: var(--font-weight-bold);
 }
 
