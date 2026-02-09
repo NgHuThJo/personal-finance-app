@@ -23,7 +23,7 @@ function Root() {
     }),
     throwOnError: false,
     enabled: !isAuthBootstrapped,
-    retry: 0,
+    // retry: 3,
   });
 
   useEffect(() => {

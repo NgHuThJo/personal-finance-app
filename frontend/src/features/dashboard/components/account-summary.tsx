@@ -18,7 +18,7 @@ const options = [
   },
   {
     name: "Recurring Bills",
-    to: "/recurring-bills",
+    to: "/bills",
   },
 ];
 

@@ -16,6 +16,9 @@
   /* Pattern for names: --<property>-<role>-[<variant>]-[<state>] */
   /* Text */
   --color-border-input-primary: var(--grey-900);
+  --color-navigation-primary: var(--green);
+  --color-navigation-secondary: var(--grey-300);
+  --color-navigation-secondary-hover: var(--white);
   --color-text-primary: var(--grey-900);
   --color-text-secondary: var(--grey-500);
   --color-text-inverse: var(--white);
@@ -28,6 +31,7 @@
   --color-background-surface-secondary: var(--white);
   --color-background-surface-raised-primary: var(--white);
   --color-background-cta-primary: var(--grey-900);
+  --color-background-cta-secondary: var(--white);
 
   /* Status */
   --color-status-error: var(--red);

@@ -1,6 +1,6 @@
 import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
 import styles from "./_pathless-dashboard-layout.module.css";
-import { Logger } from "#frontend/shared/app/logging";
+import { DashboardNavigation } from "#frontend/features/dashboard/components/dashboard-navigation";
 import { useAccessToken } from "#frontend/shared/store/access-token";
 
 export const Route = createFileRoute("/_pathless-dashboard-layout")({
@@ -11,16 +11,17 @@ function DashboardLayout() {
   const accessToken = useAccessToken();
 
   if (!accessToken) {
-    Logger.info("in dashboard layout");
     return <Navigate to={"/login"} />;
   }
 
   return (
-    <>
+    <div className={styles.page}>
       <main className={styles.layout}>
         <Outlet />
       </main>
-      <nav className={styles.navigation}></nav>
-    </>
+      <div className={styles["nav-wrapper"]}>
+        <DashboardNavigation />
+      </div>
+    </div>
   );
 }

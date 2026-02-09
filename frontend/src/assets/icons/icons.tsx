@@ -565,6 +565,7 @@ export function ShortLogo(props: React.SVGProps<SVGSVGElement>) {
       height="22"
       viewBox="0 0 22 22"
       fill="none"
+      {...props}
     >
       <path
         d="M8.46495 21.44H2.44895V10.24H0.272949V5.312H2.57695C3.21695 2.272 6.19295 0 11.4729 0H12.7529V4.288H10.5129C8.84895 4.288 8.04895 4.448 8.08095 5.312H12.7529V10.24H8.46495V21.44Z"
@@ -586,6 +587,7 @@ export function Logout(props: React.SVGProps<SVGSVGElement>) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      {...props}
     >
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
       <polyline points="16 17 21 12 16 7"></polyline>

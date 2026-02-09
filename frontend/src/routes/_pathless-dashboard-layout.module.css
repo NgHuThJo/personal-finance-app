@@ -1,5 +1,13 @@
+.page {
+  @media screen and (width >= 1024px) {
+    display: grid;
+    grid-template-areas: "nav dashboard" "nav dashboard";
+    grid-template-columns: auto 1fr;
+  }
+}
+
 .layout {
-  --padding-inline-macro-grid: var(--spacing-10);
+  --padding-inline-macro-grid: var(--spacing-4);
   --width-column-macro-grid-breakout: 20rem;
   --width-max-macro-grid-content: 50rem;
 
@@ -29,11 +37,19 @@
   > * {
     grid-column: breakout-start / breakout-end;
   }
+
+  @media screen and (width >= 1024px) {
+    grid-area: dashboard;
+  }
 }
 
-.navigation {
-  height: 20px;
+.nav-wrapper {
   position: sticky;
   bottom: 0;
-  background-color: red;
+
+  @media screen and (width >= 1024px) {
+    grid-area: nav;
+    top: 0;
+    bottom: revert;
+  }
 }
