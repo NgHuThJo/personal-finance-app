@@ -2,13 +2,13 @@ import { createStore, useStore } from "zustand";
 
 type AccessTokenStore = {
   accessToken: string | null;
-  setAccessToken: (newAccessToken: string) => void;
+  setAccessToken: (newAccessToken: string | null) => void;
   logout: () => void;
 };
 
 export const accessTokenStore = createStore<AccessTokenStore>((set) => ({
   accessToken: null,
-  setAccessToken: (newAccessToken: string) =>
+  setAccessToken: (newAccessToken) =>
     set(() => ({
       accessToken: newAccessToken,
     })),
