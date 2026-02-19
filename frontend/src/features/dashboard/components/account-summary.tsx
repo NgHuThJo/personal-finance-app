@@ -1,9 +1,9 @@
-import { Link } from "@tanstack/react-router";
+import { Link, linkOptions } from "@tanstack/react-router";
 import styles from "./account-summary.module.css";
 import { CaretRight } from "#frontend/assets/icons/icons";
 
 // Ensure that key is unique
-const options = [
+const options = linkOptions([
   {
     name: "Pots",
     to: "/pots",
@@ -20,7 +20,7 @@ const options = [
     name: "Recurring Bills",
     to: "/bills",
   },
-];
+]);
 
 export function AccountSummary() {
   return (

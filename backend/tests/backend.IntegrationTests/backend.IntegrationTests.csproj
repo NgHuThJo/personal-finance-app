@@ -13,6 +13,7 @@
     <PackageReference Include="FluentAssertions" VersionOverride="8.8.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" VersionOverride="10.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" VersionOverride="18.0.1" />
+    <PackageReference Include="Respawn" />
     <PackageReference Include="Testcontainers" VersionOverride="4.9.0" />
     <PackageReference Include="Testcontainers.PostgreSql" VersionOverride="4.9.0" />
     <PackageReference Include="xunit.v3" VersionOverride="3.2.1" />

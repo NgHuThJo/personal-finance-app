@@ -12,8 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as PathlessDashboardLayoutRouteImport } from './routes/_pathless-dashboard-layout'
 import { Route as PathlessAuthLayoutRouteImport } from './routes/_pathless-auth-layout'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PathlessDashboardLayoutTransactionsRouteImport } from './routes/_pathless-dashboard-layout/transactions'
 import { Route as PathlessDashboardLayoutPotsRouteImport } from './routes/_pathless-dashboard-layout/pots'
 import { Route as PathlessDashboardLayoutDashboardRouteImport } from './routes/_pathless-dashboard-layout/dashboard'
+import { Route as PathlessDashboardLayoutBudgetRouteImport } from './routes/_pathless-dashboard-layout/budget'
+import { Route as PathlessDashboardLayoutBillsRouteImport } from './routes/_pathless-dashboard-layout/bills'
 import { Route as PathlessAuthLayoutSignupRouteImport } from './routes/_pathless-auth-layout/signup'
 import { Route as PathlessAuthLayoutLoginRouteImport } from './routes/_pathless-auth-layout/login'
 
@@ -30,6 +33,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PathlessDashboardLayoutTransactionsRoute =
+  PathlessDashboardLayoutTransactionsRouteImport.update({
+    id: '/transactions',
+    path: '/transactions',
+    getParentRoute: () => PathlessDashboardLayoutRoute,
+  } as any)
 const PathlessDashboardLayoutPotsRoute =
   PathlessDashboardLayoutPotsRouteImport.update({
     id: '/pots',
@@ -40,6 +49,18 @@ const PathlessDashboardLayoutDashboardRoute =
   PathlessDashboardLayoutDashboardRouteImport.update({
     id: '/dashboard',
     path: '/dashboard',
+    getParentRoute: () => PathlessDashboardLayoutRoute,
+  } as any)
+const PathlessDashboardLayoutBudgetRoute =
+  PathlessDashboardLayoutBudgetRouteImport.update({
+    id: '/budget',
+    path: '/budget',
+    getParentRoute: () => PathlessDashboardLayoutRoute,
+  } as any)
+const PathlessDashboardLayoutBillsRoute =
+  PathlessDashboardLayoutBillsRouteImport.update({
+    id: '/bills',
+    path: '/bills',
     getParentRoute: () => PathlessDashboardLayoutRoute,
   } as any)
 const PathlessAuthLayoutSignupRoute =
@@ -58,15 +79,21 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof PathlessAuthLayoutLoginRoute
   '/signup': typeof PathlessAuthLayoutSignupRoute
+  '/bills': typeof PathlessDashboardLayoutBillsRoute
+  '/budget': typeof PathlessDashboardLayoutBudgetRoute
   '/dashboard': typeof PathlessDashboardLayoutDashboardRoute
   '/pots': typeof PathlessDashboardLayoutPotsRoute
+  '/transactions': typeof PathlessDashboardLayoutTransactionsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof PathlessAuthLayoutLoginRoute
   '/signup': typeof PathlessAuthLayoutSignupRoute
+  '/bills': typeof PathlessDashboardLayoutBillsRoute
+  '/budget': typeof PathlessDashboardLayoutBudgetRoute
   '/dashboard': typeof PathlessDashboardLayoutDashboardRoute
   '/pots': typeof PathlessDashboardLayoutPotsRoute
+  '/transactions': typeof PathlessDashboardLayoutTransactionsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -75,14 +102,33 @@ export interface FileRoutesById {
   '/_pathless-dashboard-layout': typeof PathlessDashboardLayoutRouteWithChildren
   '/_pathless-auth-layout/login': typeof PathlessAuthLayoutLoginRoute
   '/_pathless-auth-layout/signup': typeof PathlessAuthLayoutSignupRoute
+  '/_pathless-dashboard-layout/bills': typeof PathlessDashboardLayoutBillsRoute
+  '/_pathless-dashboard-layout/budget': typeof PathlessDashboardLayoutBudgetRoute
   '/_pathless-dashboard-layout/dashboard': typeof PathlessDashboardLayoutDashboardRoute
   '/_pathless-dashboard-layout/pots': typeof PathlessDashboardLayoutPotsRoute
+  '/_pathless-dashboard-layout/transactions': typeof PathlessDashboardLayoutTransactionsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/signup' | '/dashboard' | '/pots'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/bills'
+    | '/budget'
+    | '/dashboard'
+    | '/pots'
+    | '/transactions'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/signup' | '/dashboard' | '/pots'
+  to:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/bills'
+    | '/budget'
+    | '/dashboard'
+    | '/pots'
+    | '/transactions'
   id:
     | '__root__'
     | '/'
@@ -90,8 +136,11 @@ export interface FileRouteTypes {
     | '/_pathless-dashboard-layout'
     | '/_pathless-auth-layout/login'
     | '/_pathless-auth-layout/signup'
+    | '/_pathless-dashboard-layout/bills'
+    | '/_pathless-dashboard-layout/budget'
     | '/_pathless-dashboard-layout/dashboard'
     | '/_pathless-dashboard-layout/pots'
+    | '/_pathless-dashboard-layout/transactions'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -123,6 +172,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_pathless-dashboard-layout/transactions': {
+      id: '/_pathless-dashboard-layout/transactions'
+      path: '/transactions'
+      fullPath: '/transactions'
+      preLoaderRoute: typeof PathlessDashboardLayoutTransactionsRouteImport
+      parentRoute: typeof PathlessDashboardLayoutRoute
+    }
     '/_pathless-dashboard-layout/pots': {
       id: '/_pathless-dashboard-layout/pots'
       path: '/pots'
@@ -135,6 +191,20 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof PathlessDashboardLayoutDashboardRouteImport
+      parentRoute: typeof PathlessDashboardLayoutRoute
+    }
+    '/_pathless-dashboard-layout/budget': {
+      id: '/_pathless-dashboard-layout/budget'
+      path: '/budget'
+      fullPath: '/budget'
+      preLoaderRoute: typeof PathlessDashboardLayoutBudgetRouteImport
+      parentRoute: typeof PathlessDashboardLayoutRoute
+    }
+    '/_pathless-dashboard-layout/bills': {
+      id: '/_pathless-dashboard-layout/bills'
+      path: '/bills'
+      fullPath: '/bills'
+      preLoaderRoute: typeof PathlessDashboardLayoutBillsRouteImport
       parentRoute: typeof PathlessDashboardLayoutRoute
     }
     '/_pathless-auth-layout/signup': {
@@ -168,15 +238,22 @@ const PathlessAuthLayoutRouteWithChildren =
   PathlessAuthLayoutRoute._addFileChildren(PathlessAuthLayoutRouteChildren)
 
 interface PathlessDashboardLayoutRouteChildren {
+  PathlessDashboardLayoutBillsRoute: typeof PathlessDashboardLayoutBillsRoute
+  PathlessDashboardLayoutBudgetRoute: typeof PathlessDashboardLayoutBudgetRoute
   PathlessDashboardLayoutDashboardRoute: typeof PathlessDashboardLayoutDashboardRoute
   PathlessDashboardLayoutPotsRoute: typeof PathlessDashboardLayoutPotsRoute
+  PathlessDashboardLayoutTransactionsRoute: typeof PathlessDashboardLayoutTransactionsRoute
 }
 
 const PathlessDashboardLayoutRouteChildren: PathlessDashboardLayoutRouteChildren =
   {
+    PathlessDashboardLayoutBillsRoute: PathlessDashboardLayoutBillsRoute,
+    PathlessDashboardLayoutBudgetRoute: PathlessDashboardLayoutBudgetRoute,
     PathlessDashboardLayoutDashboardRoute:
       PathlessDashboardLayoutDashboardRoute,
     PathlessDashboardLayoutPotsRoute: PathlessDashboardLayoutPotsRoute,
+    PathlessDashboardLayoutTransactionsRoute:
+      PathlessDashboardLayoutTransactionsRoute,
   }
 
 const PathlessDashboardLayoutRouteWithChildren =

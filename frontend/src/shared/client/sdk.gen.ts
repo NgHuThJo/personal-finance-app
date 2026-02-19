@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetApiAuthRefreshData, GetApiAuthRefreshErrors, GetApiAuthRefreshResponses, GetApiPotsData, GetApiPotsResponses, GetApiUsersByUserIdData, GetApiUsersByUserIdErrors, GetApiUsersByUserIdResponses, PostApiAuthLoginData, PostApiAuthLoginErrors, PostApiAuthLoginResponses, PostApiAuthLogoutData, PostApiAuthLogoutErrors, PostApiAuthLogoutResponses, PostApiAuthSignupData, PostApiAuthSignupErrors, PostApiAuthSignupResponses, PostApiPotsData, PostApiPotsResponses } from './types.gen';
+import type { GetApiAuthRefreshData, GetApiAuthRefreshErrors, GetApiAuthRefreshResponses, GetApiBalancesData, GetApiBalancesErrors, GetApiBalancesResponses, GetApiPotsData, GetApiPotsResponses, GetApiUsersData, GetApiUsersErrors, GetApiUsersResponses, PostApiAuthLoginData, PostApiAuthLoginErrors, PostApiAuthLoginResponses, PostApiAuthLogoutData, PostApiAuthLogoutErrors, PostApiAuthLogoutResponses, PostApiAuthSignupData, PostApiAuthSignupErrors, PostApiAuthSignupResponses, PostApiPotsData, PostApiPotsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -18,7 +18,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const getApiUsersByUserId = <ThrowOnError extends boolean = false>(options: Options<GetApiUsersByUserIdData, ThrowOnError>) => (options.client ?? client).get<GetApiUsersByUserIdResponses, GetApiUsersByUserIdErrors, ThrowOnError>({ url: '/api/users/{userId}', ...options });
+export const getApiUsers = <ThrowOnError extends boolean = false>(options?: Options<GetApiUsersData, ThrowOnError>) => (options?.client ?? client).get<GetApiUsersResponses, GetApiUsersErrors, ThrowOnError>({ url: '/api/users', ...options });
 
 export const getApiPots = <ThrowOnError extends boolean = false>(options: Options<GetApiPotsData, ThrowOnError>) => (options.client ?? client).get<GetApiPotsResponses, unknown, ThrowOnError>({
     url: '/api/pots',
@@ -59,3 +59,5 @@ export const postApiAuthLogin = <ThrowOnError extends boolean = false>(options: 
 export const postApiAuthLogout = <ThrowOnError extends boolean = false>(options?: Options<PostApiAuthLogoutData, ThrowOnError>) => (options?.client ?? client).post<PostApiAuthLogoutResponses, PostApiAuthLogoutErrors, ThrowOnError>({ url: '/api/auth/logout', ...options });
 
 export const getApiAuthRefresh = <ThrowOnError extends boolean = false>(options?: Options<GetApiAuthRefreshData, ThrowOnError>) => (options?.client ?? client).get<GetApiAuthRefreshResponses, GetApiAuthRefreshErrors, ThrowOnError>({ url: '/api/auth/refresh', ...options });
+
+export const getApiBalances = <ThrowOnError extends boolean = false>(options?: Options<GetApiBalancesData, ThrowOnError>) => (options?.client ?? client).get<GetApiBalancesResponses, GetApiBalancesErrors, ThrowOnError>({ url: '/api/balances', ...options });

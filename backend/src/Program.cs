@@ -34,6 +34,7 @@ foreach (var interceptorType in intercepterTypes)
 
 // Register JwtTokenProvider
 builder.Services.AddSingleton<JwtTokenProvider>();
+builder.Services.AddScoped<CurrentUser>();
 builder.Services.AddProblemDetails(options =>
 {
     options.CustomizeProblemDetails = context =>
@@ -49,6 +50,7 @@ builder.Services.AddProblemDetails(options =>
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddValidatorsFromAssembly(assembly);
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddOpenApi();
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -90,6 +92,8 @@ builder
             ),
             ClockSkew = TimeSpan.Zero,
         };
+        // Use this to prevent sub claim from being mapped to legacy namespaces
+        options.MapInboundClaims = false;
     });
 builder.Services.AddAuthorization();
 
@@ -123,6 +127,6 @@ app.UseAuthorization();
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();
-app.MapUserApi().MapPotApi().MapAuthApi();
+app.MapUserApi().MapPotApi().MapAuthApi().MapBalanceApi();
 
 app.Run();

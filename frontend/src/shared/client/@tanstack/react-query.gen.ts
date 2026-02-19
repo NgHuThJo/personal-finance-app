@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { getApiAuthRefresh, getApiPots, getApiUsersByUserId, type Options, postApiAuthLogin, postApiAuthLogout, postApiAuthSignup, postApiPots } from '../sdk.gen';
-import type { GetApiAuthRefreshData, GetApiAuthRefreshError, GetApiAuthRefreshResponse, GetApiPotsData, GetApiPotsResponse, GetApiUsersByUserIdData, GetApiUsersByUserIdError, GetApiUsersByUserIdResponse, PostApiAuthLoginData, PostApiAuthLoginError, PostApiAuthLoginResponse, PostApiAuthLogoutData, PostApiAuthLogoutError, PostApiAuthLogoutResponse, PostApiAuthSignupData, PostApiAuthSignupError, PostApiAuthSignupResponse, PostApiPotsData, PostApiPotsResponse } from '../types.gen';
+import { getApiAuthRefresh, getApiBalances, getApiPots, getApiUsers, type Options, postApiAuthLogin, postApiAuthLogout, postApiAuthSignup, postApiPots } from '../sdk.gen';
+import type { GetApiAuthRefreshData, GetApiAuthRefreshError, GetApiAuthRefreshResponse, GetApiBalancesData, GetApiBalancesError, GetApiBalancesResponse, GetApiPotsData, GetApiPotsResponse, GetApiUsersData, GetApiUsersError, GetApiUsersResponse, PostApiAuthLoginData, PostApiAuthLoginError, PostApiAuthLoginResponse, PostApiAuthLogoutData, PostApiAuthLogoutError, PostApiAuthLogoutResponse, PostApiAuthSignupData, PostApiAuthSignupError, PostApiAuthSignupResponse, PostApiPotsData, PostApiPotsResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -39,11 +39,11 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     return [params];
 };
 
-export const getApiUsersByUserIdQueryKey = (options: Options<GetApiUsersByUserIdData>) => createQueryKey('getApiUsersByUserId', options);
+export const getApiUsersQueryKey = (options?: Options<GetApiUsersData>) => createQueryKey('getApiUsers', options);
 
-export const getApiUsersByUserIdOptions = (options: Options<GetApiUsersByUserIdData>) => queryOptions<GetApiUsersByUserIdResponse, GetApiUsersByUserIdError, GetApiUsersByUserIdResponse, ReturnType<typeof getApiUsersByUserIdQueryKey>>({
+export const getApiUsersOptions = (options?: Options<GetApiUsersData>) => queryOptions<GetApiUsersResponse, GetApiUsersError, GetApiUsersResponse, ReturnType<typeof getApiUsersQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await getApiUsersByUserId({
+        const { data } = await getApiUsers({
             ...options,
             ...queryKey[0],
             signal,
@@ -51,7 +51,7 @@ export const getApiUsersByUserIdOptions = (options: Options<GetApiUsersByUserIdD
         });
         return data;
     },
-    queryKey: getApiUsersByUserIdQueryKey(options)
+    queryKey: getApiUsersQueryKey(options)
 });
 
 export const getApiPotsQueryKey = (options: Options<GetApiPotsData>) => createQueryKey('getApiPots', options);
@@ -138,4 +138,19 @@ export const getApiAuthRefreshOptions = (options?: Options<GetApiAuthRefreshData
         return data;
     },
     queryKey: getApiAuthRefreshQueryKey(options)
+});
+
+export const getApiBalancesQueryKey = (options?: Options<GetApiBalancesData>) => createQueryKey('getApiBalances', options);
+
+export const getApiBalancesOptions = (options?: Options<GetApiBalancesData>) => queryOptions<GetApiBalancesResponse, GetApiBalancesError, GetApiBalancesResponse, ReturnType<typeof getApiBalancesQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getApiBalances({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiBalancesQueryKey(options)
 });

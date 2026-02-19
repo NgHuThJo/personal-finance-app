@@ -13,6 +13,9 @@ import { Logger } from "#frontend/shared/app/logging";
 import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 import "#frontend/assets/styles";
 
+// Added for customizing test behavior
+const defaultQueryRetries = import.meta.env.VITE_IS_E2E === "true" ? 0 : 3;
+
 z.config({
   customError: (issue) => {
     const formattedPath = issue?.path?.map((value) => {
@@ -46,6 +49,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       throwOnError: true,
+      retry: defaultQueryRetries,
     },
   },
   queryCache: new QueryCache({

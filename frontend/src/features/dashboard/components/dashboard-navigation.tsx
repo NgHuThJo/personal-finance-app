@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, linkOptions } from "@tanstack/react-router";
 import styles from "./dashboard-navigation.module.css";
 import {
   ArrowsDownUp,
@@ -9,28 +9,29 @@ import {
   ShortLogo,
 } from "#frontend/assets/icons/icons";
 
-const iconList = [
+// Note: "to" is used as React key, might consider a different key if "to" is not unique
+const iconList = linkOptions([
   {
     to: "/dashboard",
     icon: House,
   },
   {
-    to: "/dashboard/transactions",
+    to: "/transactions",
     icon: ArrowsDownUp,
   },
   {
-    to: "/dashboard/budget",
+    to: "/budget",
     icon: ChartDonut,
   },
   {
-    to: "/dashboard/pots",
+    to: "/pots",
     icon: Jar,
   },
   {
-    to: "/dashboard/bills",
+    to: "/bills",
     icon: Receipt,
   },
-];
+]);
 
 export function DashboardNavigation() {
   return (
@@ -41,6 +42,7 @@ export function DashboardNavigation() {
       <div className={styles["nav-list-wrapper"]}>
         {iconList.map(({ to, icon: Icon }) => (
           <Link
+            key={to}
             to={to}
             className={styles["nav-link"]}
             activeProps={{

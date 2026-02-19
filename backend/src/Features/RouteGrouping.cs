@@ -12,18 +12,31 @@ public static class RouteGrouper
         return builder.AddEndpointFilter<ValidationFilter<T>>();
     }
 
+    /* User */
     public static WebApplication MapUserApi(this WebApplication app)
     {
         var group = app.MapGroup("/api/users");
         group.RequireAuthorization();
         group
-            .MapGet("{userId:int}", GetUserByIdEndpoint.GetById)
-            .ProducesProblem((int)HttpStatusCode.NotFound)
-            .AddEndpointFilter<UserIdValidationFilter>();
+            .MapGet("", GetUserByIdEndpoint.GetById)
+            .ProducesProblem((int)HttpStatusCode.NotFound);
 
         return app;
     }
 
+    /* Balance */
+    public static WebApplication MapBalanceApi(this WebApplication app)
+    {
+        var group = app.MapGroup("/api/balances");
+        group.RequireAuthorization();
+        group
+            .MapGet("", GetBalanceByIdEndpoint.Get)
+            .ProducesProblem((int)HttpStatusCode.Unauthorized);
+
+        return app;
+    }
+
+    /* Pot */
     public static WebApplication MapPotApi(this WebApplication app)
     {
         var group = app.MapGroup("/api/pots");
@@ -38,6 +51,7 @@ public static class RouteGrouper
         return app;
     }
 
+    /* Auth */
     public static WebApplication MapAuthApi(this WebApplication app)
     {
         var group = app.MapGroup("/api/auth");

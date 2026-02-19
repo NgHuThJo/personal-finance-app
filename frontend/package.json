@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node dist/index.html",
     "dev": "vite",
+    "dev-test": "cross-env VITE_IS_E2E=true vite",
     "build": "vite build",
     "vitest": "vitest",
     "playwright": "npx playwright test --ui",

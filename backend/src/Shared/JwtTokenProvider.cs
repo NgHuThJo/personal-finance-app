@@ -33,8 +33,10 @@ public class JwtTokenProvider(IConfiguration config)
             ]),
             Issuer = jwtConfig["Issuer"]!,
             Audience = jwtConfig["Audience"]!,
+            NotBefore = DateTime.UtcNow,
+            IssuedAt = DateTime.UtcNow,
             Expires = DateTime.UtcNow.AddMinutes(
-                jwtConfig.GetValue<int>(jwtConfig["Expires"]!)
+                jwtConfig.GetValue<int>("Expires")
             ),
             SigningCredentials = credentials,
         };

@@ -1,5 +1,4 @@
 using backend.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -14,14 +13,20 @@ public class TestWebApplicationFactory(string connectionString)
     private readonly string _connectionString = connectionString;
     public HttpClient Client = null!;
     public WebApplicationFactory<Program> Factory = null!;
+    public string DefaultUserId { get; set; } = "1";
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureTestServices(services =>
         {
+            // Set this property to this class's property value whenever a TestAuthHandlerOptions is instantiated somewhere
+            services.Configure<TestAuthHandlerOptions>(options =>
+                options.DefaultUserId = DefaultUserId
+            );
+
             services
                 .AddAuthentication("TestScheme")
-                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                .AddScheme<TestAuthHandlerOptions, TestAuthHandler>(
                     "TestScheme",
                     options => { }
                 );

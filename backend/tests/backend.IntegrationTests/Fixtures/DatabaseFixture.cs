@@ -2,6 +2,7 @@ using backend.Models;
 using backend.Shared;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using Respawn;
 using Testcontainers.PostgreSql;
 using Xunit;
 
@@ -10,6 +11,8 @@ namespace backend.IntegrationTests;
 public class DatabaseFixture(PostgresContainerFixture containerFixture)
     : IAsyncLifetime
 {
+    private Respawner _respawner = null!;
+    private NpgsqlConnection _connection = null!;
     public PostgreSqlContainer Container { get; init; } =
         containerFixture.Container;
     public string ConnectionString { get; private set; } = null!;
@@ -17,17 +20,19 @@ public class DatabaseFixture(PostgresContainerFixture containerFixture)
 
     public async ValueTask InitializeAsync()
     {
-        ConnectionString = Container.GetConnectionString();
+        await using (
+            var adminConnection = new NpgsqlConnection(
+                Container.GetConnectionString()
+            )
+        )
+        {
+            await adminConnection.OpenAsync();
 
-        await using var adminConnection = new NpgsqlConnection(
-            Container.GetConnectionString()
-        );
-
-        await adminConnection.OpenAsync();
-
-        await using var createCommand = adminConnection.CreateCommand();
-        createCommand.CommandText = $"""CREATE DATABASE "{DatabaseName}";""";
-        await createCommand.ExecuteNonQueryAsync();
+            await using var createCommand = adminConnection.CreateCommand();
+            createCommand.CommandText =
+                $"""CREATE DATABASE "{DatabaseName}";""";
+            await createCommand.ExecuteNonQueryAsync();
+        }
 
         ConnectionString = new NpgsqlConnectionStringBuilder(
             Container.GetConnectionString()
@@ -40,26 +45,59 @@ public class DatabaseFixture(PostgresContainerFixture containerFixture)
             .UseNpgsql(ConnectionString)
             .Options;
 
+        await using (
+            var db = new AppDbContext(options, new TimestampInterceptor())
+        )
+        {
+            // First migrate, then seed
+            await db.Database.MigrateAsync();
+            await SeedTestDb();
+        }
+
+        _connection = new NpgsqlConnection(ConnectionString);
+        await _connection.OpenAsync();
+
+        _respawner = await Respawner.CreateAsync(
+            _connection,
+            new RespawnerOptions
+            {
+                DbAdapter = DbAdapter.Postgres,
+                SchemasToInclude = ["public"],
+                TablesToIgnore = ["__EFMigrationsHistory"],
+                // WithReseed resets serial/identity counters
+                WithReseed = true,
+            }
+        );
+    }
+
+    public async Task SeedTestDb()
+    {
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseNpgsql(ConnectionString)
+            .Options;
+
         await using var db = new AppDbContext(
             options,
             new TimestampInterceptor()
         );
 
-        await db.Database.MigrateAsync();
-
         // Seed database here
-        var fakeUsers = UserFaker
+        var listOfFakeUsers = UserFaker
             .CreateUserFaker()
-            .UseSeed(TestConstants.TESTDATA_SEED);
+            .Generate(TestConstants.NUMBER_OF_USERS);
 
-        var newUsers = fakeUsers.Generate(5);
-        db.Set<User>().AddRange(newUsers);
+        db.Set<User>().AddRange(listOfFakeUsers);
         await db.SaveChangesAsync();
+    }
+
+    public async Task ResetAsync()
+    {
+        await _respawner.ResetAsync(_connection);
     }
 
     public async ValueTask DisposeAsync()
     {
-        await using var adminConnection = new NpgsqlConnection(
+        var adminConnection = new NpgsqlConnection(
             Container.GetConnectionString()
         );
         await adminConnection.OpenAsync();

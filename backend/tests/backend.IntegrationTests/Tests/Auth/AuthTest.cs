@@ -17,19 +17,19 @@ public class AuthApiTest(DatabaseFixture dbFixture)
     public async Task SignUpUser_WhenSuccessful_ReturnsUser()
     {
         // Arrange
-        var fakeData = AuthFaker.CreateSignUpUser();
+        var fakeData = AuthFaker.SignUpUserRequest();
         // Act
         var postResponse = await Client.PostAsJsonAsync(
             _baseApiUrl,
             fakeData,
             TestContext.Current.CancellationToken
         );
+        // Assert
+        postResponse.StatusCode.Should().Be(HttpStatusCode.Created);
         var createdUser =
             await postResponse.Content.ReadFromJsonAsync<SignUpUserResponse>(
                 TestContext.Current.CancellationToken
             );
-        // Assert
-        postResponse.StatusCode.Should().Be(HttpStatusCode.Created);
         createdUser.Should().NotBeNull();
     }
 
@@ -49,31 +49,32 @@ public class AuthApiTest(DatabaseFixture dbFixture)
             fakeData,
             TestContext.Current.CancellationToken
         );
+        // Assert
+        postResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var validationResult =
             await postResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>(
                 TestContext.Current.CancellationToken
             );
-        // Assert
-        postResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         validationResult?.Errors.Should().ContainKey("Email");
     }
 
     [Fact]
     public async Task SignUpUser_WhenEmailAlreadyExists_ReturnStatusCode409()
     {
-        var fakeData = AuthFaker.CreateSignUpUser();
-
+        // Arrange
+        var fakeData = AuthFaker.SignUpUserRequest();
+        // Act
         var postResponse = await Client.PostAsJsonAsync(
             _baseApiUrl,
             fakeData,
             TestContext.Current.CancellationToken
         );
+        postResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+
         var newUser =
             await postResponse.Content.ReadFromJsonAsync<SignUpUserResponse>(
                 TestContext.Current.CancellationToken
             );
-
-        postResponse.StatusCode.Should().Be(HttpStatusCode.Created);
         newUser.Should().NotBeNull();
 
         postResponse = await Client.PostAsJsonAsync(
@@ -81,6 +82,7 @@ public class AuthApiTest(DatabaseFixture dbFixture)
             fakeData,
             TestContext.Current.CancellationToken
         );
+        // Assert
         postResponse.StatusCode.Should().Be(HttpStatusCode.Conflict);
     }
 }

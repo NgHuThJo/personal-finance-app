@@ -2,6 +2,18 @@ using FluentValidation;
 
 namespace backend.Shared;
 
+public static partial class EndpointFilterLogger
+{
+    [LoggerMessage(
+        Level = LogLevel.Information,
+        Message = "Route value {RouteValue} is invalid"
+    )]
+    public static partial void RouteValueIsInvalid(
+        ILogger logger,
+        string? routeValue
+    );
+}
+
 public class ValidationFilter<TRequest> : IEndpointFilter
 {
     public async ValueTask<object?> InvokeAsync(
@@ -45,7 +57,8 @@ public class ValidationFilter<TRequest> : IEndpointFilter
     }
 }
 
-public class UserIdValidationFilter : IEndpointFilter
+public class UserIdValidationFilter(ILogger<UserIdValidationFilter> logger)
+    : IEndpointFilter
 {
     public async ValueTask<object?> InvokeAsync(
         EndpointFilterInvocationContext context,
@@ -58,6 +71,7 @@ public class UserIdValidationFilter : IEndpointFilter
 
         if (!int.TryParse(rawRouteValue, out var userId) || userId <= 0)
         {
+            EndpointFilterLogger.RouteValueIsInvalid(logger, rawRouteValue);
             return TypedResults.BadRequest("Invalid userId");
         }
 

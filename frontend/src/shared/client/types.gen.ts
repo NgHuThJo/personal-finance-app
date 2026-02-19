@@ -32,10 +32,15 @@ export type GetAllPotsResponse = {
     target: number;
 };
 
+export type GetBalanceByIdResponse = {
+    current: number;
+    income: number;
+    expense: number;
+};
+
 export type GetUserByIdResponse = {
-    id: number;
     email: string;
-    name: null | string;
+    name: string;
 };
 
 export type LoginUserRequest = {
@@ -63,32 +68,30 @@ export type SignUpUserResponse = {
     name: string;
 };
 
-export type GetApiUsersByUserIdData = {
+export type GetApiUsersData = {
     body?: never;
-    path: {
-        userId: number;
-    };
+    path?: never;
     query?: never;
-    url: '/api/users/{userId}';
+    url: '/api/users';
 };
 
-export type GetApiUsersByUserIdErrors = {
+export type GetApiUsersErrors = {
     /**
      * Not Found
      */
     404: ProblemDetails;
 };
 
-export type GetApiUsersByUserIdError = GetApiUsersByUserIdErrors[keyof GetApiUsersByUserIdErrors];
+export type GetApiUsersError = GetApiUsersErrors[keyof GetApiUsersErrors];
 
-export type GetApiUsersByUserIdResponses = {
+export type GetApiUsersResponses = {
     /**
      * OK
      */
     200: GetUserByIdResponse;
 };
 
-export type GetApiUsersByUserIdResponse = GetApiUsersByUserIdResponses[keyof GetApiUsersByUserIdResponses];
+export type GetApiUsersResponse = GetApiUsersResponses[keyof GetApiUsersResponses];
 
 export type GetApiPotsData = {
     body: GetAllPotsRequest;
@@ -225,3 +228,28 @@ export type GetApiAuthRefreshResponses = {
 };
 
 export type GetApiAuthRefreshResponse = GetApiAuthRefreshResponses[keyof GetApiAuthRefreshResponses];
+
+export type GetApiBalancesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/balances';
+};
+
+export type GetApiBalancesErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ProblemDetails;
+};
+
+export type GetApiBalancesError = GetApiBalancesErrors[keyof GetApiBalancesErrors];
+
+export type GetApiBalancesResponses = {
+    /**
+     * OK
+     */
+    200: GetBalanceByIdResponse;
+};
+
+export type GetApiBalancesResponse = GetApiBalancesResponses[keyof GetApiBalancesResponses];

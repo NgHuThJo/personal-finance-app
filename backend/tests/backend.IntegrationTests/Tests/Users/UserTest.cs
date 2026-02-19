@@ -6,15 +6,21 @@ using Xunit;
 
 namespace backend.IntegrationTests;
 
-public class UserApiTest(DatabaseFixture fixture) : IntegrationTestBase(fixture)
+public class UserApiTest : IntegrationTestBase
 {
-    private const string _baseApiUrl = "/api/users";
+    public UserApiTest(DatabaseFixture fixture)
+        : base(fixture)
+    {
+        Factory.DefaultUserId = "1";
+    }
+
+    private const string _uriPath = "/api/users";
 
     [Fact]
     public async Task GetUserById_WhenSuccessful_ReturnStatusCode200()
     {
         var getResponse = await Client.GetAsync(
-            $"{_baseApiUrl}/1",
+            _uriPath,
             TestContext.Current.CancellationToken
         );
 
@@ -31,8 +37,10 @@ public class UserApiTest(DatabaseFixture fixture) : IntegrationTestBase(fixture)
     [Fact]
     public async Task GetUserById_WhenIdIsInvalid_ReturnStatusCode400()
     {
+        Client.DefaultRequestHeaders.Add(TestAuthHandler.UserIdHeader, "0");
+
         var getResponse = await Client.GetAsync(
-            $"{_baseApiUrl}/0",
+            _uriPath,
             TestContext.Current.CancellationToken
         );
 
@@ -42,12 +50,14 @@ public class UserApiTest(DatabaseFixture fixture) : IntegrationTestBase(fixture)
     [Fact]
     public async Task GetUserById_WhenIdDoesNotExist_ReturnStatusCode422()
     {
+        Client.DefaultRequestHeaders.Add(TestAuthHandler.UserIdHeader, "1000");
+
         // Test case where the id is not in the database
         var getResponse = await Client.GetAsync(
-            $"{_baseApiUrl}/1000",
+            _uriPath,
             TestContext.Current.CancellationToken
         );
 
-        getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        getResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }

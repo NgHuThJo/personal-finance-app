@@ -13,7 +13,7 @@ public static partial class GetUserByIdLogger
 {
     [LoggerMessage(
         Level = LogLevel.Information,
-        Message = "User{Id} does not exist"
+        Message = "UserId {Id} does not exist"
     )]
     public static partial void UserIdNotFound(ILogger logger, int id);
 }
@@ -26,29 +26,29 @@ public record UserNotFound(int Id) : GetUserByIdResult;
 
 public record GetUserByIdResponse
 {
-    [Range(0, int.MaxValue)]
-    public required int Id { get; init; }
-
     [EmailAddress]
     public required string Email { get; init; }
 
     [MinLength(1)]
-    public required string? Name { get; init; } = null;
+    public required string Name { get; init; }
 }
 
 public sealed class GetUserByIdEndpoint
 {
     public static async Task<
         Results<Ok<GetUserByIdResponse>, ProblemHttpResult>
-    > GetById([FromRoute] int userId, [FromServices] GetUserByIdHandler handler)
+    > GetById(
+        [FromServices] CurrentUser user,
+        [FromServices] GetUserByIdHandler handler
+    )
     {
-        var foundUser = await handler.Handle(userId);
+        var foundUser = await handler.Handle(user.UserId);
 
         return foundUser switch
         {
-            UserFound(var user) => TypedResults.Ok(user),
-            UserNotFound(var id) => TypedResultsProblemDetails.NotFound(
-                $"UserId \"{id}\" does not exist"
+            UserFound(var u) => TypedResults.Ok(u),
+            UserNotFound(var id) => TypedResultsProblemDetails.BadRequest(
+                $"""UserId {id} does not exist"""
             ),
             _ => throw new NotSupportedException(
                 "An unknown error has occurred in GetUserById endpoint"
@@ -79,12 +79,7 @@ public sealed class GetUserByIdHandler(
         }
 
         return new UserFound(
-            new GetUserByIdResponse
-            {
-                Id = user.Id,
-                Email = user.Email,
-                Name = user.Name,
-            }
+            new GetUserByIdResponse { Email = user.Email, Name = user.Name }
         );
     }
 }

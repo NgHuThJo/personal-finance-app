@@ -30,13 +30,15 @@ export const zGetAllPotsResponse = z.object({
     target: z.number().gte(0)
 });
 
+export const zGetBalanceByIdResponse = z.object({
+    current: z.number(),
+    income: z.number(),
+    expense: z.number()
+});
+
 export const zGetUserByIdResponse = z.object({
-    id: z.int().gte(0).lte(2147483647),
     email: z.string(),
-    name: z.union([
-        z.null(),
-        z.string().min(1)
-    ])
+    name: z.string().min(1)
 });
 
 export const zLoginUserRequest = z.object({
@@ -79,18 +81,16 @@ export const zSignUpUserResponse = z.object({
     name: z.string().min(1)
 });
 
-export const zGetApiUsersByUserIdData = z.object({
+export const zGetApiUsersData = z.object({
     body: z.optional(z.never()),
-    path: z.object({
-        userId: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })
-    }),
+    path: z.optional(z.never()),
     query: z.optional(z.never())
 });
 
 /**
  * OK
  */
-export const zGetApiUsersByUserIdResponse = zGetUserByIdResponse;
+export const zGetApiUsersResponse = zGetUserByIdResponse;
 
 export const zGetApiPotsData = z.object({
     body: zGetAllPotsRequest,
@@ -157,3 +157,14 @@ export const zGetApiAuthRefreshData = z.object({
  * OK
  */
 export const zGetApiAuthRefreshResponse = zCreateRefreshTokenResponse;
+
+export const zGetApiBalancesData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+/**
+ * OK
+ */
+export const zGetApiBalancesResponse = zGetBalanceByIdResponse;

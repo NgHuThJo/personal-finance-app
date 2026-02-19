@@ -52,30 +52,11 @@ public class AppDbContext(
             .WithMany(u => u.ReceivedTransactions)
             .OnDelete(DeleteBehavior.SetNull);
 
+        /* RefreshToken */
         modelBuilder
             .Entity<RefreshToken>()
             .Property(r => r.Token)
             .HasMaxLength(200);
         modelBuilder.Entity<RefreshToken>().HasIndex(r => r.Token).IsUnique();
-        // modelBuilder.Entity<Board>().HasIndex(b => b.Name).IsUnique();
-
-        // modelBuilder
-        //     .Entity<BoardColumn>()
-        //     .HasMany(b => b.KanbanTasks)
-        //     .WithOne(k => k.BoardColumn)
-        //     .HasForeignKey(k => k.BoardColumnId)
-        //     .OnDelete(DeleteBehavior.Cascade);
-
-        // modelBuilder
-        //     .Entity<BoardColumn>()
-        //     .HasIndex(b => new { b.BoardId, b.Name })
-        //     .IsUnique();
-
-        // modelBuilder
-        //     .Entity<KanbanTask>()
-        //     .HasMany(k => k.Subtasks)
-        //     .WithOne(s => s.KanbanTask)
-        //     .HasForeignKey(s => s.KanbanTaskId)
-        //     .OnDelete(DeleteBehavior.Cascade);
     }
 }

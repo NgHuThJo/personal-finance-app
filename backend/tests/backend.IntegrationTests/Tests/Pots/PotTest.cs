@@ -17,7 +17,7 @@ public class PotApiTest(DatabaseFixture dbFixture)
     [Fact]
     public async Task CreatePot_IfSuccessful_ReturnStatusCode201()
     {
-        var fakeData = PotFaker.CreatePot();
+        var fakeData = PotFaker.CreatePotRequest();
         var jsonContent = JsonContent.Create(fakeData);
 
         var postResponse = await Client.PostAsync(
