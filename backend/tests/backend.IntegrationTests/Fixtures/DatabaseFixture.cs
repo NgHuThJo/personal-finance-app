@@ -121,5 +121,10 @@ public class DatabaseFixture(PostgresContainerFixture containerFixture)
 
             await dropCommand.ExecuteNonQueryAsync();
         }
+
+        if (_connection is not null)
+        {
+            await _connection.DisposeAsync();
+        }
     }
 }

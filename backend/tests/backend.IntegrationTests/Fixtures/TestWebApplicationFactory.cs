@@ -30,10 +30,7 @@ public class TestWebApplicationFactory(string connectionString)
                     "TestScheme",
                     options => { }
                 );
-        });
 
-        builder.ConfigureServices(services =>
-        {
             var descriptor = services.FirstOrDefault(s =>
                 s.ServiceType == typeof(DbContextOptions<AppDbContext>)
             );
