@@ -6,8 +6,11 @@ export function PotsBoard() {
     <div>
       <header className={styles.header}>
         <h1 className={styles.heading}>Pots</h1>
-        <Button variant="">+Add New Pot</Button>
+        <Button variant="logout" size="lg">
+          +Add New Pot
+        </Button>
       </header>
+      <div className={styles.body}></div>
     </div>
   );
 }

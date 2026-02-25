@@ -11,6 +11,7 @@ const buttonVariants = cva(styles.button, {
       link: styles.link,
       logout: styles.logout,
       login: styles.login,
+      icon: styles.icon,
     },
     size: {
       default: styles["default-size"],
@@ -20,7 +21,6 @@ const buttonVariants = cva(styles.button, {
     },
     intent: {
       default: "",
-      destructive: "",
     },
   },
   defaultVariants: {

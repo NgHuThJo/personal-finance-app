@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Suspense } from "react";
 import { PotsBoard } from "#frontend/features/pots/components/board";
 
 export const Route = createFileRoute("/_pathless-dashboard-layout/pots")({
@@ -10,5 +11,9 @@ export const Route = createFileRoute("/_pathless-dashboard-layout/pots")({
 });
 
 function Pots() {
-  return <PotsBoard />;
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <PotsBoard />
+    </Suspense>
+  );
 }

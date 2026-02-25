@@ -7,3 +7,15 @@
 .heading {
   font-size: var(--font-size-heading);
 }
+
+.body {
+  display: grid;
+
+  @media screen and (width >= 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media screen and (width >= 1024px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

@@ -111,20 +111,6 @@ export const postApiAuthLoginMutation = (options?: Partial<Options<PostApiAuthLo
     return mutationOptions;
 };
 
-export const postApiAuthLogoutMutation = (options?: Partial<Options<PostApiAuthLogoutData>>): UseMutationOptions<PostApiAuthLogoutResponse, PostApiAuthLogoutError, Options<PostApiAuthLogoutData>> => {
-    const mutationOptions: UseMutationOptions<PostApiAuthLogoutResponse, PostApiAuthLogoutError, Options<PostApiAuthLogoutData>> = {
-        mutationFn: async (fnOptions) => {
-            const { data } = await postApiAuthLogout({
-                ...options,
-                ...fnOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
-
 export const getApiAuthRefreshQueryKey = (options?: Options<GetApiAuthRefreshData>) => createQueryKey('getApiAuthRefresh', options);
 
 export const getApiAuthRefreshOptions = (options?: Options<GetApiAuthRefreshData>) => queryOptions<GetApiAuthRefreshResponse, GetApiAuthRefreshError, GetApiAuthRefreshResponse, ReturnType<typeof getApiAuthRefreshQueryKey>>({
@@ -139,6 +125,20 @@ export const getApiAuthRefreshOptions = (options?: Options<GetApiAuthRefreshData
     },
     queryKey: getApiAuthRefreshQueryKey(options)
 });
+
+export const postApiAuthLogoutMutation = (options?: Partial<Options<PostApiAuthLogoutData>>): UseMutationOptions<PostApiAuthLogoutResponse, PostApiAuthLogoutError, Options<PostApiAuthLogoutData>> => {
+    const mutationOptions: UseMutationOptions<PostApiAuthLogoutResponse, PostApiAuthLogoutError, Options<PostApiAuthLogoutData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postApiAuthLogout({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
 
 export const getApiBalancesQueryKey = (options?: Options<GetApiBalancesData>) => createQueryKey('getApiBalances', options);
 

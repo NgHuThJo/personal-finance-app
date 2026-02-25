@@ -115,7 +115,7 @@ export function Login() {
             type={isPasswordVisible ? "text" : "password"}
             id="password"
           />
-          <Button size="icon" onClick={togglePasswordVisibility}>
+          <Button variant="icon" size="icon" onClick={togglePasswordVisibility}>
             <IconEye />
           </Button>
         </div>
