@@ -20,14 +20,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 
 export const getApiUsers = <ThrowOnError extends boolean = false>(options?: Options<GetApiUsersData, ThrowOnError>) => (options?.client ?? client).get<GetApiUsersResponses, GetApiUsersErrors, ThrowOnError>({ url: '/api/users', ...options });
 
-export const getApiPots = <ThrowOnError extends boolean = false>(options: Options<GetApiPotsData, ThrowOnError>) => (options.client ?? client).get<GetApiPotsResponses, unknown, ThrowOnError>({
-    url: '/api/pots',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
+export const getApiPots = <ThrowOnError extends boolean = false>(options?: Options<GetApiPotsData, ThrowOnError>) => (options?.client ?? client).get<GetApiPotsResponses, unknown, ThrowOnError>({ url: '/api/pots', ...options });
 
 export const postApiPots = <ThrowOnError extends boolean = false>(options: Options<PostApiPotsData, ThrowOnError>) => (options.client ?? client).post<PostApiPotsResponses, unknown, ThrowOnError>({
     url: '/api/pots',

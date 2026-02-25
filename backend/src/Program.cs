@@ -1,9 +1,13 @@
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using backend.Features;
 using backend.Models;
 using backend.Shared;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
@@ -76,7 +80,7 @@ builder.Services.AddCors(options =>
     );
 });
 builder
-    .Services.AddAuthentication("Bearer")
+    .Services.AddAuthentication()
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new()
@@ -96,10 +100,79 @@ builder
         options.MapInboundClaims = false;
     });
 builder.Services.AddAuthorization();
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // Always handle the case where the request handled by this middleware is rejected
+    options.OnRejected = async (context, token) =>
+    {
+        if (
+            context.Lease.TryGetMetadata(
+                MetadataName.RetryAfter,
+                out TimeSpan retryAfter
+            )
+        )
+        {
+            context.HttpContext.Response.Headers.RetryAfter =
+                $"{retryAfter.Seconds}";
+
+            var problemDetails = ProblemDetailsHelper.Create(
+                statusCode: StatusCodes.Status429TooManyRequests,
+                title: "Too many requests",
+                detail: $"Too many requests. Please try again after {retryAfter.Seconds} seconds."
+            );
+
+            await context.HttpContext.Response.WriteAsJsonAsync(
+                problemDetails,
+                cancellationToken: token
+            );
+        }
+    };
+
+    options.AddFixedWindowLimiter(
+        "fixed",
+        options =>
+        {
+            options.PermitLimit = 5;
+            options.Window = TimeSpan.FromMinutes(1);
+        }
+    );
+
+    // Use this policy throughout the app for authenticated endpoints
+    // Per-user policy for authenticated users, anonymous for everyone else
+    options.AddPolicy(
+        "per-user",
+        httpContext =>
+        {
+            var userId = httpContext.User.FindFirstValue("userId");
+
+            if (!string.IsNullOrWhiteSpace(userId))
+            {
+                return RateLimitPartition.GetTokenBucketLimiter(
+                    userId,
+                    _ => new TokenBucketRateLimiterOptions
+                    {
+                        TokenLimit = 5,
+                        TokensPerPeriod = 2,
+                        ReplenishmentPeriod = TimeSpan.FromMinutes(1),
+                    }
+                );
+            }
+
+            return RateLimitPartition.GetFixedWindowLimiter(
+                "anonymous",
+                _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 5,
+                    Window = TimeSpan.FromMinutes(1),
+                }
+            );
+        }
+    );
+});
 
 // Configure Serilog logger
-// .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
-// .WriteTo.File("Logs/log.txt")
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
@@ -124,9 +197,10 @@ else
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseRateLimiter();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
+
 app.MapUserApi().MapPotApi().MapAuthApi().MapBalanceApi();
 
 app.Run();

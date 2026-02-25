@@ -11,7 +11,7 @@ namespace backend.IntegrationTests;
 public class PotApiTest(DatabaseFixture dbFixture)
     : IntegrationTestBase(dbFixture)
 {
-    private readonly string _baseApiUrl = "/api/pots";
+    private readonly string _uriPath = "/api/pots";
 
     [Fact]
     public async Task CreatePot_IfSuccessful_ReturnStatusCode201()
@@ -21,7 +21,7 @@ public class PotApiTest(DatabaseFixture dbFixture)
         var jsonContent = JsonContent.Create(fakeData);
         // Act
         var postResponse = await Client.PostAsync(
-            _baseApiUrl,
+            _uriPath,
             jsonContent,
             TestContext.Current.CancellationToken
         );
@@ -42,7 +42,7 @@ public class PotApiTest(DatabaseFixture dbFixture)
         var jsonContent = JsonContent.Create(fakeData);
         // Act
         var postResponse = await Client.PostAsync(
-            _baseApiUrl,
+            _uriPath,
             jsonContent,
             TestContext.Current.CancellationToken
         );
@@ -54,5 +54,20 @@ public class PotApiTest(DatabaseFixture dbFixture)
             );
         content.Should().NotBeNull();
         content.Errors.Should().ContainKeys("Target", "Name");
+    }
+
+    [Fact]
+    public async Task GetAllPots_IfSuccessful_Return200()
+    {
+        // Arrange
+        // Act
+        var getResponse = await Client.GetFromJsonAsync<
+            List<GetAllPotsResponse>
+        >(_uriPath, TestContext.Current.CancellationToken);
+        // Assert
+        getResponse
+            .Should()
+            .HaveCountGreaterThan(0)
+            .And.BeOfType<List<GetAllPotsResponse>>();
     }
 }

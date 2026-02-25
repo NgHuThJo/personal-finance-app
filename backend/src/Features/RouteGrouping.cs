@@ -16,7 +16,7 @@ public static class RouteGrouper
     public static WebApplication MapUserApi(this WebApplication app)
     {
         var group = app.MapGroup("/api/users");
-        group.RequireAuthorization();
+        group.RequireAuthorization().RequireRateLimiting("per-user");
         group
             .MapGet("", GetUserByIdEndpoint.GetById)
             .ProducesProblem((int)HttpStatusCode.NotFound);
@@ -28,7 +28,7 @@ public static class RouteGrouper
     public static WebApplication MapBalanceApi(this WebApplication app)
     {
         var group = app.MapGroup("/api/balances");
-        group.RequireAuthorization();
+        group.RequireAuthorization().RequireRateLimiting("per-user");
         group
             .MapGet("", GetBalanceByIdEndpoint.Get)
             .ProducesProblem((int)HttpStatusCode.Unauthorized);
@@ -40,13 +40,11 @@ public static class RouteGrouper
     public static WebApplication MapPotApi(this WebApplication app)
     {
         var group = app.MapGroup("/api/pots");
-        group.RequireAuthorization();
+        group.RequireAuthorization().RequireRateLimiting("per-user");
         group
             .MapPost("", CreatePotEndpoint.Create)
             .AddValidationFilter<CreatePotRequest>();
-        group
-            .MapGet("", GetAllPotsEndpoint.GetAll)
-            .AddValidationFilter<GetAllPotsRequest>();
+        group.MapGet("", GetAllPotsEndpoint.GetAll);
 
         return app;
     }
@@ -55,6 +53,7 @@ public static class RouteGrouper
     public static WebApplication MapAuthApi(this WebApplication app)
     {
         var group = app.MapGroup("/api/auth");
+        group.RequireRateLimiting("fixed");
         group
             .MapPost("signup", SignUpUserEndpoint.Create)
             .ProducesProblem((int)HttpStatusCode.Conflict)
@@ -65,11 +64,12 @@ public static class RouteGrouper
             .ProducesProblem((int)HttpStatusCode.Unauthorized)
             .AddValidationFilter<LoginUserRequest>();
         group
-            .MapPost("logout", LogoutUserEndpoint.Logout)
-            .ProducesProblem((int)HttpStatusCode.Forbidden);
-        group
             .MapGet("refresh", CreateRefreshTokenEndpoint.Get)
             .ProducesProblem((int)HttpStatusCode.Unauthorized);
+        group
+            .MapPost("logout", LogoutUserEndpoint.Logout)
+            .RequireAuthorization()
+            .ProducesProblem((int)HttpStatusCode.Forbidden);
 
         return app;
     }

@@ -54,9 +54,9 @@ export const getApiUsersOptions = (options?: Options<GetApiUsersData>) => queryO
     queryKey: getApiUsersQueryKey(options)
 });
 
-export const getApiPotsQueryKey = (options: Options<GetApiPotsData>) => createQueryKey('getApiPots', options);
+export const getApiPotsQueryKey = (options?: Options<GetApiPotsData>) => createQueryKey('getApiPots', options);
 
-export const getApiPotsOptions = (options: Options<GetApiPotsData>) => queryOptions<GetApiPotsResponse, DefaultError, GetApiPotsResponse, ReturnType<typeof getApiPotsQueryKey>>({
+export const getApiPotsOptions = (options?: Options<GetApiPotsData>) => queryOptions<GetApiPotsResponse, DefaultError, GetApiPotsResponse, ReturnType<typeof getApiPotsQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await getApiPots({
             ...options,

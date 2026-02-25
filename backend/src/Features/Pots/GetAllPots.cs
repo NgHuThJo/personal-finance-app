@@ -1,17 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using backend.Models;
+using backend.Shared;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Features;
-
-public record GetAllPotsRequest
-{
-    [Range(0, int.MaxValue)]
-    public required int UserId { get; init; }
-}
 
 public record GetAllPotsResponse
 {
@@ -25,22 +20,14 @@ public record GetAllPotsResponse
     public required decimal Target { get; init; }
 }
 
-public class GetAllPotsValidator : AbstractValidator<GetAllPotsRequest>
-{
-    public GetAllPotsValidator()
-    {
-        RuleFor(r => r.UserId).GreaterThan(0);
-    }
-}
-
 public sealed class GetAllPotsEndpoint
 {
     public static async Task<Ok<List<GetAllPotsResponse>>> GetAll(
-        [FromBody] GetAllPotsRequest query,
+        [FromServices] CurrentUser user,
         [FromServices] GetAllPotsHandler handler
     )
     {
-        var pots = await handler.Handle(query);
+        var pots = await handler.Handle(user.UserId);
 
         return TypedResults.Ok(pots);
     }
@@ -50,10 +37,10 @@ public class GetAllPotsHandler(AppDbContext context)
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<List<GetAllPotsResponse>> Handle(GetAllPotsRequest query)
+    public async Task<List<GetAllPotsResponse>> Handle(int userId)
     {
         var pots = await _context
-            .Pots.Where(p => p.UserId == query.UserId)
+            .Pots.Where(p => p.UserId == userId)
             .Select(p => new GetAllPotsResponse
             {
                 Id = p.Id,

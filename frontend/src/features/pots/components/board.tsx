@@ -1,3 +1,13 @@
-export function PotBoard() {
-  return <p>You don't have a pot account yet.</p>;
+import styles from "./board.module.css";
+import { Button } from "#frontend/shared/primitives/button";
+
+export function PotsBoard() {
+  return (
+    <div>
+      <header className={styles.header}>
+        <h1 className={styles.heading}>Pots</h1>
+        <Button variant="">+Add New Pot</Button>
+      </header>
+    </div>
+  );
 }

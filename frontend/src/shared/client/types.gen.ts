@@ -7,7 +7,6 @@ export type ClientOptions = {
 export type CreatePotRequest = {
     target: number;
     name: string;
-    userId: number;
 };
 
 export type CreatePotResponse = {
@@ -15,15 +14,10 @@ export type CreatePotResponse = {
     total: number;
     target: number;
     name: string;
-    userId: number;
 };
 
 export type CreateRefreshTokenResponse = {
     accessToken: string;
-};
-
-export type GetAllPotsRequest = {
-    userId: number;
 };
 
 export type GetAllPotsResponse = {
@@ -94,7 +88,7 @@ export type GetApiUsersResponses = {
 export type GetApiUsersResponse = GetApiUsersResponses[keyof GetApiUsersResponses];
 
 export type GetApiPotsData = {
-    body: GetAllPotsRequest;
+    body?: never;
     path?: never;
     query?: never;
     url: '/api/pots';

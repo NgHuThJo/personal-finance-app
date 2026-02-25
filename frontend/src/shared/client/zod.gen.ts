@@ -4,24 +4,18 @@ import { z } from 'zod';
 
 export const zCreatePotRequest = z.object({
     target: z.number().gte(0),
-    name: z.string().min(1),
-    userId: z.int().gte(0).lte(2147483647)
+    name: z.string().min(1)
 });
 
 export const zCreatePotResponse = z.object({
     id: z.int().gte(0).lte(2147483647),
     total: z.number().gte(0),
     target: z.number().gte(0),
-    name: z.string().min(1),
-    userId: z.int().gte(0).lte(2147483647)
+    name: z.string().min(1)
 });
 
 export const zCreateRefreshTokenResponse = z.object({
     accessToken: z.string()
-});
-
-export const zGetAllPotsRequest = z.object({
-    userId: z.int().gte(0).lte(2147483647)
 });
 
 export const zGetAllPotsResponse = z.object({
@@ -93,7 +87,7 @@ export const zGetApiUsersData = z.object({
 export const zGetApiUsersResponse = zGetUserByIdResponse;
 
 export const zGetApiPotsData = z.object({
-    body: zGetAllPotsRequest,
+    body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });

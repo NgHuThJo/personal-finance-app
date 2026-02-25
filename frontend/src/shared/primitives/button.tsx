@@ -7,37 +7,20 @@ import { cn } from "#frontend/shared/utils/cn";
 const buttonVariants = cva(styles.button, {
   variants: {
     variant: {
-      default: styles.default,
-      ghost: styles.ghost,
+      default: styles["default-variant"],
       link: styles.link,
-      cancel: styles.cancel,
-      select: styles.select,
-      sidebar: styles.sidebar,
-      unit: styles.unit,
-      search: styles.search,
-      dropdown: styles.dropdown,
-      bookmark: styles.bookmark,
-      retry: styles.retry,
       logout: styles.logout,
       login: styles.login,
-      ["search-item"]: styles["search-item"],
     },
     size: {
       default: styles["default-size"],
       sm: styles.sm,
       lg: styles.lg,
       icon: styles.icon,
-      select: styles["select-size"],
-      sidebar: styles["sidebar-size"],
-      board: styles["board-size"],
     },
     intent: {
       default: "",
       destructive: "",
-      create: "",
-      active: "",
-      unit: "",
-      weekday: "",
     },
   },
   defaultVariants: {
@@ -45,38 +28,7 @@ const buttonVariants = cva(styles.button, {
     size: "default",
     intent: "default",
   },
-  compoundVariants: [
-    {
-      variant: "dropdown",
-      intent: "unit",
-      className: styles["unit"],
-    },
-    {
-      variant: "dropdown",
-      intent: "weekday",
-      className: styles["weekday"],
-    },
-    {
-      variant: "default",
-      intent: "destructive",
-      className: styles["destructive-default"],
-    },
-    {
-      variant: "link",
-      intent: "destructive",
-      className: styles["destructive-link"],
-    },
-    {
-      variant: "sidebar",
-      intent: "create",
-      className: styles["create-sidebar"],
-    },
-    {
-      variant: "sidebar",
-      intent: "active",
-      className: styles["active-sidebar"],
-    },
-  ],
+  compoundVariants: [],
 });
 
 export function Button({
