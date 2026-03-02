@@ -1,7 +1,7 @@
-using backend.Shared;
+using backend.Src.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace backend.Models;
+namespace backend.Src.Models;
 
 public class AppDbContext(
     DbContextOptions options,
@@ -45,12 +45,12 @@ public class AppDbContext(
             .Entity<Transaction>()
             .HasOne(t => t.Sender)
             .WithMany(u => u.SentTransactions)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.Restrict);
         modelBuilder
             .Entity<Transaction>()
             .HasOne(t => t.Recipient)
             .WithMany(u => u.ReceivedTransactions)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.Restrict);
 
         /* RefreshToken */
         modelBuilder

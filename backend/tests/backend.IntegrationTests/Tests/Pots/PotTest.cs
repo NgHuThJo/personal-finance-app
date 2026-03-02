@@ -1,7 +1,8 @@
 using System.Net;
 using System.Net.Http.Json;
-using backend.Features;
-using backend.Models;
+using backend.Shared.Test;
+using backend.Src.Features;
+using backend.Src.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;

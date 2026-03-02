@@ -1,4 +1,4 @@
-namespace backend.Shared
+namespace backend.Src.Shared
 {
     public static class GlobalConstants
     {

@@ -1,6 +1,6 @@
-namespace backend.Shared;
+namespace backend.Src.Shared;
 
-public static partial class Logger
+public static partial class GlobalLogger
 {
     // Logging for global exception handler
     [LoggerMessage(Level = LogLevel.Error, Message = "Unhandled error")]

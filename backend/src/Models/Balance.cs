@@ -1,4 +1,4 @@
-namespace backend.Models;
+namespace backend.Src.Models;
 
 public class Balance
 {

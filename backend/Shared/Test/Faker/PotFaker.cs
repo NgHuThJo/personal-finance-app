@@ -1,8 +1,8 @@
-using backend.Features;
-using backend.Models;
+using backend.Src.Features;
+using backend.Src.Models;
 using Bogus;
 
-namespace backend.IntegrationTests;
+namespace backend.Shared.Test;
 
 public static class PotFaker
 {

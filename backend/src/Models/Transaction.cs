@@ -1,6 +1,6 @@
-using backend.Shared;
+using backend.Src.Shared;
 
-namespace backend.Models;
+namespace backend.Src.Models;
 
 public enum Category
 {

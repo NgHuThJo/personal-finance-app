@@ -6,10 +6,10 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Bogus" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" />
-    <PackageReference Include="Bogus" VersionOverride="35.6.5" />
     <PackageReference Include="FluentAssertions" VersionOverride="8.8.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" VersionOverride="10.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" VersionOverride="18.0.1" />
@@ -23,6 +23,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\backend.csproj" />
+    <ProjectReference Include="..\..\Src\backend.csproj" />
+    <ProjectReference Include="..\..\Shared\shared.csproj" />
   </ItemGroup>
 </Project>

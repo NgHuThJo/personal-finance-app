@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using backend.Models;
+using backend.Src.Models;
 
 #nullable disable
 
@@ -25,7 +25,7 @@ namespace backend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("backend.Models.Balance", b =>
+            modelBuilder.Entity("backend.Src.Models.Balance", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,7 +53,7 @@ namespace backend.Migrations
                     b.ToTable("Balances");
                 });
 
-            modelBuilder.Entity("backend.Models.Budget", b =>
+            modelBuilder.Entity("backend.Src.Models.Budget", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,7 +77,7 @@ namespace backend.Migrations
                     b.ToTable("Budgets");
                 });
 
-            modelBuilder.Entity("backend.Models.Pot", b =>
+            modelBuilder.Entity("backend.Src.Models.Pot", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -105,7 +105,7 @@ namespace backend.Migrations
                     b.ToTable("Pots");
                 });
 
-            modelBuilder.Entity("backend.Models.RefreshToken", b =>
+            modelBuilder.Entity("backend.Src.Models.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -137,7 +137,7 @@ namespace backend.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("backend.Models.Transaction", b =>
+            modelBuilder.Entity("backend.Src.Models.Transaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -176,7 +176,7 @@ namespace backend.Migrations
                     b.ToTable("Transactions");
                 });
 
-            modelBuilder.Entity("backend.Models.User", b =>
+            modelBuilder.Entity("backend.Src.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -204,20 +204,20 @@ namespace backend.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("backend.Models.Balance", b =>
+            modelBuilder.Entity("backend.Src.Models.Balance", b =>
                 {
-                    b.HasOne("backend.Models.User", "User")
+                    b.HasOne("backend.Src.Models.User", "User")
                         .WithOne("Balance")
-                        .HasForeignKey("backend.Models.Balance", "UserId")
+                        .HasForeignKey("backend.Src.Models.Balance", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("backend.Models.Budget", b =>
+            modelBuilder.Entity("backend.Src.Models.Budget", b =>
                 {
-                    b.HasOne("backend.Models.User", "User")
+                    b.HasOne("backend.Src.Models.User", "User")
                         .WithMany("Budgets")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -226,9 +226,9 @@ namespace backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("backend.Models.Pot", b =>
+            modelBuilder.Entity("backend.Src.Models.Pot", b =>
                 {
-                    b.HasOne("backend.Models.User", "User")
+                    b.HasOne("backend.Src.Models.User", "User")
                         .WithMany("Pots")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -237,9 +237,9 @@ namespace backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("backend.Models.RefreshToken", b =>
+            modelBuilder.Entity("backend.Src.Models.RefreshToken", b =>
                 {
-                    b.HasOne("backend.Models.User", "User")
+                    b.HasOne("backend.Src.Models.User", "User")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -248,15 +248,15 @@ namespace backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("backend.Models.Transaction", b =>
+            modelBuilder.Entity("backend.Src.Models.Transaction", b =>
                 {
-                    b.HasOne("backend.Models.User", "Recipient")
+                    b.HasOne("backend.Src.Models.User", "Recipient")
                         .WithMany("ReceivedTransactions")
                         .HasForeignKey("RecipientId")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
-                    b.HasOne("backend.Models.User", "Sender")
+                    b.HasOne("backend.Src.Models.User", "Sender")
                         .WithMany("SentTransactions")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.SetNull)
@@ -267,7 +267,7 @@ namespace backend.Migrations
                     b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("backend.Models.User", b =>
+            modelBuilder.Entity("backend.Src.Models.User", b =>
                 {
                     b.Navigation("Balance")
                         .IsRequired();

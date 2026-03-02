@@ -1,7 +1,7 @@
-using backend.Features;
+using backend.Src.Features;
 using Bogus;
 
-namespace backend.IntegrationTests;
+namespace backend.Shared.Test;
 
 public static class AuthFaker
 {

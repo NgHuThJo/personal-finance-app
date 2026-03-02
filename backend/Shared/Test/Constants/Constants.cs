@@ -1,4 +1,4 @@
-namespace backend.IntegrationTests;
+namespace backend.Shared.Test;
 
 public static class TestConstants
 {

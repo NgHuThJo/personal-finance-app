@@ -12,15 +12,15 @@ using backend.Src.Models;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251206223732_AddRestOfModels")]
-    partial class AddRestOfModels
+    [Migration("20260302162641_RefactorNamespaces")]
+    partial class RefactorNamespaces
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "10.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -85,6 +85,10 @@ namespace backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<decimal>("Target")
                         .HasColumnType("numeric");
 
@@ -99,6 +103,38 @@ namespace backend.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Pots");
+                });
+
+            modelBuilder.Entity("backend.Src.Models.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("backend.Src.Models.Transaction", b =>
@@ -153,6 +189,7 @@ namespace backend.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Password")
@@ -192,7 +229,18 @@ namespace backend.Migrations
             modelBuilder.Entity("backend.Src.Models.Pot", b =>
                 {
                     b.HasOne("backend.Src.Models.User", "User")
-                        .WithMany()
+                        .WithMany("Pots")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("backend.Src.Models.RefreshToken", b =>
+                {
+                    b.HasOne("backend.Src.Models.User", "User")
+                        .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -205,13 +253,13 @@ namespace backend.Migrations
                     b.HasOne("backend.Src.Models.User", "Recipient")
                         .WithMany("ReceivedTransactions")
                         .HasForeignKey("RecipientId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("backend.Src.Models.User", "Sender")
                         .WithMany("SentTransactions")
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Recipient");
@@ -226,7 +274,11 @@ namespace backend.Migrations
 
                     b.Navigation("Budgets");
 
+                    b.Navigation("Pots");
+
                     b.Navigation("ReceivedTransactions");
+
+                    b.Navigation("RefreshTokens");
 
                     b.Navigation("SentTransactions");
                 });

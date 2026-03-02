@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace backend.Shared;
+namespace backend.Src.Shared;
 
 public interface IHasTimestamps
 {

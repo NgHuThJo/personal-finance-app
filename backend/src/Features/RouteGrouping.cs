@@ -1,7 +1,7 @@
 using System.Net;
-using backend.Shared;
+using backend.Src.Shared;
 
-namespace backend.Features;
+namespace backend.Src.Features;
 
 public static class RouteGrouper
 {

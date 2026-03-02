@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
-namespace backend.Shared;
+namespace backend.Src.Shared;
 
 public class JwtTokenProvider(IConfiguration config)
 {

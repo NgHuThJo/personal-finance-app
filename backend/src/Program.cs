@@ -2,17 +2,17 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
-using backend.Features;
-using backend.Models;
-using backend.Shared;
+using backend.Src.Features;
+using backend.Src.Models;
+using backend.Src.Shared;
 using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using Serilog;
 
+// Args come from public static void main(string[] args), they are command line arguments
 var builder = WebApplication.CreateBuilder(args);
 var defaultJwt = builder.Configuration.GetSection("Jwt:Schemas:Bearer");
 

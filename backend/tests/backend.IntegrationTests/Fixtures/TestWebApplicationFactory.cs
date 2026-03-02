@@ -1,4 +1,4 @@
-using backend.Models;
+using backend.Src.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;

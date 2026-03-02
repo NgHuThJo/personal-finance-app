@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace backend.Shared;
+namespace backend.Src.Shared;
 
 public static partial class EndpointFilterLogger
 {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace backend.Shared;
+namespace backend.Src.Shared;
 
 public static class PasswordHasher
 {

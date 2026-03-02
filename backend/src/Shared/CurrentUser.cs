@@ -1,7 +1,7 @@
 using System.Security;
 using System.Security.Claims;
 
-namespace backend.Shared;
+namespace backend.Src.Shared;
 
 public class CurrentUser
 {

@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
-using backend.Models;
-using backend.Shared;
+using backend.Src.Models;
+using backend.Src.Shared;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
-namespace backend.Features;
+namespace backend.Src.Features;
 
 public record CreatePotRequest
 {

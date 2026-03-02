@@ -13,11 +13,8 @@ class Mutex {
 
   unlock() {
     if (this.#workerQueue.length > 0) {
-      const nextWorker = this.#workerQueue.shift();
-
-      if (nextWorker) {
-        nextWorker();
-      }
+      const nextWorker = this.#workerQueue.shift()!;
+      nextWorker();
     } else {
       this.#isLocked = false;
     }
