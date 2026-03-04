@@ -23,7 +23,7 @@ function Root() {
     }),
     throwOnError: false,
     enabled: !isAuthBootstrapped,
-    // retry: 3,
+    retry: 0,
   });
 
   useEffect(() => {
@@ -35,7 +35,7 @@ function Root() {
       setAccessToken(data.accessToken);
     }
 
-    if (isPending) {
+    if (!isPending) {
       isAuthBootstrapped = true;
     }
   }, [data, setAccessToken, isPending, error]);

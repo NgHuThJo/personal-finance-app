@@ -24,6 +24,7 @@ export type GetAllPotsResponse = {
     id: number;
     total: number;
     target: number;
+    name: string;
 };
 
 export type GetBalanceByIdResponse = {

@@ -1,74 +1,30 @@
-.layout {
-  display: grid;
-  gap: 2rem;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.heading {
-  font-size: var(--font-size-heading);
-}
-
-.body {
-  display: grid;
-  gap: var(--spacing-6);
-
-  @media screen and (width >= 578px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  @media screen and (width >= 1024px) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.card {
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  gap: var(--spacing-8);
-  padding: var(--spacing-6) var(--spacing-5);
-  border-radius: var(--border-radius-6);
-  background-color: var(--color-background-surface-secondary);
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--spacing-4);
-}
-
-.card-content {
+.dialog {
   display: grid;
   grid-template-rows: 1fr 0.5rem 1fr;
   gap: var(--spacing-4);
 }
 
-.card-content-header {
+.dialog-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: var(--spacing-4);
 }
 
-.card-content-footer {
+.dialog-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: var(--spacing-4);
 }
 
-.card-content-progress {
+.dialog-progress {
   border-radius: var(--border-radius-10);
   background-color: var(--color-background-surface-primary);
   overflow: hidden;
 }
 
-.card-content-progress-bar {
+.dialog-progress-bar {
   --width-progress-bar: 100%;
 
   width: var(--width-progress-bar);
@@ -76,12 +32,34 @@
   background-color: var(--color-background-surface-tertiary);
 }
 
-.card-footer {
+.dialog-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: var(--spacing-4);
   flex-wrap: wrap;
+}
+
+.dialog-input-wrapper {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.dialog-input {
+  padding: var(--spacing-3) var(--spacing-4);
+  border: 1px solid var(--color-border-input-primary);
+  border-radius: var(--border-radius-4);
+  font-size: var(--font-size-action);
+
+  &:focus-within {
+    outline: 2px solid var(--color-border-input-primary);
+    outline-offset: 2px;
+  }
+}
+
+.dialog-input-label {
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-label);
 }
 
 .total-label {
@@ -96,7 +74,7 @@
 }
 
 .percent-number {
-  color: var(--color-text-secondary);
+  color: var(--color-status-error);
 }
 
 .target-number {

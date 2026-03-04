@@ -42,7 +42,7 @@ function Index() {
     <div className={styles.page}>
       <header className={styles.header}>
         <h1>Overview</h1>
-        <Button variant="logout" onClick={onClickLogout}>
+        <Button variant="cta-primary" onClick={onClickLogout}>
           <Logout />
           Logout
         </Button>

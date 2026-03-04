@@ -1,10 +1,14 @@
 import { Logger } from "#frontend/shared/app/logging";
 import { getApiAuthRefresh } from "#frontend/shared/client";
-import { client } from "#frontend/shared/client/client.gen";
+import type { ClientOptions } from "#frontend/shared/client";
+import { createClient, createConfig } from "#frontend/shared/client/client";
 import { accessTokenStore } from "#frontend/shared/store/access-token";
 import { createInFlight } from "#frontend/shared/utils/concurrency/single-flight";
 
-export const clientWithAuth = client;
+// They are the same, deep clone it
+export const clientWithAuth = createClient(
+  createConfig<ClientOptions>({ baseUrl: "https://localhost:7111/" }),
+);
 
 const refreshAccessToken = async () => {
   try {

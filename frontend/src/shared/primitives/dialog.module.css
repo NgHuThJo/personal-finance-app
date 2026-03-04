@@ -34,7 +34,7 @@
 
 /* === DialogContent === */
 .dialog-content {
-  background-color: var(--c-bg-secondary);
+  background-color: var(--color-background-surface-raised-primary);
   position: fixed;
   top: 50%;
   left: 50%;
@@ -208,10 +208,8 @@
 
 /* === DialogTitle === */
 .dialog-title {
-  font-size: var(--font-size-h4);
+  font-size: var(--font-size-subheading);
   font-weight: var(--font-weight-heading);
-  line-height: 1;
-  color: var(--c-heading);
 }
 
 .destructive-dialog-title {
@@ -226,4 +224,5 @@
 /* === DialogDescription === */
 .dialog-description {
   font-size: var(--font-size-root);
+  color: var(--color-text-secondary);
 }

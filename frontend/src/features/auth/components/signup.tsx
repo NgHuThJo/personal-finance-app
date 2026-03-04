@@ -121,7 +121,7 @@ export function Signup() {
           {errors.password?.message}
         </span>
       </label>
-      <Button type="submit" variant="login" disabled={isPending}>
+      <Button type="submit" variant="cta-primary" disabled={isPending}>
         Create Account
       </Button>
       <p className={styles["cta-link"]}>

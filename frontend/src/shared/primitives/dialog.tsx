@@ -1,6 +1,5 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { cva, type VariantProps } from "class-variance-authority";
-import { XIcon } from "lucide-react";
 import * as React from "react";
 import styles from "./dialog.module.css";
 import { cn } from "#frontend/shared/utils/cn";
@@ -34,7 +33,6 @@ const dialogCloseVariants = cva("", {
   variants: {
     variant: {
       default: styles["dialog-close"],
-      cancel: "",
       group: styles["dialog-close-group"],
     },
   },
@@ -124,7 +122,7 @@ function DialogContent({
             className={cn(styles["dialog-close"], className)}
             data-slot="dialog-close"
           >
-            <XIcon />
+            {/* <XIcon /> */}
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}

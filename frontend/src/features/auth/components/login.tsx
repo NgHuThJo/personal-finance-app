@@ -129,7 +129,7 @@ export function Login() {
           {errors.root?.["server-unauthorized"]?.message}
         </span>
       </label>
-      <Button type="submit" variant="login" disabled={isPending}>
+      <Button type="submit" variant="cta-primary" disabled={isPending}>
         Login
       </Button>
       <p className={styles["cta-link"]}>

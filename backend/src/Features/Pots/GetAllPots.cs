@@ -18,6 +18,9 @@ public record GetAllPotsResponse
 
     [Range(0, double.MaxValue)]
     public required decimal Target { get; init; }
+
+    [MinLength(1)]
+    public required string Name { get; init; }
 }
 
 public sealed class GetAllPotsEndpoint
@@ -46,6 +49,7 @@ public class GetAllPotsHandler(AppDbContext context)
                 Id = p.Id,
                 Total = p.Total,
                 Target = p.Target,
+                Name = p.Name,
             })
             .AsNoTracking()
             .ToListAsync();

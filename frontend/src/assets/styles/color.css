@@ -29,6 +29,7 @@
   --color-background-canvas-primary: var(--beige-100);
   --color-background-surface-primary: var(--grey-900);
   --color-background-surface-secondary: var(--white);
+  --color-background-surface-tertiary: var(--green);
   --color-background-surface-raised-primary: var(--white);
   --color-background-cta-primary: var(--grey-900);
   --color-background-cta-secondary: var(--white);

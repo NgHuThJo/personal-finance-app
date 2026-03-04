@@ -36,6 +36,9 @@ public class AppDbContext(
             .HasForeignKey<Balance>(b => b.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        /* Pot */
+        modelBuilder.Entity<Pot>().HasIndex(p => p.Name).IsUnique();
+
         /* Transaction */
         modelBuilder
             .Entity<Transaction>()
