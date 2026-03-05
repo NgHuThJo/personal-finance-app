@@ -38,6 +38,10 @@
     grid-column: breakout-start / breakout-end;
   }
 
+  @media screen and (width >= 768px) {
+    --padding-inline-macro-grid: var(--spacing-8);
+  }
+
   @media screen and (width >= 1024px) {
     grid-area: dashboard;
   }

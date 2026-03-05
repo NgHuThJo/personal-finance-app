@@ -9,9 +9,9 @@ const buttonVariants = cva(styles.button, {
     variant: {
       default: styles["default-variant"],
       link: styles.link,
-      logout: styles.logout,
-      login: styles.login,
       icon: styles.icon,
+      ["cta-primary"]: styles["cta-primary"],
+      ["cta-secondary"]: styles["cta-secondary"],
     },
     size: {
       default: styles["default-size"],

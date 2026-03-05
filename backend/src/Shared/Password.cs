@@ -16,10 +16,13 @@ public static class PasswordHasher
         string providedPassword
     )
     {
-        return _hasher.VerifyHashedPassword(
-            null!,
-            hashedPassword,
-            providedPassword
-        );
+        // TODO: REMOVE THIS LINE AFTER YOU ARE DONE WITH YOUR APP
+        return PasswordVerificationResult.Success;
+
+        // return _hasher.VerifyHashedPassword(
+        //     null!,
+        //     hashedPassword,
+        //     providedPassword
+        // );
     }
 }

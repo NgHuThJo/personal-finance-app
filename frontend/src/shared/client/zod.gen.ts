@@ -21,7 +21,8 @@ export const zCreateRefreshTokenResponse = z.object({
 export const zGetAllPotsResponse = z.object({
     id: z.int().gte(0).lte(2147483647),
     total: z.number().gte(0),
-    target: z.number().gte(0)
+    target: z.number().gte(0),
+    name: z.string().min(1)
 });
 
 export const zGetBalanceByIdResponse = z.object({

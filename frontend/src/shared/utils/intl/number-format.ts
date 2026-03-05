@@ -20,6 +20,13 @@ class NumberFormatter {
       currencyDisplay: "symbol",
     };
   }
+
+  getPercentOptions(): Intl.NumberFormatOptions {
+    return {
+      style: "percent",
+      maximumFractionDigits: 2,
+    };
+  }
 }
 
 export const numberFormatter = new NumberFormatter();

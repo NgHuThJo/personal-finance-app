@@ -100,16 +100,7 @@
 }
 
 /* Custom */
-.logout {
-  color: var(--color-text-inverse);
-  background-color: var(--color-background-cta-primary);
-
-  &:disabled {
-    opacity: 0.5;
-  }
-}
-
-.login {
+.cta-primary {
   padding: var(--spacing-6);
   color: var(--color-text-cta-primary);
   background-color: var(--color-background-cta-primary);
@@ -117,6 +108,13 @@
   &:disabled {
     opacity: 0.5;
   }
+}
+
+.cta-secondary {
+  padding: var(--spacing-4);
+  font-weight: var(--font-weight-heading);
+  font-size: var(--font-size-content-primary);
+  background-color: var(--color-background-canvas-primary);
 }
 
 @media (prefers-reduced-motion) {
