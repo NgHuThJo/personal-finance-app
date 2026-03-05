@@ -14,6 +14,7 @@ public class PotApiTest(DatabaseFixture dbFixture)
 {
     private readonly string _uriPath = "/api/pots";
 
+    // CreatePot
     [Fact]
     public async Task CreatePot_IfSuccessful_ReturnStatusCode201()
     {
@@ -57,6 +58,7 @@ public class PotApiTest(DatabaseFixture dbFixture)
         content.Errors.Should().ContainKeys("Target", "Name");
     }
 
+    // GetAllPots
     [Fact]
     public async Task GetAllPots_IfSuccessful_Return200()
     {
@@ -70,5 +72,46 @@ public class PotApiTest(DatabaseFixture dbFixture)
             .Should()
             .HaveCountGreaterThan(0)
             .And.BeOfType<List<GetAllPotsResponse>>();
+    }
+
+    // WithdrawMoneyFromPot
+    [Fact]
+    public async Task WithdrawMoneyFromPot_IfSuccessful_Return204()
+    {
+        // Arrange
+        var fakeData = PotFaker.WithdrawMoneyFromPotRequest(1);
+        var jsonContent = JsonContent.Create(fakeData);
+        // Act
+        var putResponse = await Client.PutAsync(
+            _uriPath,
+            jsonContent,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        putResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task WithdrawMoneyFromPot_IfPotIdNotFound_Return422()
+    {
+        // Arrange
+        var fakeData = PotFaker.WithdrawMoneyFromPotRequest(1000);
+        var jsonContent = JsonContent.Create(fakeData);
+        // Act
+        var putResponse = await Client.PutAsync(
+            _uriPath,
+            jsonContent,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        putResponse
+            .StatusCode.Should()
+            .Be(HttpStatusCode.UnprocessableContent);
+        var content =
+            await putResponse.Content.ReadFromJsonAsync<ProblemDetails>(
+                TestContext.Current.CancellationToken
+            );
+        content.Should().NotBeNull();
+        content.Detail.Should().NotBeNullOrEmpty();
     }
 }

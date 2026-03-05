@@ -24,10 +24,6 @@ public static partial class LogoutUserLogger
     public static partial void NoRefreshTokenFoundInCookie(ILogger logger);
 }
 
-public abstract record LogoutUserResult;
-
-public record NoRefreshTokenFoundInDb : LogoutUserResult;
-
 public static class LogoutUserEndpoint
 {
     public static async Task<Results<NoContent, ProblemHttpResult>> Logout(

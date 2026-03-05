@@ -133,4 +133,24 @@ public static class TypedResultsProblemDetails
 
         return TypedResults.Problem(problem);
     }
+
+    public static ProblemHttpResult UnprocessableContent(
+        string detail,
+        string title = "Unprocessable Content",
+        string? type = null,
+        string? instance = null,
+        IDictionary<string, object?>? extensions = null
+    )
+    {
+        var problem = ProblemDetailsHelper.Create(
+            statusCode: StatusCodes.Status422UnprocessableEntity,
+            detail: detail,
+            title: title,
+            type: type,
+            instance: instance,
+            extensions: extensions
+        );
+
+        return TypedResults.Problem(problem);
+    }
 }

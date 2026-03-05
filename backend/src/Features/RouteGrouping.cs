@@ -45,6 +45,10 @@ public static class RouteGrouper
             .MapPost("", CreatePotEndpoint.Create)
             .AddValidationFilter<CreatePotRequest>();
         group.MapGet("", GetAllPotsEndpoint.GetAll);
+        group
+            .MapPut("", WithdrawMoneyFromPotEndpoint.Withdraw)
+            .ProducesProblem((int)HttpStatusCode.UnprocessableEntity)
+            .AddValidationFilter<WithdrawMoneyFromPotRequest>();
 
         return app;
     }
