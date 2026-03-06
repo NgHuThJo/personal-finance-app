@@ -63,6 +63,11 @@ export type SignUpUserResponse = {
     name: string;
 };
 
+export type WithdrawMoneyFromPotRequest = {
+    potId: number;
+    moneyWithdrawn: number;
+};
+
 export type GetApiUsersData = {
     body?: never;
     path?: never;
@@ -119,6 +124,31 @@ export type PostApiPotsResponses = {
 };
 
 export type PostApiPotsResponse = PostApiPotsResponses[keyof PostApiPotsResponses];
+
+export type PutApiPotsData = {
+    body: WithdrawMoneyFromPotRequest;
+    path?: never;
+    query?: never;
+    url: '/api/pots';
+};
+
+export type PutApiPotsErrors = {
+    /**
+     * Unprocessable Entity
+     */
+    422: ProblemDetails;
+};
+
+export type PutApiPotsError = PutApiPotsErrors[keyof PutApiPotsErrors];
+
+export type PutApiPotsResponses = {
+    /**
+     * No Content
+     */
+    204: void;
+};
+
+export type PutApiPotsResponse = PutApiPotsResponses[keyof PutApiPotsResponses];
 
 export type PostApiAuthSignupData = {
     body: SignUpUserRequest;

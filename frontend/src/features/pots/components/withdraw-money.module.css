@@ -80,3 +80,7 @@
 .target-number {
   color: var(--color-text-secondary);
 }
+
+.field-error {
+  color: var(--color-status-error);
+}

@@ -1,7 +1,7 @@
-import { ZodError } from "zod";
+import { ZodError, z } from "zod";
 
 export function makeZodErrorsUserFriendly<T>(error: ZodError<T>) {
-  const fieldErrors = error.flatten().fieldErrors;
+  const fieldErrors = z.flattenError(error);
 
   return Object.entries(fieldErrors).reduce(
     (acc, [key, messages]) => {

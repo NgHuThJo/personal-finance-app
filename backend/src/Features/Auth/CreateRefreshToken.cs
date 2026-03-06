@@ -16,7 +16,7 @@ public static partial class CreateRefreshToken
 
     [LoggerMessage(
         Level = LogLevel.Information,
-        Message = "Refresh token has not expired"
+        Message = "Refresh token has expired"
     )]
     public static partial void RefreshTokenHasExpired(ILogger logger);
 
@@ -70,13 +70,13 @@ public class CreateRefreshTokenEndpoint
             case UserHasNoActiveRefreshToken:
             {
                 return TypedResultsProblemDetails.Unauthorized(
-                    "User has no active  refresh token"
+                    "User has no active refresh token"
                 );
             }
             case RefreshTokenHasExpired:
             {
                 return TypedResultsProblemDetails.Unauthorized(
-                    "Refresh token has not expired"
+                    "Refresh token has expired"
                 );
             }
             case RefreshTokenRevoked:

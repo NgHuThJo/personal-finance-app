@@ -76,6 +76,11 @@ export const zSignUpUserResponse = z.object({
     name: z.string().min(1)
 });
 
+export const zWithdrawMoneyFromPotRequest = z.object({
+    potId: z.int().gte(0).lte(2147483647),
+    moneyWithdrawn: z.number().gte(0)
+});
+
 export const zGetApiUsersData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
@@ -108,6 +113,17 @@ export const zPostApiPotsData = z.object({
  * Created
  */
 export const zPostApiPotsResponse = zCreatePotResponse;
+
+export const zPutApiPotsData = z.object({
+    body: zWithdrawMoneyFromPotRequest,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+/**
+ * No Content
+ */
+export const zPutApiPotsResponse = z.void();
 
 export const zPostApiAuthSignupData = z.object({
     body: zSignUpUserRequest,

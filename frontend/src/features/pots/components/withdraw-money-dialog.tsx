@@ -1,7 +1,18 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import styles from "./withdraw-money.module.css";
+import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
-import type { GetAllPotsResponse } from "#frontend/shared/client";
+import type {
+  GetAllPotsResponse,
+  WithdrawMoneyFromPotRequest,
+} from "#frontend/shared/client";
+
+import {
+  getApiPotsQueryKey,
+  putApiPotsMutation,
+} from "#frontend/shared/client/@tanstack/react-query.gen";
+import { zWithdrawMoneyFromPotRequest } from "#frontend/shared/client/zod.gen";
 import { Button } from "#frontend/shared/primitives/button";
 import {
   Dialog,
@@ -13,6 +24,7 @@ import {
   DialogTrigger,
 } from "#frontend/shared/primitives/dialog";
 import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
+import { makeZodErrorsUserFriendly } from "#frontend/shared/utils/zod";
 
 type WithdrawMoneyDialogProps = {
   potData: GetAllPotsResponse;
@@ -22,14 +34,88 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
-  } = useForm({
-    // resolver: zodResolver()
+  } = useForm<WithdrawMoneyFromPotRequest>();
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    ...putApiPotsMutation({
+      client: clientWithAuth,
+      credentials: "include",
+    }),
+    onSuccess: async () => {
+      Logger.info("Money successfully withdrawn from pot");
+      await queryClient.invalidateQueries({ queryKey: getApiPotsQueryKey() });
+    },
+    onError: (error) => {
+      Logger.info("Money could not be withdrawn", error);
+
+      switch (error.status) {
+        case 422: {
+          setError("root.server-unprocessable-content", {
+            type: String(error.type),
+            message: String(error.detail),
+          });
+          break;
+        }
+        default: {
+          Logger.error(`Unknown error in ${WithdrawMoneyDialog.name}`);
+        }
+      }
+    },
   });
   const { id, name, target, total } = potData;
 
   const handleWithdrawSubmit = handleSubmit((data) => {
-    Logger.info("data in withdrawal", data);
+    const convertedData: WithdrawMoneyFromPotRequest = {
+      ...data,
+      potId: data.potId,
+    };
+
+    const validationResult = zWithdrawMoneyFromPotRequest.safeParse(
+      convertedData,
+      {
+        error: (iss) => {
+          if (iss.code === "invalid_type") {
+            return `Invalid type expected ${iss.expected}`;
+          }
+          if (iss.code === "too_small") {
+            return `Minimum is ${iss.minimum}`;
+          }
+          if (iss.code === "too_big") {
+            return `Maximum is ${iss.maximum}`;
+          }
+        },
+      },
+    );
+
+    if (!validationResult.success) {
+      const userFriendlyErrors = makeZodErrorsUserFriendly(
+        validationResult.error,
+      );
+
+      for (const error in userFriendlyErrors) {
+        const convertedError: keyof typeof userFriendlyErrors =
+          error as keyof typeof userFriendlyErrors;
+
+        userFriendlyErrors[convertedError].forEach((errorMessage) => {
+          setError(convertedError, {
+            message: errorMessage,
+          });
+        });
+      }
+    }
+
+    // const convertedData : WithdrawMoneyFromPotRequest = {
+    //   potId: Number(data.potId)
+    // }
+
+    // mutate({
+    //   body: {
+    //     potId: data.potId,
+    //     moneyWithdrawn: data.moneyWithdrawn,
+    //   },
+    // });
   });
 
   return (
@@ -87,11 +173,54 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
                 Amount to withdraw
               </label>
               <input
+                type="hidden"
+                {...register("potId", {
+                  value: id,
+                })}
+                defaultValue={id}
+              />
+              <input
                 type="number"
                 id="withdraw-amount"
                 className={styles["dialog-input"]}
-                {...register("withdraw-amount")}
+                step="any"
+                placeholder="Enter an amount to withdraw..."
+                {...register("moneyWithdrawn", {
+                  required: "Amount to withdraw required",
+                  min: {
+                    value: 0.01,
+                    message: "Minimum of 0.01",
+                  },
+                  max: {
+                    value: total,
+                    message: `Maximum of ${total}`,
+                  },
+                  valueAsNumber: true,
+                })}
               />
+              {errors.moneyWithdrawn?.type === "required" && (
+                <span className={styles["field-error"]}>
+                  {errors.moneyWithdrawn?.message}
+                </span>
+              )}
+              {errors.moneyWithdrawn?.type === "min" && (
+                <span className={styles["field-error"]}>
+                  {errors.moneyWithdrawn?.message}
+                </span>
+              )}
+              {errors.moneyWithdrawn?.type === "max" && (
+                <span className={styles["field-error"]}>
+                  {errors.moneyWithdrawn?.message}
+                </span>
+              )}
+              {errors.root?.["server-unprocessable-content"] && (
+                <span
+                  className={styles["field-error"]}
+                  data-testid="server-unprocessable-content"
+                >
+                  {errors.root?.["server-unprocessable-content"]?.message}
+                </span>
+              )}
             </div>
             <Button variant="cta-primary" type="submit">
               Confirm Withdrawal

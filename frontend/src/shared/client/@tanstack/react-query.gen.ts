@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { getApiAuthRefresh, getApiBalances, getApiPots, getApiUsers, type Options, postApiAuthLogin, postApiAuthLogout, postApiAuthSignup, postApiPots } from '../sdk.gen';
-import type { GetApiAuthRefreshData, GetApiAuthRefreshError, GetApiAuthRefreshResponse, GetApiBalancesData, GetApiBalancesError, GetApiBalancesResponse, GetApiPotsData, GetApiPotsResponse, GetApiUsersData, GetApiUsersError, GetApiUsersResponse, PostApiAuthLoginData, PostApiAuthLoginError, PostApiAuthLoginResponse, PostApiAuthLogoutData, PostApiAuthLogoutError, PostApiAuthLogoutResponse, PostApiAuthSignupData, PostApiAuthSignupError, PostApiAuthSignupResponse, PostApiPotsData, PostApiPotsResponse } from '../types.gen';
+import { getApiAuthRefresh, getApiBalances, getApiPots, getApiUsers, type Options, postApiAuthLogin, postApiAuthLogout, postApiAuthSignup, postApiPots, putApiPots } from '../sdk.gen';
+import type { GetApiAuthRefreshData, GetApiAuthRefreshError, GetApiAuthRefreshResponse, GetApiBalancesData, GetApiBalancesError, GetApiBalancesResponse, GetApiPotsData, GetApiPotsResponse, GetApiUsersData, GetApiUsersError, GetApiUsersResponse, PostApiAuthLoginData, PostApiAuthLoginError, PostApiAuthLoginResponse, PostApiAuthLogoutData, PostApiAuthLogoutError, PostApiAuthLogoutResponse, PostApiAuthSignupData, PostApiAuthSignupError, PostApiAuthSignupResponse, PostApiPotsData, PostApiPotsResponse, PutApiPotsData, PutApiPotsError, PutApiPotsResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -73,6 +73,20 @@ export const postApiPotsMutation = (options?: Partial<Options<PostApiPotsData>>)
     const mutationOptions: UseMutationOptions<PostApiPotsResponse, DefaultError, Options<PostApiPotsData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await postApiPots({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const putApiPotsMutation = (options?: Partial<Options<PutApiPotsData>>): UseMutationOptions<PutApiPotsResponse, PutApiPotsError, Options<PutApiPotsData>> => {
+    const mutationOptions: UseMutationOptions<PutApiPotsResponse, PutApiPotsError, Options<PutApiPotsData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await putApiPots({
                 ...options,
                 ...fnOptions,
                 throwOnError: true

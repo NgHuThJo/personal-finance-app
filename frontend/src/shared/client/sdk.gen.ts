@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetApiAuthRefreshData, GetApiAuthRefreshErrors, GetApiAuthRefreshResponses, GetApiBalancesData, GetApiBalancesErrors, GetApiBalancesResponses, GetApiPotsData, GetApiPotsResponses, GetApiUsersData, GetApiUsersErrors, GetApiUsersResponses, PostApiAuthLoginData, PostApiAuthLoginErrors, PostApiAuthLoginResponses, PostApiAuthLogoutData, PostApiAuthLogoutErrors, PostApiAuthLogoutResponses, PostApiAuthSignupData, PostApiAuthSignupErrors, PostApiAuthSignupResponses, PostApiPotsData, PostApiPotsResponses } from './types.gen';
+import type { GetApiAuthRefreshData, GetApiAuthRefreshErrors, GetApiAuthRefreshResponses, GetApiBalancesData, GetApiBalancesErrors, GetApiBalancesResponses, GetApiPotsData, GetApiPotsResponses, GetApiUsersData, GetApiUsersErrors, GetApiUsersResponses, PostApiAuthLoginData, PostApiAuthLoginErrors, PostApiAuthLoginResponses, PostApiAuthLogoutData, PostApiAuthLogoutErrors, PostApiAuthLogoutResponses, PostApiAuthSignupData, PostApiAuthSignupErrors, PostApiAuthSignupResponses, PostApiPotsData, PostApiPotsResponses, PutApiPotsData, PutApiPotsErrors, PutApiPotsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -23,6 +23,15 @@ export const getApiUsers = <ThrowOnError extends boolean = false>(options?: Opti
 export const getApiPots = <ThrowOnError extends boolean = false>(options?: Options<GetApiPotsData, ThrowOnError>) => (options?.client ?? client).get<GetApiPotsResponses, unknown, ThrowOnError>({ url: '/api/pots', ...options });
 
 export const postApiPots = <ThrowOnError extends boolean = false>(options: Options<PostApiPotsData, ThrowOnError>) => (options.client ?? client).post<PostApiPotsResponses, unknown, ThrowOnError>({
+    url: '/api/pots',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const putApiPots = <ThrowOnError extends boolean = false>(options: Options<PutApiPotsData, ThrowOnError>) => (options.client ?? client).put<PutApiPotsResponses, PutApiPotsErrors, ThrowOnError>({
     url: '/api/pots',
     ...options,
     headers: {

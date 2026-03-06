@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using backend.Src.Models;
 using backend.Src.Shared;
 using FluentValidation;
@@ -24,7 +25,10 @@ public record MoneyWithdrawn : WithdrawMoneyFromPotResult;
 
 public record WithdrawMoneyFromPotRequest
 {
+    [Range(0, int.MaxValue)]
     public required int PotId { get; init; }
+
+    [Range(0, double.MaxValue)]
     public required decimal MoneyWithdrawn { get; init; }
 }
 

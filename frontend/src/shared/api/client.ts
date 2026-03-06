@@ -5,6 +5,9 @@ import { createClient, createConfig } from "#frontend/shared/client/client";
 import { accessTokenStore } from "#frontend/shared/store/access-token";
 import { createInFlight } from "#frontend/shared/utils/concurrency/single-flight";
 
+// Keep copies of the incoming request bodies to retry later
+// Potential to break if assumption that Request is always the same in the entire request-response lifecycle becomes false
+const requestBodyDictionary = new Map<Request, Request>();
 // They are the same, deep clone it
 export const clientWithAuth = createClient(
   createConfig<ClientOptions>({ baseUrl: "https://localhost:7111/" }),
@@ -25,10 +28,15 @@ const refreshAccessToken = async () => {
 
 const inFlightRequestNewAccessTokenFn = createInFlight(refreshAccessToken);
 
-function withBearerToken(request: Request, accessToken: string) {
-  const next = new Request(request);
-  next.headers.set("Authorization", `Bearer ${accessToken}`);
-  return next;
+function withBearerToken(oldRequest: Request, accessToken: string) {
+  const nextRequest = requestBodyDictionary.get(oldRequest);
+
+  if (!nextRequest) {
+    throw Error(`Old and new request in ${withBearerToken.name} do not match`);
+  }
+
+  nextRequest.headers.set("Authorization", `Bearer ${accessToken}`);
+  return nextRequest;
 }
 
 function formatErrorMessage(...errors: unknown[]) {
@@ -37,6 +45,7 @@ function formatErrorMessage(...errors: unknown[]) {
 
 clientWithAuth.interceptors.request.use(async (request) => {
   const accessToken = accessTokenStore.getState().accessToken;
+  requestBodyDictionary.set(request, request.clone());
 
   return accessToken ? withBearerToken(request, accessToken) : request;
 });
