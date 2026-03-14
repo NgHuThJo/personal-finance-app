@@ -110,12 +110,11 @@ public sealed class SignUpUserHandler(
         var newUser = new User
         {
             Email = command.Email,
-            Password = hashedPassword,
             Name = command.Name,
+            PasswordHash = hashedPassword,
             Balance = new Balance(),
         };
         _context.Users.Add(newUser);
-
         await _context.SaveChangesAsync();
 
         return new SignupSuccessful(

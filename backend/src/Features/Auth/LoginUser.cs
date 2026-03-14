@@ -19,6 +19,12 @@ public static partial class LoginUserLogger
 
     [LoggerMessage(
         Level = LogLevel.Information,
+        Message = "User is not registered with password"
+    )]
+    public static partial void UserIsNotRegisteredLocally(ILogger logger);
+
+    [LoggerMessage(
+        Level = LogLevel.Information,
         Message = "Email address {Email} does not exist"
     )]
     public static partial void EmailDoesNotExist(ILogger logger, string email);
@@ -27,6 +33,8 @@ public static partial class LoginUserLogger
 public abstract record LoginUserResult;
 
 public record PasswordsDoNotMatch : LoginUserResult;
+
+public record UserIsNotRegisteredWithPassword : LoginUserResult;
 
 public record EmailDoesNotExist(string Email) : LoginUserResult;
 
@@ -90,6 +98,12 @@ public sealed class LoginUserEndpoint
                     $"Email address {email} does not exist"
                 );
             }
+            case UserIsNotRegisteredWithPassword:
+            {
+                return TypedResultsProblemDetails.Unauthorized(
+                    "User is not registered locally with password"
+                );
+            }
             case PasswordsDoNotMatch:
             {
                 return TypedResultsProblemDetails.Unauthorized(
@@ -123,8 +137,8 @@ public class LoginUserHandler(
             .Users.Select(u => new
             {
                 u.Email,
-                u.Password,
                 u.Id,
+                u.PasswordHash,
             })
             .SingleOrDefaultAsync(u =>
                 u.Email.ToLower() == command.Email.ToLower()
@@ -136,8 +150,14 @@ public class LoginUserHandler(
             return new EmailDoesNotExist(command.Email);
         }
 
+        if (userInfo.PasswordHash is null)
+        {
+            LoginUserLogger.UserIsNotRegisteredLocally(_logger);
+            return new UserIsNotRegisteredWithPassword();
+        }
+
         var passwordVerificationResult = PasswordHasher.VerifyHashedPassword(
-            userInfo.Password,
+            userInfo.PasswordHash,
             command.Password
         );
 

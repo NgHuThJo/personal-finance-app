@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using backend.Src.Models;
@@ -11,9 +12,11 @@ using backend.Src.Models;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260313170931_SeparateUserFromUserProvider")]
+    partial class SeparateUserFromUserProvider
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -192,7 +195,7 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<string>("Password")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -211,6 +214,9 @@ namespace backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
                     b.Property<int>("Provider")
                         .HasColumnType("integer");
 
@@ -223,8 +229,7 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.HasIndex("Provider", "ProviderUserId")
                         .IsUnique();
@@ -298,8 +303,8 @@ namespace backend.Migrations
             modelBuilder.Entity("backend.Src.Models.UserAuthProvider", b =>
                 {
                     b.HasOne("backend.Src.Models.User", "User")
-                        .WithOne("AuthProvider")
-                        .HasForeignKey("backend.Src.Models.UserAuthProvider", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -308,9 +313,6 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Src.Models.User", b =>
                 {
-                    b.Navigation("AuthProvider")
-                        .IsRequired();
-
                     b.Navigation("Balance")
                         .IsRequired();
 

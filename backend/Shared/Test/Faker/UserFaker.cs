@@ -9,7 +9,7 @@ public static class UserFaker
         new Faker<User>()
             .RuleFor(u => u.Name, (Faker f) => f.Name.FirstName())
             .RuleFor(u => u.Email, (Faker f) => f.Internet.Email())
-            .RuleFor(u => u.Password, (Faker f) => f.Internet.Password())
+            .RuleFor(u => u.PasswordHash, (Faker f) => f.Internet.Password())
             .RuleFor(
                 u => u.Pots,
                 (Faker f) =>
@@ -28,6 +28,13 @@ public static class UserFaker
                         .CreateBudgetFaker()
                         .Generate(TestConstants.NUMBER_OF_USERS)
             )
+            // .RuleFor(
+            //     u => u.AuthProvider,
+            //     (Faker f) =>
+            //         UserAuthProviderFaker
+            //             .CreateUserAuthProviderFaker()
+            //             .Generate()
+            // )
             // .RuleFor(
             //     u => u.ReceivedTransactions,
             //     (Faker f) =>

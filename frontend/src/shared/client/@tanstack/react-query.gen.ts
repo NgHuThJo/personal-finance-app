@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { getApiAuthRefresh, getApiBalances, getApiPots, getApiUsers, type Options, postApiAuthLogin, postApiAuthLogout, postApiAuthSignup, postApiPots, putApiPots } from '../sdk.gen';
-import type { GetApiAuthRefreshData, GetApiAuthRefreshError, GetApiAuthRefreshResponse, GetApiBalancesData, GetApiBalancesError, GetApiBalancesResponse, GetApiPotsData, GetApiPotsResponse, GetApiUsersData, GetApiUsersError, GetApiUsersResponse, PostApiAuthLoginData, PostApiAuthLoginError, PostApiAuthLoginResponse, PostApiAuthLogoutData, PostApiAuthLogoutError, PostApiAuthLogoutResponse, PostApiAuthSignupData, PostApiAuthSignupError, PostApiAuthSignupResponse, PostApiPotsData, PostApiPotsResponse, PutApiPotsData, PutApiPotsError, PutApiPotsResponse } from '../types.gen';
+import { getApiAuthLoginGoogle, getApiAuthRefresh, getApiBalances, getApiPots, getApiUsers, type Options, postApiAuthLogin, postApiAuthLogout, postApiAuthLogoutGoogle, postApiAuthSignup, postApiPots, putApiPots } from '../sdk.gen';
+import type { GetApiAuthLoginGoogleData, GetApiAuthRefreshData, GetApiAuthRefreshError, GetApiAuthRefreshResponse, GetApiBalancesData, GetApiBalancesError, GetApiBalancesResponse, GetApiPotsData, GetApiPotsResponse, GetApiUsersData, GetApiUsersError, GetApiUsersResponse, PostApiAuthLoginData, PostApiAuthLoginError, PostApiAuthLoginResponse, PostApiAuthLogoutData, PostApiAuthLogoutError, PostApiAuthLogoutGoogleData, PostApiAuthLogoutResponse, PostApiAuthSignupData, PostApiAuthSignupError, PostApiAuthSignupResponse, PostApiPotsData, PostApiPotsResponse, PutApiPotsData, PutApiPotsError, PutApiPotsResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -125,6 +125,20 @@ export const postApiAuthLoginMutation = (options?: Partial<Options<PostApiAuthLo
     return mutationOptions;
 };
 
+export const postApiAuthLogoutMutation = (options?: Partial<Options<PostApiAuthLogoutData>>): UseMutationOptions<PostApiAuthLogoutResponse, PostApiAuthLogoutError, Options<PostApiAuthLogoutData>> => {
+    const mutationOptions: UseMutationOptions<PostApiAuthLogoutResponse, PostApiAuthLogoutError, Options<PostApiAuthLogoutData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postApiAuthLogout({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
 export const getApiAuthRefreshQueryKey = (options?: Options<GetApiAuthRefreshData>) => createQueryKey('getApiAuthRefresh', options);
 
 export const getApiAuthRefreshOptions = (options?: Options<GetApiAuthRefreshData>) => queryOptions<GetApiAuthRefreshResponse, GetApiAuthRefreshError, GetApiAuthRefreshResponse, ReturnType<typeof getApiAuthRefreshQueryKey>>({
@@ -140,10 +154,28 @@ export const getApiAuthRefreshOptions = (options?: Options<GetApiAuthRefreshData
     queryKey: getApiAuthRefreshQueryKey(options)
 });
 
-export const postApiAuthLogoutMutation = (options?: Partial<Options<PostApiAuthLogoutData>>): UseMutationOptions<PostApiAuthLogoutResponse, PostApiAuthLogoutError, Options<PostApiAuthLogoutData>> => {
-    const mutationOptions: UseMutationOptions<PostApiAuthLogoutResponse, PostApiAuthLogoutError, Options<PostApiAuthLogoutData>> = {
+export const getApiAuthLoginGoogleQueryKey = (options?: Options<GetApiAuthLoginGoogleData>) => createQueryKey('getApiAuthLoginGoogle', options);
+
+/**
+ * Redirects to Google login
+ */
+export const getApiAuthLoginGoogleOptions = (options?: Options<GetApiAuthLoginGoogleData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof getApiAuthLoginGoogleQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getApiAuthLoginGoogle({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiAuthLoginGoogleQueryKey(options)
+});
+
+export const postApiAuthLogoutGoogleMutation = (options?: Partial<Options<PostApiAuthLogoutGoogleData>>): UseMutationOptions<unknown, DefaultError, Options<PostApiAuthLogoutGoogleData>> => {
+    const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PostApiAuthLogoutGoogleData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await postApiAuthLogout({
+            const { data } = await postApiAuthLogoutGoogle({
                 ...options,
                 ...fnOptions,
                 throwOnError: true

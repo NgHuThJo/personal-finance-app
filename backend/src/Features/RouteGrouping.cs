@@ -68,13 +68,16 @@ public static class RouteGrouper
             .ProducesProblem((int)HttpStatusCode.Unauthorized)
             .AddValidationFilter<LoginUserRequest>();
         group
+            .MapPost("logout", LogoutUserEndpoint.Logout)
+            .ProducesProblem((int)HttpStatusCode.Forbidden);
+        group
             .MapGet("refresh", CreateRefreshTokenEndpoint.Get)
             .ProducesProblem((int)HttpStatusCode.Unauthorized);
-        group
-            .MapPost("logout", LogoutUserEndpoint.Logout)
-            .RequireAuthorization()
-            .ProducesProblem((int)HttpStatusCode.Forbidden);
 
+        group
+            .MapGet("login/google", LoginGoogleUserEndpoint.Login)
+            .WithSummary("Redirects to Google login");
+        group.MapPost("logout/google", LogoutGoogleUserEndpoint.Logout);
         return app;
     }
 }

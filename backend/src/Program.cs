@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -6,8 +7,11 @@ using backend.Src.Features;
 using backend.Src.Models;
 using backend.Src.Shared;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using Serilog;
@@ -22,7 +26,7 @@ var assembly = typeof(Program).Assembly;
 var handlerTypes = assembly
     .GetTypes()
     .Where(t => t.IsClass && !t.IsAbstract && t.Name.EndsWith("Handler"));
-var intercepterTypes = assembly
+var interceptorTypes = assembly
     .GetTypes()
     .Where(t => t.IsClass && !t.IsAbstract && t.Name.EndsWith("Interceptor"));
 
@@ -31,7 +35,7 @@ foreach (var handlerType in handlerTypes)
     builder.Services.AddScoped(handlerType);
 }
 
-foreach (var interceptorType in intercepterTypes)
+foreach (var interceptorType in interceptorTypes)
 {
     builder.Services.AddScoped(interceptorType);
 }
@@ -80,7 +84,12 @@ builder.Services.AddCors(options =>
     );
 });
 builder
-    .Services.AddAuthentication()
+    .Services.AddAuthentication(options =>
+    {
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        ;
+    })
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new()
@@ -98,6 +107,140 @@ builder
         };
         // Use this to prevent sub claim from being mapped to legacy namespaces
         options.MapInboundClaims = false;
+    })
+    .AddOpenIdConnect(options =>
+    {
+        var oidcConfig = builder.Configuration.GetRequiredSection(
+            "OpenIDConnectSettings:Google"
+        );
+        var googleSecretConfig = builder.Configuration.GetSection(
+            "Authentication:Google"
+        );
+
+        options.Authority = oidcConfig["Authority"];
+        options.ClientId = oidcConfig["ClientId"];
+        options.ClientSecret = googleSecretConfig["ClientSecret"];
+
+        options.SignInScheme =
+            CookieAuthenticationDefaults.AuthenticationScheme;
+        options.ResponseType = OpenIdConnectResponseType.Code;
+
+        options.SaveTokens = true;
+        options.GetClaimsFromUserInfoEndpoint = true;
+
+        options.Scope.Add("openid");
+        options.Scope.Add("profile");
+        options.Scope.Add("email");
+
+        options.MapInboundClaims = false;
+        options.TokenValidationParameters.NameClaimType =
+            JwtRegisteredClaimNames.Name;
+        options.TokenValidationParameters.RoleClaimType = "roles";
+
+        options.Events.OnTokenValidated = async (context) =>
+        {
+            var services = context.HttpContext.RequestServices;
+
+            var db = services.GetRequiredService<AppDbContext>();
+            var JwtTokenProvider =
+                services.GetRequiredService<JwtTokenProvider>();
+
+            var sub = context?.Principal?.FindFirst("sub")?.Value;
+            var name = context?.Principal?.FindFirst("name")?.Value;
+            var email = context?.Principal?.FindFirst("email")?.Value;
+
+            if (
+                string.IsNullOrWhiteSpace(sub)
+                || string.IsNullOrWhiteSpace(name)
+                || string.IsNullOrWhiteSpace(email)
+            )
+            {
+                throw new InvalidOperationException(
+                    "Required claims are missing from identity token"
+                );
+            }
+
+            Console.WriteLine(db);
+
+            var providerRecord = await db
+                .UserAuthProviders.Include(p => p.User)
+                .SingleOrDefaultAsync(p =>
+                    p.Provider == AuthProvider.Google && p.ProviderUserId == sub
+                );
+
+            User user;
+
+            // Create new user if not associated with a provider
+            if (providerRecord is null)
+            {
+                user = new User
+                {
+                    Email = email,
+                    Name = name,
+                    Balance = new Balance(),
+                    AuthProvider = new UserAuthProvider
+                    {
+                        Provider = AuthProvider.Google,
+                        ProviderUserId = sub,
+                    },
+                };
+
+                db.Users.Add(user);
+                await db.SaveChangesAsync();
+            }
+            else
+            {
+                user = providerRecord.User;
+            }
+
+            var accessToken = JwtTokenProvider.GenerateAccessToken(user.Id);
+            var refreshToken = new RefreshToken
+            {
+                Token = JwtTokenProvider.GenerateRefreshToken(),
+                ExpiresAtUtc = DateTime.UtcNow.AddDays(7),
+                UserId = user.Id,
+            };
+
+            db.RefreshTokens.Add(refreshToken);
+            await db.SaveChangesAsync();
+
+            context?.HttpContext.Response.Cookies.Append(
+                "refresh_token",
+                refreshToken.Token,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.None,
+                    Secure = true,
+                    MaxAge = TimeSpan.FromDays(7),
+                }
+            );
+
+            context?.HttpContext.Items["access_token"] = accessToken;
+        };
+
+        options.Events.OnTicketReceived = context =>
+        {
+            var jwt = (string)context.HttpContext.Items["access_token"]!;
+
+            // context.Response.Cookies.Append(
+            //     "access_token",
+            //     jwt,
+            //     new CookieOptions
+            //     {
+            //         Secure = true,
+            //         SameSite = SameSiteMode.None,
+            //     }
+            // );
+
+            context.Response.Redirect(
+                $"https://localhost:5173/#access_token={jwt}"
+            );
+
+            context.HandleResponse();
+
+            return Task.CompletedTask;
+        };
     });
 builder.Services.AddAuthorization();
 builder.Services.AddRateLimiter(options =>
@@ -201,6 +344,7 @@ app.UseRateLimiter();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 
+// Always map controllers last
 app.MapUserApi().MapPotApi().MapAuthApi().MapBalanceApi();
 
 app.Run();

@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetApiAuthRefreshData, GetApiAuthRefreshErrors, GetApiAuthRefreshResponses, GetApiBalancesData, GetApiBalancesErrors, GetApiBalancesResponses, GetApiPotsData, GetApiPotsResponses, GetApiUsersData, GetApiUsersErrors, GetApiUsersResponses, PostApiAuthLoginData, PostApiAuthLoginErrors, PostApiAuthLoginResponses, PostApiAuthLogoutData, PostApiAuthLogoutErrors, PostApiAuthLogoutResponses, PostApiAuthSignupData, PostApiAuthSignupErrors, PostApiAuthSignupResponses, PostApiPotsData, PostApiPotsResponses, PutApiPotsData, PutApiPotsErrors, PutApiPotsResponses } from './types.gen';
+import type { GetApiAuthLoginGoogleData, GetApiAuthLoginGoogleResponses, GetApiAuthRefreshData, GetApiAuthRefreshErrors, GetApiAuthRefreshResponses, GetApiBalancesData, GetApiBalancesErrors, GetApiBalancesResponses, GetApiPotsData, GetApiPotsResponses, GetApiUsersData, GetApiUsersErrors, GetApiUsersResponses, PostApiAuthLoginData, PostApiAuthLoginErrors, PostApiAuthLoginResponses, PostApiAuthLogoutData, PostApiAuthLogoutErrors, PostApiAuthLogoutGoogleData, PostApiAuthLogoutGoogleResponses, PostApiAuthLogoutResponses, PostApiAuthSignupData, PostApiAuthSignupErrors, PostApiAuthSignupResponses, PostApiPotsData, PostApiPotsResponses, PutApiPotsData, PutApiPotsErrors, PutApiPotsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -58,8 +58,15 @@ export const postApiAuthLogin = <ThrowOnError extends boolean = false>(options: 
     }
 });
 
+export const postApiAuthLogout = <ThrowOnError extends boolean = false>(options?: Options<PostApiAuthLogoutData, ThrowOnError>) => (options?.client ?? client).post<PostApiAuthLogoutResponses, PostApiAuthLogoutErrors, ThrowOnError>({ url: '/api/auth/logout', ...options });
+
 export const getApiAuthRefresh = <ThrowOnError extends boolean = false>(options?: Options<GetApiAuthRefreshData, ThrowOnError>) => (options?.client ?? client).get<GetApiAuthRefreshResponses, GetApiAuthRefreshErrors, ThrowOnError>({ url: '/api/auth/refresh', ...options });
 
-export const postApiAuthLogout = <ThrowOnError extends boolean = false>(options?: Options<PostApiAuthLogoutData, ThrowOnError>) => (options?.client ?? client).post<PostApiAuthLogoutResponses, PostApiAuthLogoutErrors, ThrowOnError>({ url: '/api/auth/logout', ...options });
+/**
+ * Redirects to Google login
+ */
+export const getApiAuthLoginGoogle = <ThrowOnError extends boolean = false>(options?: Options<GetApiAuthLoginGoogleData, ThrowOnError>) => (options?.client ?? client).get<GetApiAuthLoginGoogleResponses, unknown, ThrowOnError>({ url: '/api/auth/login/google', ...options });
+
+export const postApiAuthLogoutGoogle = <ThrowOnError extends boolean = false>(options?: Options<PostApiAuthLogoutGoogleData, ThrowOnError>) => (options?.client ?? client).post<PostApiAuthLogoutGoogleResponses, unknown, ThrowOnError>({ url: '/api/auth/logout/google', ...options });
 
 export const getApiBalances = <ThrowOnError extends boolean = false>(options?: Options<GetApiBalancesData, ThrowOnError>) => (options?.client ?? client).get<GetApiBalancesResponses, GetApiBalancesErrors, ThrowOnError>({ url: '/api/balances', ...options });

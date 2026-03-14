@@ -147,6 +147,17 @@ export const zPostApiAuthLoginData = z.object({
  */
 export const zPostApiAuthLoginResponse = z.string();
 
+export const zPostApiAuthLogoutData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+/**
+ * No Content
+ */
+export const zPostApiAuthLogoutResponse = z.void();
+
 export const zGetApiAuthRefreshData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
@@ -158,16 +169,17 @@ export const zGetApiAuthRefreshData = z.object({
  */
 export const zGetApiAuthRefreshResponse = zCreateRefreshTokenResponse;
 
-export const zPostApiAuthLogoutData = z.object({
+export const zGetApiAuthLoginGoogleData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });
 
-/**
- * No Content
- */
-export const zPostApiAuthLogoutResponse = z.void();
+export const zPostApiAuthLogoutGoogleData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
 
 export const zGetApiBalancesData = z.object({
     body: z.optional(z.never()),

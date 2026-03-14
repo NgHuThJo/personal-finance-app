@@ -17,13 +17,13 @@ namespace backend.DatabaseSeeding
             );
             var assembly = typeof(Program).Assembly;
 
-            var intercepterTypes = assembly
+            var interceptorTypes = assembly
                 .GetTypes()
                 .Where(t =>
                     t.IsClass && !t.IsAbstract && t.Name.EndsWith("Interceptor")
                 );
 
-            foreach (var interceptorType in intercepterTypes)
+            foreach (var interceptorType in interceptorTypes)
             {
                 hostBuilder.Services.AddScoped(interceptorType);
             }

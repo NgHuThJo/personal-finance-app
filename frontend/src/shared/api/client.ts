@@ -8,7 +8,7 @@ import { createInFlight } from "#frontend/shared/utils/concurrency/single-flight
 // Keep copies of the incoming request bodies to retry later
 // Potential to break if assumption that Request is always the same in the entire request-response lifecycle becomes false
 const requestBodyDictionary = new Map<Request, Request>();
-// They are the same, deep clone it
+// Create new instance because deep cloning does not work with functions as properties
 export const clientWithAuth = createClient(
   createConfig<ClientOptions>({ baseUrl: "https://localhost:7111/" }),
 );
@@ -28,15 +28,8 @@ const refreshAccessToken = async () => {
 
 const inFlightRequestNewAccessTokenFn = createInFlight(refreshAccessToken);
 
-function withBearerToken(oldRequest: Request, accessToken: string) {
-  const nextRequest = requestBodyDictionary.get(oldRequest);
-
-  if (!nextRequest) {
-    throw Error(`Old and new request in ${withBearerToken.name} do not match`);
-  }
-
-  nextRequest.headers.set("Authorization", `Bearer ${accessToken}`);
-  return nextRequest;
+function withBearerToken(request: Request, accessToken: string) {
+  request.headers.set("Authorization", `Bearer ${accessToken}`);
 }
 
 function formatErrorMessage(...errors: unknown[]) {
@@ -47,7 +40,11 @@ clientWithAuth.interceptors.request.use(async (request) => {
   const accessToken = accessTokenStore.getState().accessToken;
   requestBodyDictionary.set(request, request.clone());
 
-  return accessToken ? withBearerToken(request, accessToken) : request;
+  if (accessToken) {
+    withBearerToken(request, accessToken);
+  }
+
+  return request;
 });
 
 clientWithAuth.interceptors.response.use(async (response, request, options) => {
@@ -68,7 +65,15 @@ clientWithAuth.interceptors.response.use(async (response, request, options) => {
       });
     }
 
-    const retryRequest = withBearerToken(request, accessToken);
+    const retryRequest = requestBodyDictionary.get(request);
+
+    if (!retryRequest) {
+      throw Error(
+        `Old and new request in ${withBearerToken.name} do not match`,
+      );
+    }
+
+    withBearerToken(retryRequest, accessToken);
     const retryResponse = await fetch(retryRequest);
 
     if (retryResponse.status >= 400) {

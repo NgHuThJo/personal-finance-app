@@ -17,6 +17,7 @@ public class AppDbContext(
     public DbSet<Budget> Budgets { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<UserAuthProvider> UserAuthProviders { get; set; }
 
     protected override void OnConfiguring(
         DbContextOptionsBuilder optionsBuilder
@@ -61,5 +62,11 @@ public class AppDbContext(
             .Property(r => r.Token)
             .HasMaxLength(200);
         modelBuilder.Entity<RefreshToken>().HasIndex(r => r.Token).IsUnique();
+
+        /* UserAuthProvider */
+        modelBuilder
+            .Entity<UserAuthProvider>()
+            .HasIndex(u => new { u.Provider, u.ProviderUserId })
+            .IsUnique();
     }
 }

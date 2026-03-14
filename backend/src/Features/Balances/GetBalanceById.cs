@@ -10,7 +10,7 @@ public static partial class GetBalanceByIdLogger
 {
     [LoggerMessage(
         Level = LogLevel.Information,
-        Message = "Balance with User{Id} does not exist"
+        Message = "Balance with UserId {Id} does not exist"
     )]
     public static partial void LogBalanceNotFound(ILogger logger, int id);
 }

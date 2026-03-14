@@ -70,6 +70,27 @@ export function Login() {
     },
   );
 
+  const onGoogleLogin = () => {
+    const newUrl = URL.parse(import.meta.env.VITE_GOOGLE_LOGIN_URL);
+
+    if (newUrl === null) {
+      Logger.error(
+        `Invalid URL passed as argument to URL.${URL.parse.name}, cannot `,
+      );
+      return;
+    }
+    const popupWidth = 500;
+    const popupHeight = 500;
+    const popupLeft = window.screenX + (window.innerWidth - popupWidth) / 2;
+    const popupTop = window.screenY + (window.innerHeight - popupHeight) / 2;
+
+    window.open(
+      newUrl,
+      "_blank",
+      `popup=true, width=${popupWidth}, height=${popupHeight}; left=${popupLeft}, top=${popupTop}`,
+    );
+  };
+
   return (
     <form onSubmit={onSubmit} className={styles.form}>
       <h1>Login</h1>
@@ -131,6 +152,14 @@ export function Login() {
       </label>
       <Button type="submit" variant="cta-primary" disabled={isPending}>
         Login
+      </Button>
+      <Button
+        type="button"
+        variant="cta-primary"
+        disabled={isPending}
+        onClick={onGoogleLogin}
+      >
+        Login with Google
       </Button>
       <p className={styles["cta-link"]}>
         Need to create an account? <Link to="/signup">Sign up</Link>
