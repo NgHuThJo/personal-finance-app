@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RedirectRouteImport } from './routes/redirect'
 import { Route as PathlessDashboardLayoutRouteImport } from './routes/_pathless-dashboard-layout'
 import { Route as PathlessAuthLayoutRouteImport } from './routes/_pathless-auth-layout'
 import { Route as IndexRouteImport } from './routes/index'
@@ -20,6 +21,11 @@ import { Route as PathlessDashboardLayoutBillsRouteImport } from './routes/_path
 import { Route as PathlessAuthLayoutSignupRouteImport } from './routes/_pathless-auth-layout/signup'
 import { Route as PathlessAuthLayoutLoginRouteImport } from './routes/_pathless-auth-layout/login'
 
+const RedirectRoute = RedirectRouteImport.update({
+  id: '/redirect',
+  path: '/redirect',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PathlessDashboardLayoutRoute = PathlessDashboardLayoutRouteImport.update({
   id: '/_pathless-dashboard-layout',
   getParentRoute: () => rootRouteImport,
@@ -77,6 +83,7 @@ const PathlessAuthLayoutLoginRoute = PathlessAuthLayoutLoginRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/redirect': typeof RedirectRoute
   '/login': typeof PathlessAuthLayoutLoginRoute
   '/signup': typeof PathlessAuthLayoutSignupRoute
   '/bills': typeof PathlessDashboardLayoutBillsRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/redirect': typeof RedirectRoute
   '/login': typeof PathlessAuthLayoutLoginRoute
   '/signup': typeof PathlessAuthLayoutSignupRoute
   '/bills': typeof PathlessDashboardLayoutBillsRoute
@@ -100,6 +108,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_pathless-auth-layout': typeof PathlessAuthLayoutRouteWithChildren
   '/_pathless-dashboard-layout': typeof PathlessDashboardLayoutRouteWithChildren
+  '/redirect': typeof RedirectRoute
   '/_pathless-auth-layout/login': typeof PathlessAuthLayoutLoginRoute
   '/_pathless-auth-layout/signup': typeof PathlessAuthLayoutSignupRoute
   '/_pathless-dashboard-layout/bills': typeof PathlessDashboardLayoutBillsRoute
@@ -112,6 +121,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/redirect'
     | '/login'
     | '/signup'
     | '/bills'
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/redirect'
     | '/login'
     | '/signup'
     | '/bills'
@@ -134,6 +145,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_pathless-auth-layout'
     | '/_pathless-dashboard-layout'
+    | '/redirect'
     | '/_pathless-auth-layout/login'
     | '/_pathless-auth-layout/signup'
     | '/_pathless-dashboard-layout/bills'
@@ -147,10 +159,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PathlessAuthLayoutRoute: typeof PathlessAuthLayoutRouteWithChildren
   PathlessDashboardLayoutRoute: typeof PathlessDashboardLayoutRouteWithChildren
+  RedirectRoute: typeof RedirectRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/redirect': {
+      id: '/redirect'
+      path: '/redirect'
+      fullPath: '/redirect'
+      preLoaderRoute: typeof RedirectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_pathless-dashboard-layout': {
       id: '/_pathless-dashboard-layout'
       path: ''
@@ -265,6 +285,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PathlessAuthLayoutRoute: PathlessAuthLayoutRouteWithChildren,
   PathlessDashboardLayoutRoute: PathlessDashboardLayoutRouteWithChildren,
+  RedirectRoute: RedirectRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

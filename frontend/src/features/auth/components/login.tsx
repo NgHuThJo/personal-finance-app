@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
+import { useSyncExternalStore } from "react";
 import { useForm } from "react-hook-form";
 import styles from "./login.module.css";
 import { IconEye } from "#frontend/assets/icons/icons";
@@ -10,7 +11,64 @@ import { useToggle } from "#frontend/shared/hooks/use-toggle";
 import { Button } from "#frontend/shared/primitives/button";
 import { accessTokenStore } from "#frontend/shared/store/access-token";
 
+const getPageSizes = () => {
+  return {
+    screenX: window.screenX,
+    screenY: window.screenY,
+    browserWindowX: window.outerWidth,
+    browserWindowY: window.outerHeight,
+    popupWidth: 500,
+    popupHeight: 500,
+  };
+};
+
+const listeners = new Set<() => void>();
+let snapshot = getPageSizes();
+
+const emitChanges = () => {
+  for (const listener of listeners) {
+    listener();
+  }
+};
+
+function subscribe(listener: () => void) {
+  const resizeHandler = () => {
+    const newSizes = getPageSizes();
+
+    if (
+      newSizes.screenX !== snapshot.screenX ||
+      newSizes.screenY !== snapshot.screenY ||
+      newSizes.browserWindowX !== snapshot.browserWindowX ||
+      newSizes.browserWindowY !== snapshot.browserWindowY
+    ) {
+      snapshot = newSizes;
+      emitChanges();
+    }
+  };
+  let intervalId: ReturnType<typeof setInterval>;
+
+  if (listeners.size === 0) {
+    window.addEventListener("resize", resizeHandler);
+    intervalId = setInterval(resizeHandler, 500);
+  }
+
+  listeners.add(listener);
+
+  return () => {
+    listeners.delete(listener);
+    if (listeners.size === 0) {
+      window.removeEventListener("resize", resizeHandler);
+      clearInterval(intervalId);
+    }
+  };
+}
+
+function getSnapshot() {
+  return snapshot;
+}
+
 export function Login() {
+  const pageSizeObject = useSyncExternalStore(subscribe, getSnapshot);
   const { isOpen: isPasswordVisible, toggle: togglePasswordVisibility } =
     useToggle(false);
   const route = useRouter();
@@ -79,15 +137,17 @@ export function Login() {
       );
       return;
     }
-    const popupWidth = 500;
-    const popupHeight = 500;
-    const popupLeft = window.screenX + (window.innerWidth - popupWidth) / 2;
-    const popupTop = window.screenY + (window.innerHeight - popupHeight) / 2;
+    const popupLeft =
+      pageSizeObject.screenX +
+      (pageSizeObject.browserWindowX - pageSizeObject.popupWidth) / 2;
+    const popupTop =
+      pageSizeObject.screenY +
+      (pageSizeObject.browserWindowY - pageSizeObject.popupHeight) / 2;
 
     window.open(
       newUrl,
       "_blank",
-      `popup=true, width=${popupWidth}, height=${popupHeight}; left=${popupLeft}, top=${popupTop}`,
+      `popup=true, width=${pageSizeObject.popupWidth}, height=${pageSizeObject.popupHeight}; left=${popupLeft}, top=${popupTop}`,
     );
   };
 

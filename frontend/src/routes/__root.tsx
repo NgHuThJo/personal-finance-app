@@ -1,11 +1,14 @@
 import { useQuery, type QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 import styles from "./__root.module.css";
 import { Logger } from "#frontend/shared/app/logging";
 import { getApiAuthRefreshOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
-import { accessTokenStore } from "#frontend/shared/store/access-token";
+import {
+  accessTokenStore,
+  useAccessToken,
+} from "#frontend/shared/store/access-token";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
@@ -16,6 +19,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 let isAuthBootstrapped = false;
 
 function Root() {
+  const onOpenIdConnectDone = useEffectEvent((event: MessageEvent) => {
+    if (event.origin !== `${import.meta.env.VITE_DEV_SERVER_URL}`) {
+      Logger.info("Redirect from popup failed");
+      return;
+    }
+
+    const accessToken = event.data;
+
+    if (typeof accessToken !== "string" || !accessToken) {
+      return;
+    }
+
+    setAccessToken(accessToken);
+  });
+  const accessToken = useAccessToken();
   const { setAccessToken } = accessTokenStore.getState();
   const { data, error, isPending } = useQuery({
     ...getApiAuthRefreshOptions({
@@ -27,6 +45,8 @@ function Root() {
   });
 
   useEffect(() => {
+    window.addEventListener("message", onOpenIdConnectDone);
+
     if (error) {
       Logger.error("Access token creation with refresh token failed", error);
     }
@@ -38,6 +58,10 @@ function Root() {
     if (!isPending) {
       isAuthBootstrapped = true;
     }
+
+    return () => {
+      window.removeEventListener("message", onOpenIdConnectDone);
+    };
   }, [data, setAccessToken, isPending, error]);
 
   if (isPending) {

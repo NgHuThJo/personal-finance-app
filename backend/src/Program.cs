@@ -234,7 +234,7 @@ builder
             // );
 
             context.Response.Redirect(
-                $"https://localhost:5173/#access_token={jwt}"
+                $"https://localhost:5173/redirect/#{jwt}"
             );
 
             context.HandleResponse();
