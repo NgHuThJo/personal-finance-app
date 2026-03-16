@@ -10,7 +10,7 @@ const labelVariants = cva(styles.label, {
     },
   },
   defaultVariants: {
-    // variant: "default",
+    variant: "default",
   },
   compoundVariants: [],
 });

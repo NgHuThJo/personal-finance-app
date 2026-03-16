@@ -22,6 +22,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "#frontend/shared/primitives/dialog";
+import { Field, FieldLabel } from "#frontend/shared/primitives/field";
+import { Input } from "#frontend/shared/primitives/input";
 import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
 import { makeZodErrorsUserFriendly } from "#frontend/shared/utils/zod";
 
@@ -102,18 +104,13 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
           });
         });
       }
+
+      return;
     }
 
-    // const convertedData : WithdrawMoneyFromPotRequest = {
-    //   potId: Number(data.potId)
-    // }
-
-    // mutate({
-    //   body: {
-    //     potId: data.potId,
-    //     moneyWithdrawn: data.moneyWithdrawn,
-    //   },
-    // });
+    mutate({
+      body: validationResult.data,
+    });
   });
 
   return (
@@ -162,24 +159,20 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
               })}
             </span>
           </div>
-          <div className={styles["dialog-input-wrapper"]}>
-            <label
-              htmlFor="withdraw-amount"
-              className={styles["dialog-input-label"]}
-            >
+          <Field>
+            <FieldLabel htmlFor="withdraw-amount">
               Amount to withdraw
-            </label>
-            <input
+            </FieldLabel>
+            <Input
               type="hidden"
               {...register("potId", {
                 value: id,
               })}
               defaultValue={id}
             />
-            <input
+            <Input
               type="number"
               id="withdraw-amount"
-              className={styles["dialog-input"]}
               step="any"
               placeholder="Enter an amount to withdraw..."
               {...register("moneyWithdrawn", {
@@ -189,8 +182,8 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
                   message: "Minimum of 0.01",
                 },
                 max: {
-                  value: total,
-                  message: `Maximum of ${total}`,
+                  value: target,
+                  message: `Maximum of ${target}`,
                 },
                 valueAsNumber: true,
               })}
@@ -208,7 +201,7 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
                 {errors.root?.["server-unprocessable-content"]?.message}
               </span>
             )}
-          </div>
+          </Field>
           <Button variant="cta-primary" type="submit">
             Confirm Withdrawal
           </Button>

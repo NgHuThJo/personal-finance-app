@@ -47,6 +47,10 @@
   background: rgba(var(--color-background-cta-primary), 0.5);
 }
 
+.input:placeholder-shown {
+  text-overflow: ellipsis;
+}
+
 /* dark mode adjustments */
 /* .dark .input {
   background: rgba(var(--input-rgb), 0.3);

@@ -40,28 +40,6 @@
   flex-wrap: wrap;
 }
 
-.dialog-input-wrapper {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.dialog-input {
-  padding: var(--spacing-3) var(--spacing-4);
-  border: 1px solid var(--color-border-input-primary);
-  border-radius: var(--border-radius-4);
-  font-size: var(--font-size-action);
-
-  &:focus-within {
-    outline: 2px solid var(--color-border-input-primary);
-    outline-offset: 2px;
-  }
-}
-
-.dialog-input-label {
-  color: var(--color-text-secondary);
-  font-weight: var(--font-weight-label);
-}
-
 .total-label {
   font-weight: var(--font-weight-heading);
   line-height: 1.5;
