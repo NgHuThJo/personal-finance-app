@@ -25,9 +25,6 @@ public record MoneyWithdrawn : WithdrawMoneyFromPotResult;
 
 public record WithdrawMoneyFromPotRequest
 {
-    [Range(0, int.MaxValue)]
-    public required int PotId { get; init; }
-
     [Range(0, double.MaxValue)]
     public required decimal MoneyWithdrawn { get; init; }
 }
@@ -37,7 +34,6 @@ public class WithdrawMoneyFromPotValidator
 {
     public WithdrawMoneyFromPotValidator()
     {
-        RuleFor(m => m.PotId).GreaterThan(0);
         RuleFor(m => m.MoneyWithdrawn).GreaterThan(0);
     }
 }
@@ -45,17 +41,18 @@ public class WithdrawMoneyFromPotValidator
 public static class WithdrawMoneyFromPotEndpoint
 {
     public static async Task<Results<ProblemHttpResult, NoContent>> Withdraw(
+        [FromRoute] int potId,
         [FromBody] WithdrawMoneyFromPotRequest command,
         [FromServices] WithdrawMoneyFromPotHandler handler
     )
     {
-        var result = await handler.Handle(command);
+        var result = await handler.Handle(command, potId);
 
         return result switch
         {
-            PotNotFound(int potId) =>
+            PotNotFound(int notFoundPotId) =>
                 TypedResultsProblemDetails.UnprocessableContent(
-                    $"PotId {potId} not found"
+                    $"PotId {notFoundPotId} not found"
                 ),
             MoneyWithdrawn => TypedResults.NoContent(),
             _ => throw new NotSupportedException(),
@@ -72,20 +69,18 @@ public class WithdrawMoneyFromPotHandler(
     private readonly ILogger<WithdrawMoneyFromPotHandler> _logger = logger;
 
     public async Task<WithdrawMoneyFromPotResult> Handle(
-        WithdrawMoneyFromPotRequest command
+        WithdrawMoneyFromPotRequest command,
+        int potId
     )
     {
         var pot = await _context
-            .Pots.Where(p => p.Id == command.PotId)
+            .Pots.Where(p => p.Id == potId)
             .FirstOrDefaultAsync();
 
         if (pot is null)
         {
-            WithdrawMoneyFromPotLogger.PotIdDoesNotExist(
-                _logger,
-                command.PotId
-            );
-            return new PotNotFound(command.PotId);
+            WithdrawMoneyFromPotLogger.PotIdDoesNotExist(_logger, potId);
+            return new PotNotFound(potId);
         }
 
         var newPotTotal = pot.Total - command.MoneyWithdrawn;

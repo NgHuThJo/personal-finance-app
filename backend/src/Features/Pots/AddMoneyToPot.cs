@@ -24,7 +24,6 @@ public record MoneySuccessfullyAdded() : AddMoneyToPotResult;
 
 public record AddMoneyToPotRequest
 {
-    public int PotId { get; set; }
     public decimal MoneyAdded { get; set; }
 }
 
@@ -32,7 +31,6 @@ public class AddMoneyToPotValidator : AbstractValidator<AddMoneyToPotRequest>
 {
     public AddMoneyToPotValidator()
     {
-        RuleFor(a => a.PotId).GreaterThan(0);
         RuleFor(a => a.MoneyAdded).GreaterThanOrEqualTo(0);
     }
 }
@@ -40,18 +38,19 @@ public class AddMoneyToPotValidator : AbstractValidator<AddMoneyToPotRequest>
 public static class AddMoneyToPotEndpoint
 {
     public static async Task<Results<ProblemHttpResult, NoContent>> Add(
+        [FromRoute] int potId,
         AddMoneyToPotRequest command,
         [FromServices] AddMoneyToPotHandler handler
     )
     {
-        var result = await handler.Handle(command);
+        var result = await handler.Handle(command, potId);
 
         return result switch
         {
             MoneySuccessfullyAdded => TypedResults.NoContent(),
-            PotDoesNotExist(int potId) =>
+            PotDoesNotExist(int nonExistentPotId) =>
                 TypedResultsProblemDetails.UnprocessableContent(
-                    $"Pot does not exist with id {potId}"
+                    $"Pot does not exist with id {nonExistentPotId}"
                 ),
             _ => throw new NotSupportedException(
                 $"An unknown error occurred in {nameof(Add)}"
@@ -68,16 +67,19 @@ public class AddMoneyToPotHandler(
     private readonly AppDbContext _context = context;
     private readonly ILogger<AddMoneyToPotHandler> _logger = logger;
 
-    public async Task<AddMoneyToPotResult> Handle(AddMoneyToPotRequest command)
+    public async Task<AddMoneyToPotResult> Handle(
+        AddMoneyToPotRequest command,
+        int potId
+    )
     {
         var pot = await _context
-            .Pots.Where(p => p.Id == command.PotId)
+            .Pots.Where(p => p.Id == potId)
             .SingleOrDefaultAsync();
 
         if (pot is null)
         {
-            AddMoneyToPotLogger.PotDoesNotExist(_logger, command.PotId);
-            return new PotDoesNotExist(command.PotId);
+            AddMoneyToPotLogger.PotDoesNotExist(_logger, potId);
+            return new PotDoesNotExist(potId);
         }
 
         var newTotal = pot.Target + command.MoneyAdded;

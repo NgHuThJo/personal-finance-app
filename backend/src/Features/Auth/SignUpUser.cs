@@ -61,9 +61,10 @@ public class SignUpUserRequestValidator : AbstractValidator<SignUpUserRequest>
 public sealed class SignUpUserEndpoint
 {
     public static async Task<
-        Results<Created<SignUpUserResponse>, ProblemHttpResult>
+        Results<CreatedAtRoute<SignUpUserResponse>, ProblemHttpResult>
     > Create(
         [FromServices] SignUpUserHandler handler,
+        [FromServices] LinkGenerator linkGenerator,
         [FromBody] SignUpUserRequest command
     )
     {
@@ -71,9 +72,9 @@ public sealed class SignUpUserEndpoint
 
         return newUser switch
         {
-            SignupSuccessful(var user) => TypedResults.Created(
-                $"/api/users/{user.Id}",
-                user
+            SignupSuccessful(var user) => TypedResults.CreatedAtRoute(
+                user,
+                linkGenerator.GetPathByName("GetUserById")
             ),
             EmailAlreadyInUse(var email) => TypedResultsProblemDetails.Conflict(
                 $"Email address \"{email}\" is already in use"

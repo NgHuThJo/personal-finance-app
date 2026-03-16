@@ -63,11 +63,12 @@ public class CreatePotValidator : AbstractValidator<CreatePotRequest>
 public sealed class CreatePotEndpoint
 {
     public static async Task<
-        Results<Created<CreatePotResponse>, ProblemHttpResult>
+        Results<CreatedAtRoute<CreatePotResponse>, ProblemHttpResult>
     > Create(
         [FromBody] CreatePotRequest command,
         [FromServices] CurrentUser user,
-        [FromServices] CreatePotHandler handler
+        [FromServices] CreatePotHandler handler,
+        [FromServices] LinkGenerator linkGenerator
     )
     {
         var newPot = await handler.Handle(command, user.UserId);
@@ -75,7 +76,11 @@ public sealed class CreatePotEndpoint
         return newPot switch
         {
             PotSuccessfullyCreated(CreatePotResponse createdPot) =>
-                TypedResults.Created($"/api/pots/{createdPot.Id}", createdPot),
+                TypedResults.CreatedAtRoute(
+                    createdPot,
+                    linkGenerator.GetPathByName("GetPotById"),
+                    new { potId = createdPot.Id }
+                ),
             PotNameAlreadyInUse(string potName) =>
                 TypedResultsProblemDetails.Conflict(
                     $"Pot name {potName} is already in use"

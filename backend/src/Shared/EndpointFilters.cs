@@ -57,7 +57,7 @@ public class ValidationFilter<TRequest> : IEndpointFilter
     }
 }
 
-public class UserIdValidationFilter(ILogger<UserIdValidationFilter> logger)
+public class IdValidationFilter(ILogger<IdValidationFilter> logger)
     : IEndpointFilter
 {
     public async ValueTask<object?> InvokeAsync(
@@ -65,14 +65,19 @@ public class UserIdValidationFilter(ILogger<UserIdValidationFilter> logger)
         EndpointFilterDelegate next
     )
     {
-        var rawRouteValue = context
-            .HttpContext.Request.RouteValues["userId"]
-            ?.ToString();
+        var routeValues = context.HttpContext.Request.RouteValues;
 
-        if (!int.TryParse(rawRouteValue, out var userId) || userId <= 0)
+        foreach (var (routeKey, routeValue) in routeValues)
         {
-            EndpointFilterLogger.RouteValueIsInvalid(logger, rawRouteValue);
-            return TypedResults.BadRequest("Invalid userId");
+            var rawRouteValue = routeValue?.ToString();
+
+            if (!int.TryParse(rawRouteValue, out var userId) || userId <= 0)
+            {
+                EndpointFilterLogger.RouteValueIsInvalid(logger, rawRouteValue);
+                return TypedResults.BadRequest(
+                    $"Invalid {routeKey} in {nameof(IdValidationFilter)}"
+                );
+            }
         }
 
         return await next(context);

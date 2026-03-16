@@ -79,7 +79,7 @@ public class PotApiTest(DatabaseFixture dbFixture)
     public async Task WithdrawMoneyFromPot_IfSuccessful_Return204()
     {
         // Arrange
-        var fakeData = PotFaker.WithdrawMoneyFromPotRequest(1);
+        var fakeData = PotFaker.WithdrawMoneyFromPotRequest();
         var jsonContent = JsonContent.Create(fakeData);
         // Act
         var putResponse = await Client.PutAsync(
@@ -95,7 +95,7 @@ public class PotApiTest(DatabaseFixture dbFixture)
     public async Task WithdrawMoneyFromPot_IfPotIdNotFound_Return422()
     {
         // Arrange
-        var fakeData = PotFaker.WithdrawMoneyFromPotRequest(1000);
+        var fakeData = PotFaker.WithdrawMoneyFromPotRequest();
         var jsonContent = JsonContent.Create(fakeData);
         // Act
         var putResponse = await Client.PutAsync(
@@ -120,7 +120,7 @@ public class PotApiTest(DatabaseFixture dbFixture)
     public async Task AddMoneyToPot_IfSuccessful_Return204()
     {
         // Arrange
-        var fakeData = PotFaker.AddMoneyToPotRequest(1);
+        var fakeData = PotFaker.AddMoneyToPotRequest();
         var jsonContent = JsonContent.Create(fakeData);
         // Act
         var putResponse = await Client.PutAsync(
@@ -136,7 +136,7 @@ public class PotApiTest(DatabaseFixture dbFixture)
     public async Task AddMoneyToPot_IfPotIdDoesNotExist_Return422()
     {
         // Arrange
-        var fakeData = PotFaker.AddMoneyToPotRequest(1000);
+        var fakeData = PotFaker.AddMoneyToPotRequest();
         var jsonContent = JsonContent.Create(fakeData);
         // Act
         var putResponse = await Client.PutAsync(

@@ -20,18 +20,14 @@ public static class PotFaker
             .UseSeed(TestConstants.TESTDATA_SEED_IN_TEST_CLASSES)
             .Generate();
 
-    public static WithdrawMoneyFromPotRequest WithdrawMoneyFromPotRequest(
-        int potId
-    ) =>
+    public static WithdrawMoneyFromPotRequest WithdrawMoneyFromPotRequest() =>
         new Faker<WithdrawMoneyFromPotRequest>()
-            .RuleFor(p => p.PotId, (Faker f) => potId)
             .RuleFor(p => p.MoneyWithdrawn, (Faker f) => f.Random.Decimal())
             .UseSeed(TestConstants.TESTDATA_SEED_IN_TEST_CLASSES)
             .Generate();
 
-    public static AddMoneyToPotRequest AddMoneyToPotRequest(int potId) =>
+    public static AddMoneyToPotRequest AddMoneyToPotRequest() =>
         new Faker<AddMoneyToPotRequest>()
-            .RuleFor(p => p.PotId, (Faker f) => potId)
             .RuleFor(p => p.MoneyAdded, (Faker f) => f.Random.Decimal())
             .UseSeed(TestConstants.TESTDATA_SEED_IN_TEST_CLASSES)
             .Generate();
