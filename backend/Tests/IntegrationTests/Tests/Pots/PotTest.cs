@@ -114,4 +114,44 @@ public class PotApiTest(DatabaseFixture dbFixture)
         content.Should().NotBeNull();
         content.Detail.Should().NotBeNullOrEmpty();
     }
+
+    // AddMoneyToPot
+    [Fact]
+    public async Task AddMoneyToPot_IfSuccessful_Return204()
+    {
+        // Arrange
+        var fakeData = PotFaker.AddMoneyToPotRequest(1);
+        var jsonContent = JsonContent.Create(fakeData);
+        // Act
+        var putResponse = await Client.PutAsync(
+            _uriPath,
+            jsonContent,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        putResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task AddMoneyToPot_IfPotIdDoesNotExist_Return422()
+    {
+        // Arrange
+        var fakeData = PotFaker.AddMoneyToPotRequest(1000);
+        var jsonContent = JsonContent.Create(fakeData);
+        // Act
+        var putResponse = await Client.PutAsync(
+            _uriPath,
+            jsonContent,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        putResponse
+            .StatusCode.Should()
+            .Be(HttpStatusCode.UnprocessableContent);
+        var responseBody =
+            await putResponse.Content.ReadFromJsonAsync<ProblemDetails>(
+                TestContext.Current.CancellationToken
+            );
+        responseBody?.Detail.Should().NotBeNullOrEmpty();
+    }
 }

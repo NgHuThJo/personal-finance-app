@@ -28,4 +28,11 @@ public static class PotFaker
             .RuleFor(p => p.MoneyWithdrawn, (Faker f) => f.Random.Decimal())
             .UseSeed(TestConstants.TESTDATA_SEED_IN_TEST_CLASSES)
             .Generate();
+
+    public static AddMoneyToPotRequest AddMoneyToPotRequest(int potId) =>
+        new Faker<AddMoneyToPotRequest>()
+            .RuleFor(p => p.PotId, (Faker f) => potId)
+            .RuleFor(p => p.MoneyAdded, (Faker f) => f.Random.Decimal())
+            .UseSeed(TestConstants.TESTDATA_SEED_IN_TEST_CLASSES)
+            .Generate();
 }
