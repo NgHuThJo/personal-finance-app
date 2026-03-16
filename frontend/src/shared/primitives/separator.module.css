@@ -1,0 +1,16 @@
+.separator {
+  flex-shrink: 0;
+  background: var(--color-border-input-primary);
+}
+
+/* orientation variants */
+
+.horizontal {
+  height: 1px;
+  width: 100%;
+}
+
+.vertical {
+  width: 1px;
+  align-self: stretch;
+}

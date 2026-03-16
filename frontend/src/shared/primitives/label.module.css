@@ -1,0 +1,29 @@
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+
+  user-select: none;
+}
+
+.default-label {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-label);
+}
+
+/* disabled via parent group */
+:global(.group[data-disabled="true"]) .label {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* disabled via peer */
+:global(.peer:disabled) + .label,
+:global(.peer:disabled) ~ .label {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

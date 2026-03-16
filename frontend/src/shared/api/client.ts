@@ -10,7 +10,9 @@ import { createInFlight } from "#frontend/shared/utils/concurrency/single-flight
 const requestBodyDictionary = new Map<Request, Request>();
 // Create new instance because deep cloning does not work with functions as properties
 export const clientWithAuth = createClient(
-  createConfig<ClientOptions>({ baseUrl: "https://localhost:7111/" }),
+  createConfig<ClientOptions>({
+    baseUrl: import.meta.env.VITE_BACKEND_BASE_URL,
+  }),
 );
 
 const refreshAccessToken = async () => {
@@ -30,10 +32,6 @@ const inFlightRequestNewAccessTokenFn = createInFlight(refreshAccessToken);
 
 function withBearerToken(request: Request, accessToken: string) {
   request.headers.set("Authorization", `Bearer ${accessToken}`);
-}
-
-function formatErrorMessage(...errors: unknown[]) {
-  return errors.join(", ");
 }
 
 clientWithAuth.interceptors.request.use(async (request) => {
@@ -56,13 +54,7 @@ clientWithAuth.interceptors.response.use(async (response, request, options) => {
     const accessToken = await inFlightRequestNewAccessTokenFn();
 
     if (!accessToken) {
-      throw new Error("Refresh request failed to produce access token", {
-        cause: formatErrorMessage(
-          response.status,
-          response.statusText,
-          response.url,
-        ),
-      });
+      throw new Error("Refresh request failed to produce access token");
     }
 
     const retryRequest = requestBodyDictionary.get(request);
@@ -77,23 +69,14 @@ clientWithAuth.interceptors.response.use(async (response, request, options) => {
     const retryResponse = await fetch(retryRequest);
 
     if (retryResponse.status >= 400) {
-      throw new Error("Retry request after refresh of access token failed", {
-        cause: formatErrorMessage(
-          retryResponse.status,
-          retryResponse.statusText,
-          retryResponse.url,
-        ),
-      });
+      const retryError = await retryResponse.json();
+
+      throw retryError;
     }
 
     return retryResponse;
   }
 
-  throw new Error("An unknown fetch error occurred", {
-    cause: formatErrorMessage(
-      response.status,
-      response.statusText,
-      response.url,
-    ),
-  });
+  const error = await response.json();
+  throw error;
 });

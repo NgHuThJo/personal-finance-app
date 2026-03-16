@@ -43,7 +43,8 @@ public static class RouteGrouper
         group.RequireAuthorization().RequireRateLimiting("per-user");
         group
             .MapPost("", CreatePotEndpoint.Create)
-            .AddValidationFilter<CreatePotRequest>();
+            .AddValidationFilter<CreatePotRequest>()
+            .ProducesProblem((int)HttpStatusCode.BadRequest);
         group.MapGet("", GetAllPotsEndpoint.GetAll);
         group
             .MapPut("", WithdrawMoneyFromPotEndpoint.Withdraw)

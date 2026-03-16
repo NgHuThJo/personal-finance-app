@@ -116,6 +116,15 @@ export type PostApiPotsData = {
     url: '/api/pots';
 };
 
+export type PostApiPotsErrors = {
+    /**
+     * Bad Request
+     */
+    400: ProblemDetails;
+};
+
+export type PostApiPotsError = PostApiPotsErrors[keyof PostApiPotsErrors];
+
 export type PostApiPotsResponses = {
     /**
      * Created

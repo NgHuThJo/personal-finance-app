@@ -19,7 +19,6 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogPortal,
   DialogTitle,
   DialogTrigger,
 } from "#frontend/shared/primitives/dialog";
@@ -52,7 +51,7 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
 
       switch (error.status) {
         case 422: {
-          setError("root.server-unprocessable-content", {
+          setError(`root.server-unprocessable-content`, {
             type: String(error.type),
             message: String(error.detail),
           });
@@ -95,8 +94,7 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
       );
 
       for (const error in userFriendlyErrors) {
-        const convertedError: keyof typeof userFriendlyErrors =
-          error as keyof typeof userFriendlyErrors;
+        const convertedError = error as keyof typeof userFriendlyErrors;
 
         userFriendlyErrors[convertedError].forEach((errorMessage) => {
           setError(convertedError, {
@@ -125,110 +123,98 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
           Withdraw
         </Button>
       </DialogTrigger>
-      <DialogPortal>
-        <DialogContent variant="default">
-          <DialogTitle>Withdraw from "{name}"</DialogTitle>
-          <DialogDescription>
-            Withdraw from your pot to put money back in your main balance. This
-            will reduce the amount you have in this pot.
-          </DialogDescription>
-          <form className={styles["dialog"]} onSubmit={handleWithdrawSubmit}>
-            <div className={styles["dialog-header"]}>
-              <span className={styles["total-label"]}>Total saved</span>
-              <span className={styles["total-number"]}>
-                {numberFormatter.formatNumber({
-                  number: total,
-                  options: numberFormatter.getDollarOptions(),
-                })}
+      <DialogContent variant="default">
+        <DialogTitle>Withdraw from "{name}"</DialogTitle>
+        <DialogDescription>
+          Withdraw from your pot to put money back in your main balance. This
+          will reduce the amount you have in this pot.
+        </DialogDescription>
+        <form className={styles["dialog"]} onSubmit={handleWithdrawSubmit}>
+          <div className={styles["dialog-header"]}>
+            <span className={styles["total-label"]}>Total saved</span>
+            <span className={styles["total-number"]}>
+              {numberFormatter.formatNumber({
+                number: total,
+                options: numberFormatter.getDollarOptions(),
+              })}
+            </span>
+          </div>
+          <div className={styles["dialog-progress"]}>
+            <div
+              className={styles["dialog-progress-bar"]}
+              style={{
+                "--width-progress-bar": `${Math.round((total / target) * 100)}%`,
+              }}
+            ></div>
+          </div>
+          <div className={styles["dialog-footer"]}>
+            <span className={styles["percent-number"]}>
+              {numberFormatter.formatNumber({
+                number: total / target,
+                options: numberFormatter.getPercentOptions(),
+              })}
+            </span>
+            <span className={styles["target-number"]}>
+              Target of&nbsp;
+              {numberFormatter.formatNumber({
+                number: target,
+                options: numberFormatter.getDollarOptions(),
+              })}
+            </span>
+          </div>
+          <div className={styles["dialog-input-wrapper"]}>
+            <label
+              htmlFor="withdraw-amount"
+              className={styles["dialog-input-label"]}
+            >
+              Amount to withdraw
+            </label>
+            <input
+              type="hidden"
+              {...register("potId", {
+                value: id,
+              })}
+              defaultValue={id}
+            />
+            <input
+              type="number"
+              id="withdraw-amount"
+              className={styles["dialog-input"]}
+              step="any"
+              placeholder="Enter an amount to withdraw..."
+              {...register("moneyWithdrawn", {
+                required: "Amount to withdraw required",
+                min: {
+                  value: 0.01,
+                  message: "Minimum of 0.01",
+                },
+                max: {
+                  value: total,
+                  message: `Maximum of ${total}`,
+                },
+                valueAsNumber: true,
+              })}
+            />
+            {errors.moneyWithdrawn && (
+              <span className={styles["field-error"]}>
+                {errors.moneyWithdrawn?.message}
               </span>
-            </div>
-            <div className={styles["dialog-progress"]}>
-              <div
-                className={styles["dialog-progress-bar"]}
-                style={{
-                  "--width-progress-bar": `${Math.round((total / target) * 100)}%`,
-                }}
-              ></div>
-            </div>
-            <div className={styles["dialog-footer"]}>
-              <span className={styles["percent-number"]}>
-                {numberFormatter.formatNumber({
-                  number: total / target,
-                  options: numberFormatter.getPercentOptions(),
-                })}
-              </span>
-              <span className={styles["target-number"]}>
-                Target of&nbsp;
-                {numberFormatter.formatNumber({
-                  number: target,
-                  options: numberFormatter.getDollarOptions(),
-                })}
-              </span>
-            </div>
-            <div className={styles["dialog-input-wrapper"]}>
-              <label
-                htmlFor="withdraw-amount"
-                className={styles["dialog-input-label"]}
+            )}
+            {errors.root?.["server-unprocessable-content"] && (
+              <span
+                className={styles["field-error"]}
+                data-testid="server-unprocessable-content"
               >
-                Amount to withdraw
-              </label>
-              <input
-                type="hidden"
-                {...register("potId", {
-                  value: id,
-                })}
-                defaultValue={id}
-              />
-              <input
-                type="number"
-                id="withdraw-amount"
-                className={styles["dialog-input"]}
-                step="any"
-                placeholder="Enter an amount to withdraw..."
-                {...register("moneyWithdrawn", {
-                  required: "Amount to withdraw required",
-                  min: {
-                    value: 0.01,
-                    message: "Minimum of 0.01",
-                  },
-                  max: {
-                    value: total,
-                    message: `Maximum of ${total}`,
-                  },
-                  valueAsNumber: true,
-                })}
-              />
-              {errors.moneyWithdrawn?.type === "required" && (
-                <span className={styles["field-error"]}>
-                  {errors.moneyWithdrawn?.message}
-                </span>
-              )}
-              {errors.moneyWithdrawn?.type === "min" && (
-                <span className={styles["field-error"]}>
-                  {errors.moneyWithdrawn?.message}
-                </span>
-              )}
-              {errors.moneyWithdrawn?.type === "max" && (
-                <span className={styles["field-error"]}>
-                  {errors.moneyWithdrawn?.message}
-                </span>
-              )}
-              {errors.root?.["server-unprocessable-content"] && (
-                <span
-                  className={styles["field-error"]}
-                  data-testid="server-unprocessable-content"
-                >
-                  {errors.root?.["server-unprocessable-content"]?.message}
-                </span>
-              )}
-            </div>
-            <Button variant="cta-primary" type="submit">
-              Confirm Withdrawal
-            </Button>
-          </form>
-          <DialogClose />
-        </DialogContent>
-      </DialogPortal>
+                {errors.root?.["server-unprocessable-content"]?.message}
+              </span>
+            )}
+          </div>
+          <Button variant="cta-primary" type="submit">
+            Confirm Withdrawal
+          </Button>
+        </form>
+        <DialogClose />
+      </DialogContent>
     </Dialog>
   );
 }

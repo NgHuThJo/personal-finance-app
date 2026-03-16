@@ -4,8 +4,28 @@ using backend.Src.Shared;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Src.Features;
+
+public abstract record CreatePotResult;
+
+public record PotNameAlreadyInUse(string PotName) : CreatePotResult;
+
+public record PotSuccessfullyCreated(CreatePotResponse Response)
+    : CreatePotResult;
+
+public static partial class CreatePotLogger
+{
+    [LoggerMessage(
+        Level = LogLevel.Error,
+        Message = "Pot name {PotName} is already in use"
+    )]
+    public static partial void PotNameAlreadyInUse(
+        ILogger logger,
+        string potName
+    );
+}
 
 public record CreatePotRequest
 {
@@ -42,7 +62,9 @@ public class CreatePotValidator : AbstractValidator<CreatePotRequest>
 
 public sealed class CreatePotEndpoint
 {
-    public static async Task<Created<CreatePotResponse>> Create(
+    public static async Task<
+        Results<Created<CreatePotResponse>, ProblemHttpResult>
+    > Create(
         [FromBody] CreatePotRequest command,
         [FromServices] CurrentUser user,
         [FromServices] CreatePotHandler handler
@@ -50,19 +72,45 @@ public sealed class CreatePotEndpoint
     {
         var newPot = await handler.Handle(command, user.UserId);
 
-        return TypedResults.Created($"/api/pots/{newPot.Id}", newPot);
+        return newPot switch
+        {
+            PotSuccessfullyCreated(CreatePotResponse createdPot) =>
+                TypedResults.Created($"/api/pots/{createdPot.Id}", createdPot),
+            PotNameAlreadyInUse(string potName) =>
+                TypedResultsProblemDetails.Conflict(
+                    $"Pot name {potName} is already in use"
+                ),
+            _ => throw new NotSupportedException(
+                $"An unknown error occurred in {nameof(CreatePotEndpoint)}"
+            ),
+        };
     }
 }
 
-public class CreatePotHandler(AppDbContext context)
+public class CreatePotHandler(
+    AppDbContext context,
+    ILogger<CreatePotHandler> logger
+)
 {
     private readonly AppDbContext _context = context;
+    private readonly ILogger<CreatePotHandler> _logger = logger;
 
-    public async Task<CreatePotResponse> Handle(
+    public async Task<CreatePotResult> Handle(
         CreatePotRequest command,
         int userId
     )
     {
+        var usedPotName = await _context
+            .Pots.Where(p => p.Name == command.Name)
+            .Select(p => p.Name)
+            .SingleOrDefaultAsync();
+
+        if (usedPotName is not null)
+        {
+            CreatePotLogger.PotNameAlreadyInUse(_logger, usedPotName);
+            return new PotNameAlreadyInUse(usedPotName);
+        }
+
         var newPot = new Pot
         {
             Target = command.Target,
@@ -74,12 +122,14 @@ public class CreatePotHandler(AppDbContext context)
 
         await _context.SaveChangesAsync();
 
-        return new CreatePotResponse
-        {
-            Id = newPot.Id,
-            Target = newPot.Target,
-            Total = newPot.Total,
-            Name = newPot.Name,
-        };
+        return new PotSuccessfullyCreated(
+            new CreatePotResponse
+            {
+                Id = newPot.Id,
+                Target = newPot.Target,
+                Total = newPot.Total,
+                Name = newPot.Name,
+            }
+        );
     }
 }
