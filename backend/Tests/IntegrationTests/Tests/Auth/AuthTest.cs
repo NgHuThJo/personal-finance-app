@@ -12,7 +12,7 @@ public class AuthApiTest(DatabaseFixture dbFixture)
     : IntegrationTestBase(dbFixture)
 {
     // Pay attention to the missing trailing slash
-    private const string _baseApiUrl = "/api/auth/signup";
+    private const string _uriPath = "/v1/auth/signup";
 
     [Fact]
     public async Task SignUpUser_WhenSuccessful_ReturnsUser()
@@ -21,7 +21,7 @@ public class AuthApiTest(DatabaseFixture dbFixture)
         var fakeData = AuthFaker.SignUpUserRequest();
         // Act
         var postResponse = await Client.PostAsJsonAsync(
-            _baseApiUrl,
+            _uriPath,
             fakeData,
             TestContext.Current.CancellationToken
         );
@@ -46,7 +46,7 @@ public class AuthApiTest(DatabaseFixture dbFixture)
         };
         // Act
         var postResponse = await Client.PostAsJsonAsync(
-            _baseApiUrl,
+            _uriPath,
             fakeData,
             TestContext.Current.CancellationToken
         );
@@ -66,7 +66,7 @@ public class AuthApiTest(DatabaseFixture dbFixture)
         var fakeData = AuthFaker.SignUpUserRequest();
         // Act
         var postResponse = await Client.PostAsJsonAsync(
-            _baseApiUrl,
+            _uriPath,
             fakeData,
             TestContext.Current.CancellationToken
         );
@@ -79,7 +79,7 @@ public class AuthApiTest(DatabaseFixture dbFixture)
         newUser.Should().NotBeNull();
 
         postResponse = await Client.PostAsJsonAsync(
-            _baseApiUrl,
+            _uriPath,
             fakeData,
             TestContext.Current.CancellationToken
         );

@@ -13,8 +13,8 @@ const options = linkOptions([
     to: "/transactions",
   },
   {
-    name: "Budgets",
-    to: "/budgets",
+    name: "Budget",
+    to: "/budget",
   },
   {
     name: "Recurring Bills",

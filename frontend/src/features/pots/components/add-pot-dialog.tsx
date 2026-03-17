@@ -6,8 +6,8 @@ import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
 import type { CreatePotRequest } from "#frontend/shared/client";
 import {
-  getApiPotsQueryKey,
-  postApiPotsMutation,
+  createPotMutation,
+  getAllPotsQueryKey,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { zCreatePotRequest } from "#frontend/shared/client/zod.gen";
 import { Button } from "#frontend/shared/primitives/button";
@@ -36,13 +36,13 @@ export function AddPotDialog() {
     formState: { errors },
   } = useForm<CreatePotRequest>();
   const { mutate } = useMutation({
-    ...postApiPotsMutation({
+    ...createPotMutation({
       client: clientWithAuth,
       credentials: "include",
     }),
     onSuccess: async () => {
       Logger.info("Money successfully withdrawn from pot");
-      await queryClient.invalidateQueries({ queryKey: getApiPotsQueryKey() });
+      await queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
       setOpen(false);
     },
     onError: (error) => {

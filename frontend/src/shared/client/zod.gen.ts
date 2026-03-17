@@ -2,14 +2,11 @@
 
 import { z } from 'zod';
 
-export const zCreatePotRequest = z.object({
-    target: z.number().gte(0),
-    name: z.string().min(1)
+export const zAddMoneyToPotRequest = z.object({
+    moneyAdded: z.number()
 });
 
-export const zCreatePotResponse = z.object({
-    id: z.int().gte(0).lte(2147483647),
-    total: z.number().gte(0),
+export const zCreatePotRequest = z.object({
     target: z.number().gte(0),
     name: z.string().min(1)
 });
@@ -77,11 +74,10 @@ export const zSignUpUserResponse = z.object({
 });
 
 export const zWithdrawMoneyFromPotRequest = z.object({
-    potId: z.int().gte(0).lte(2147483647),
     moneyWithdrawn: z.number().gte(0)
 });
 
-export const zGetApiUsersData = z.object({
+export const zGetUserByIdData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.optional(z.never())
@@ -90,9 +86,9 @@ export const zGetApiUsersData = z.object({
 /**
  * OK
  */
-export const zGetApiUsersResponse = zGetUserByIdResponse;
+export const zGetUserByIdResponse2 = zGetUserByIdResponse;
 
-export const zGetApiPotsData = z.object({
+export const zGetAllPotsData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.optional(z.never())
@@ -101,31 +97,41 @@ export const zGetApiPotsData = z.object({
 /**
  * OK
  */
-export const zGetApiPotsResponse = z.array(zGetAllPotsResponse);
+export const zGetAllPotsResponse2 = z.array(zGetAllPotsResponse);
 
-export const zPostApiPotsData = z.object({
+export const zCreatePotData = z.object({
     body: zCreatePotRequest,
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });
 
-/**
- * Created
- */
-export const zPostApiPotsResponse = zCreatePotResponse;
-
-export const zPutApiPotsData = z.object({
+export const zWithdrawMoneyFromPotData = z.object({
     body: zWithdrawMoneyFromPotRequest,
-    path: z.optional(z.never()),
+    path: z.object({
+        potId: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })
+    }),
     query: z.optional(z.never())
 });
 
 /**
  * No Content
  */
-export const zPutApiPotsResponse = z.void();
+export const zWithdrawMoneyFromPotResponse = z.void();
 
-export const zPostApiAuthSignupData = z.object({
+export const zAddMoneyToPotData = z.object({
+    body: zAddMoneyToPotRequest,
+    path: z.object({
+        potId: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })
+    }),
+    query: z.optional(z.never())
+});
+
+/**
+ * No Content
+ */
+export const zAddMoneyToPotResponse = z.void();
+
+export const zSignUpUserData = z.object({
     body: zSignUpUserRequest,
     path: z.optional(z.never()),
     query: z.optional(z.never())
@@ -134,9 +140,9 @@ export const zPostApiAuthSignupData = z.object({
 /**
  * Created
  */
-export const zPostApiAuthSignupResponse = zSignUpUserResponse;
+export const zSignUpUserResponse2 = zSignUpUserResponse;
 
-export const zPostApiAuthLoginData = z.object({
+export const zLoginUserData = z.object({
     body: zLoginUserRequest,
     path: z.optional(z.never()),
     query: z.optional(z.never())
@@ -145,9 +151,9 @@ export const zPostApiAuthLoginData = z.object({
 /**
  * OK
  */
-export const zPostApiAuthLoginResponse = z.string();
+export const zLoginUserResponse = z.string();
 
-export const zPostApiAuthLogoutData = z.object({
+export const zLogoutUserData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.optional(z.never())
@@ -156,9 +162,9 @@ export const zPostApiAuthLogoutData = z.object({
 /**
  * No Content
  */
-export const zPostApiAuthLogoutResponse = z.void();
+export const zLogoutUserResponse = z.void();
 
-export const zGetApiAuthRefreshData = z.object({
+export const zCreateRefreshTokenData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.optional(z.never())
@@ -167,21 +173,21 @@ export const zGetApiAuthRefreshData = z.object({
 /**
  * OK
  */
-export const zGetApiAuthRefreshResponse = zCreateRefreshTokenResponse;
+export const zCreateRefreshTokenResponse2 = zCreateRefreshTokenResponse;
 
-export const zGetApiAuthLoginGoogleData = z.object({
+export const zLoginGoogleUserData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });
 
-export const zPostApiAuthLogoutGoogleData = z.object({
+export const zLogoutGoogleUserData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });
 
-export const zGetApiBalancesData = z.object({
+export const zGetBalanceByIdData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.optional(z.never())
@@ -190,4 +196,4 @@ export const zGetApiBalancesData = z.object({
 /**
  * OK
  */
-export const zGetApiBalancesResponse = zGetBalanceByIdResponse;
+export const zGetBalanceByIdResponse2 = zGetBalanceByIdResponse;

@@ -4,13 +4,13 @@ import { Dots } from "#frontend/assets/icons/icons";
 import { AddPotDialog } from "#frontend/features/pots/components/add-pot-dialog";
 import { WithdrawMoneyDialog } from "#frontend/features/pots/components/withdraw-money-dialog";
 import { clientWithAuth } from "#frontend/shared/api/client";
-import { getApiPotsOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
+import { getAllPotsOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { Button } from "#frontend/shared/primitives/button";
 import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
 
 export function PotsBoard() {
   const { data } = useSuspenseQuery({
-    ...getApiPotsOptions({
+    ...getAllPotsOptions({
       client: clientWithAuth,
     }),
   });

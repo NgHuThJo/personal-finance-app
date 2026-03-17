@@ -24,7 +24,7 @@ public record MoneySuccessfullyAdded() : AddMoneyToPotResult;
 
 public record AddMoneyToPotRequest
 {
-    public decimal MoneyAdded { get; set; }
+    public required decimal MoneyAdded { get; set; }
 }
 
 public class AddMoneyToPotValidator : AbstractValidator<AddMoneyToPotRequest>
@@ -37,7 +37,9 @@ public class AddMoneyToPotValidator : AbstractValidator<AddMoneyToPotRequest>
 
 public static class AddMoneyToPotEndpoint
 {
-    public static async Task<Results<ProblemHttpResult, NoContent>> Add(
+    public static async Task<
+        Results<ProblemHttpResult, NoContent>
+    > AddMoneyToPot(
         [FromRoute] int potId,
         AddMoneyToPotRequest command,
         [FromServices] AddMoneyToPotHandler handler
@@ -53,7 +55,7 @@ public static class AddMoneyToPotEndpoint
                     $"Pot does not exist with id {nonExistentPotId}"
                 ),
             _ => throw new NotSupportedException(
-                $"An unknown error occurred in {nameof(Add)}"
+                $"An unknown error occurred in {nameof(AddMoneyToPot)}"
             ),
         };
     }

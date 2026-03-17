@@ -19,7 +19,7 @@ export function NotFound({ retry }: NotFoundProps) {
           We couldn’t connect to the server (API error). Please try again in a
           few moments.
         </p>
-        <Button variant="retry" onClick={retry}>
+        <Button variant="cta-primary" onClick={retry}>
           <Image src={icon_retry} />
           Retry
         </Button>

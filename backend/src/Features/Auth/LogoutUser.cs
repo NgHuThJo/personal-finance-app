@@ -26,7 +26,7 @@ public static partial class LogoutUserLogger
 
 public static class LogoutUserEndpoint
 {
-    public static async Task<Results<NoContent, ProblemHttpResult>> Logout(
+    public static async Task<Results<NoContent, ProblemHttpResult>> LogoutUser(
         HttpContext httpContext,
         ILoggerFactory loggerFactory,
         [FromServices] LogoutUserHandler handler

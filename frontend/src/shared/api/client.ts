@@ -1,5 +1,5 @@
 import { Logger } from "#frontend/shared/app/logging";
-import { getApiAuthRefresh } from "#frontend/shared/client";
+import { createRefreshToken } from "#frontend/shared/client";
 import type { ClientOptions } from "#frontend/shared/client";
 import { createClient, createConfig } from "#frontend/shared/client/client";
 import { accessTokenStore } from "#frontend/shared/store/access-token";
@@ -17,7 +17,7 @@ export const clientWithAuth = createClient(
 
 const refreshAccessToken = async () => {
   try {
-    const result = await getApiAuthRefresh({ credentials: "include" });
+    const result = await createRefreshToken({ credentials: "include" });
     const accessToken = result.data?.accessToken ?? null;
     accessTokenStore.getState().setAccessToken(accessToken);
     return accessToken;

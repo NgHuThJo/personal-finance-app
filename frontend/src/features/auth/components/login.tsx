@@ -6,7 +6,7 @@ import styles from "./login.module.css";
 import { IconEye } from "#frontend/assets/icons/icons";
 import { Logger } from "#frontend/shared/app/logging";
 import type { LoginUserRequest } from "#frontend/shared/client";
-import { postApiAuthLoginMutation } from "#frontend/shared/client/@tanstack/react-query.gen";
+import { loginUserMutation } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { useToggle } from "#frontend/shared/hooks/use-toggle";
 import { Button } from "#frontend/shared/primitives/button";
 import { accessTokenStore } from "#frontend/shared/store/access-token";
@@ -80,7 +80,7 @@ export function Login() {
     formState: { errors },
   } = useForm<LoginUserRequest>();
   const { mutate, isPending } = useMutation({
-    ...postApiAuthLoginMutation({
+    ...loginUserMutation({
       credentials: "include",
     }),
     onSuccess: async (accessToken) => {

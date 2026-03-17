@@ -47,7 +47,7 @@ public class CreateRefreshTokenEndpoint
 {
     public static async Task<
         Results<ProblemHttpResult, Ok<CreateRefreshTokenResponse>>
-    > Get(
+    > CreateRefreshToken(
         HttpContext httpContext,
         [FromServices] CreateRefreshTokenHandler handler
     )

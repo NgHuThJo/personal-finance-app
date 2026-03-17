@@ -6,7 +6,7 @@ namespace backend.Src.Features;
 
 public static class LoginGoogleUserEndpoint
 {
-    public static ChallengeHttpResult Login()
+    public static ChallengeHttpResult LoginGoogleUser()
     {
         return TypedResults.Challenge(
             new AuthenticationProperties

@@ -12,8 +12,7 @@ public abstract record CreatePotResult;
 
 public record PotNameAlreadyInUse(string PotName) : CreatePotResult;
 
-public record PotSuccessfullyCreated(CreatePotResponse Response)
-    : CreatePotResult;
+public record PotSuccessfullyCreated() : CreatePotResult;
 
 public static partial class CreatePotLogger
 {
@@ -36,21 +35,6 @@ public record CreatePotRequest
     public required string Name { get; init; }
 }
 
-public record CreatePotResponse
-{
-    [Range(0, int.MaxValue)]
-    public required int Id { get; init; }
-
-    [Range(0, double.MaxValue)]
-    public required decimal Total { get; init; }
-
-    [Range(0, double.MaxValue)]
-    public required decimal Target { get; init; }
-
-    [MinLength(1)]
-    public required string Name { get; init; }
-}
-
 public class CreatePotValidator : AbstractValidator<CreatePotRequest>
 {
     public CreatePotValidator()
@@ -62,25 +46,17 @@ public class CreatePotValidator : AbstractValidator<CreatePotRequest>
 
 public sealed class CreatePotEndpoint
 {
-    public static async Task<
-        Results<CreatedAtRoute<CreatePotResponse>, ProblemHttpResult>
-    > Create(
+    public static async Task<Results<Created, ProblemHttpResult>> CreatePot(
         [FromBody] CreatePotRequest command,
         [FromServices] CurrentUser user,
-        [FromServices] CreatePotHandler handler,
-        [FromServices] LinkGenerator linkGenerator
+        [FromServices] CreatePotHandler handler
     )
     {
         var newPot = await handler.Handle(command, user.UserId);
 
         return newPot switch
         {
-            PotSuccessfullyCreated(CreatePotResponse createdPot) =>
-                TypedResults.CreatedAtRoute(
-                    createdPot,
-                    linkGenerator.GetPathByName("GetPotById"),
-                    new { potId = createdPot.Id }
-                ),
+            PotSuccessfullyCreated => TypedResults.Created(),
             PotNameAlreadyInUse(string potName) =>
                 TypedResultsProblemDetails.Conflict(
                     $"Pot name {potName} is already in use"
@@ -127,14 +103,6 @@ public class CreatePotHandler(
 
         await _context.SaveChangesAsync();
 
-        return new PotSuccessfullyCreated(
-            new CreatePotResponse
-            {
-                Id = newPot.Id,
-                Target = newPot.Target,
-                Total = newPot.Total,
-                Name = newPot.Name,
-            }
-        );
+        return new PotSuccessfullyCreated();
     }
 }

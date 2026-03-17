@@ -5,7 +5,7 @@ import { Logout } from "#frontend/assets/icons/icons";
 import { AccountSummary } from "#frontend/features/dashboard/components/account-summary";
 import { BalanceSummary } from "#frontend/features/dashboard/components/balance-summary";
 import { Logger } from "#frontend/shared/app/logging";
-import { postApiAuthLogoutMutation } from "#frontend/shared/client/@tanstack/react-query.gen";
+import { logoutUserMutation } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { Button } from "#frontend/shared/primitives/button";
 import { accessTokenStore } from "#frontend/shared/store/access-token";
 
@@ -17,7 +17,7 @@ function Index() {
   const router = useRouter();
   const logout = accessTokenStore.getState().logout;
   const { mutate } = useMutation({
-    ...postApiAuthLogoutMutation({
+    ...logoutUserMutation({
       credentials: "include",
     }),
     onSuccess: () => {

@@ -38,7 +38,7 @@ public static class GetBalanceByIdEndpoint
 {
     public static async Task<
         Results<ProblemHttpResult, Ok<GetBalanceByIdResponse>>
-    > Get(
+    > GetBalanceById(
         [FromServices] CurrentUser user,
         [FromServices] GetBalanceByIdHandler handler
     )

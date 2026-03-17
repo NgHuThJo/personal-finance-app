@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetApiAuthLoginGoogleData, GetApiAuthLoginGoogleResponses, GetApiAuthRefreshData, GetApiAuthRefreshErrors, GetApiAuthRefreshResponses, GetApiBalancesData, GetApiBalancesErrors, GetApiBalancesResponses, GetApiPotsData, GetApiPotsResponses, GetApiUsersData, GetApiUsersErrors, GetApiUsersResponses, PostApiAuthLoginData, PostApiAuthLoginErrors, PostApiAuthLoginResponses, PostApiAuthLogoutData, PostApiAuthLogoutErrors, PostApiAuthLogoutGoogleData, PostApiAuthLogoutGoogleResponses, PostApiAuthLogoutResponses, PostApiAuthSignupData, PostApiAuthSignupErrors, PostApiAuthSignupResponses, PostApiPotsData, PostApiPotsErrors, PostApiPotsResponses, PutApiPotsData, PutApiPotsErrors, PutApiPotsResponses } from './types.gen';
+import type { AddMoneyToPotData, AddMoneyToPotResponses, CreatePotData, CreatePotErrors, CreatePotResponses, CreateRefreshTokenData, CreateRefreshTokenErrors, CreateRefreshTokenResponses, GetAllPotsData, GetAllPotsResponses, GetBalanceByIdData, GetBalanceByIdErrors, GetBalanceByIdResponses, GetUserByIdData, GetUserByIdErrors, GetUserByIdResponses, LoginGoogleUserData, LoginGoogleUserResponses, LoginUserData, LoginUserErrors, LoginUserResponses, LogoutGoogleUserData, LogoutGoogleUserResponses, LogoutUserData, LogoutUserErrors, LogoutUserResponses, SignUpUserData, SignUpUserErrors, SignUpUserResponses, WithdrawMoneyFromPotData, WithdrawMoneyFromPotErrors, WithdrawMoneyFromPotResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -18,12 +18,12 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const getApiUsers = <ThrowOnError extends boolean = false>(options?: Options<GetApiUsersData, ThrowOnError>) => (options?.client ?? client).get<GetApiUsersResponses, GetApiUsersErrors, ThrowOnError>({ url: '/api/users', ...options });
+export const getUserById = <ThrowOnError extends boolean = false>(options?: Options<GetUserByIdData, ThrowOnError>) => (options?.client ?? client).get<GetUserByIdResponses, GetUserByIdErrors, ThrowOnError>({ url: '/v1/users', ...options });
 
-export const getApiPots = <ThrowOnError extends boolean = false>(options?: Options<GetApiPotsData, ThrowOnError>) => (options?.client ?? client).get<GetApiPotsResponses, unknown, ThrowOnError>({ url: '/api/pots', ...options });
+export const getAllPots = <ThrowOnError extends boolean = false>(options?: Options<GetAllPotsData, ThrowOnError>) => (options?.client ?? client).get<GetAllPotsResponses, unknown, ThrowOnError>({ url: '/v1/pots', ...options });
 
-export const postApiPots = <ThrowOnError extends boolean = false>(options: Options<PostApiPotsData, ThrowOnError>) => (options.client ?? client).post<PostApiPotsResponses, PostApiPotsErrors, ThrowOnError>({
-    url: '/api/pots',
+export const createPot = <ThrowOnError extends boolean = false>(options: Options<CreatePotData, ThrowOnError>) => (options.client ?? client).post<CreatePotResponses, CreatePotErrors, ThrowOnError>({
+    url: '/v1/pots',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -31,8 +31,8 @@ export const postApiPots = <ThrowOnError extends boolean = false>(options: Optio
     }
 });
 
-export const putApiPots = <ThrowOnError extends boolean = false>(options: Options<PutApiPotsData, ThrowOnError>) => (options.client ?? client).put<PutApiPotsResponses, PutApiPotsErrors, ThrowOnError>({
-    url: '/api/pots',
+export const withdrawMoneyFromPot = <ThrowOnError extends boolean = false>(options: Options<WithdrawMoneyFromPotData, ThrowOnError>) => (options.client ?? client).patch<WithdrawMoneyFromPotResponses, WithdrawMoneyFromPotErrors, ThrowOnError>({
+    url: '/v1/pots/{potId}/withdrawal',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -40,8 +40,8 @@ export const putApiPots = <ThrowOnError extends boolean = false>(options: Option
     }
 });
 
-export const postApiAuthSignup = <ThrowOnError extends boolean = false>(options: Options<PostApiAuthSignupData, ThrowOnError>) => (options.client ?? client).post<PostApiAuthSignupResponses, PostApiAuthSignupErrors, ThrowOnError>({
-    url: '/api/auth/signup',
+export const addMoneyToPot = <ThrowOnError extends boolean = false>(options: Options<AddMoneyToPotData, ThrowOnError>) => (options.client ?? client).patch<AddMoneyToPotResponses, unknown, ThrowOnError>({
+    url: '/v1/pots/{potId}/addition',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -49,8 +49,8 @@ export const postApiAuthSignup = <ThrowOnError extends boolean = false>(options:
     }
 });
 
-export const postApiAuthLogin = <ThrowOnError extends boolean = false>(options: Options<PostApiAuthLoginData, ThrowOnError>) => (options.client ?? client).post<PostApiAuthLoginResponses, PostApiAuthLoginErrors, ThrowOnError>({
-    url: '/api/auth/login',
+export const signUpUser = <ThrowOnError extends boolean = false>(options: Options<SignUpUserData, ThrowOnError>) => (options.client ?? client).post<SignUpUserResponses, SignUpUserErrors, ThrowOnError>({
+    url: '/v1/auth/signup',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -58,15 +58,24 @@ export const postApiAuthLogin = <ThrowOnError extends boolean = false>(options: 
     }
 });
 
-export const postApiAuthLogout = <ThrowOnError extends boolean = false>(options?: Options<PostApiAuthLogoutData, ThrowOnError>) => (options?.client ?? client).post<PostApiAuthLogoutResponses, PostApiAuthLogoutErrors, ThrowOnError>({ url: '/api/auth/logout', ...options });
+export const loginUser = <ThrowOnError extends boolean = false>(options: Options<LoginUserData, ThrowOnError>) => (options.client ?? client).post<LoginUserResponses, LoginUserErrors, ThrowOnError>({
+    url: '/v1/auth/login',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
-export const getApiAuthRefresh = <ThrowOnError extends boolean = false>(options?: Options<GetApiAuthRefreshData, ThrowOnError>) => (options?.client ?? client).get<GetApiAuthRefreshResponses, GetApiAuthRefreshErrors, ThrowOnError>({ url: '/api/auth/refresh', ...options });
+export const logoutUser = <ThrowOnError extends boolean = false>(options?: Options<LogoutUserData, ThrowOnError>) => (options?.client ?? client).post<LogoutUserResponses, LogoutUserErrors, ThrowOnError>({ url: '/v1/auth/logout', ...options });
+
+export const createRefreshToken = <ThrowOnError extends boolean = false>(options?: Options<CreateRefreshTokenData, ThrowOnError>) => (options?.client ?? client).get<CreateRefreshTokenResponses, CreateRefreshTokenErrors, ThrowOnError>({ url: '/v1/auth/refresh', ...options });
 
 /**
  * Redirects to Google login
  */
-export const getApiAuthLoginGoogle = <ThrowOnError extends boolean = false>(options?: Options<GetApiAuthLoginGoogleData, ThrowOnError>) => (options?.client ?? client).get<GetApiAuthLoginGoogleResponses, unknown, ThrowOnError>({ url: '/api/auth/login/google', ...options });
+export const loginGoogleUser = <ThrowOnError extends boolean = false>(options?: Options<LoginGoogleUserData, ThrowOnError>) => (options?.client ?? client).get<LoginGoogleUserResponses, unknown, ThrowOnError>({ url: '/v1/auth/login/google', ...options });
 
-export const postApiAuthLogoutGoogle = <ThrowOnError extends boolean = false>(options?: Options<PostApiAuthLogoutGoogleData, ThrowOnError>) => (options?.client ?? client).post<PostApiAuthLogoutGoogleResponses, unknown, ThrowOnError>({ url: '/api/auth/logout/google', ...options });
+export const logoutGoogleUser = <ThrowOnError extends boolean = false>(options?: Options<LogoutGoogleUserData, ThrowOnError>) => (options?.client ?? client).post<LogoutGoogleUserResponses, unknown, ThrowOnError>({ url: '/v1/auth/logout/google', ...options });
 
-export const getApiBalances = <ThrowOnError extends boolean = false>(options?: Options<GetApiBalancesData, ThrowOnError>) => (options?.client ?? client).get<GetApiBalancesResponses, GetApiBalancesErrors, ThrowOnError>({ url: '/api/balances', ...options });
+export const getBalanceById = <ThrowOnError extends boolean = false>(options?: Options<GetBalanceByIdData, ThrowOnError>) => (options?.client ?? client).get<GetBalanceByIdResponses, GetBalanceByIdErrors, ThrowOnError>({ url: '/v1/balances', ...options });

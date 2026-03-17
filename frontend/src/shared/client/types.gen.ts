@@ -4,14 +4,11 @@ export type ClientOptions = {
     baseUrl: 'https://localhost:7111/' | (string & {});
 };
 
-export type CreatePotRequest = {
-    target: number;
-    name: string;
+export type AddMoneyToPotRequest = {
+    moneyAdded: number;
 };
 
-export type CreatePotResponse = {
-    id: number;
-    total: number;
+export type CreatePotRequest = {
     target: number;
     name: string;
 };
@@ -64,134 +61,151 @@ export type SignUpUserResponse = {
 };
 
 export type WithdrawMoneyFromPotRequest = {
-    potId: number;
     moneyWithdrawn: number;
 };
 
-export type GetApiUsersData = {
+export type GetUserByIdData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/api/users';
+    url: '/v1/users';
 };
 
-export type GetApiUsersErrors = {
+export type GetUserByIdErrors = {
     /**
      * Not Found
      */
     404: ProblemDetails;
 };
 
-export type GetApiUsersError = GetApiUsersErrors[keyof GetApiUsersErrors];
+export type GetUserByIdError = GetUserByIdErrors[keyof GetUserByIdErrors];
 
-export type GetApiUsersResponses = {
+export type GetUserByIdResponses = {
     /**
      * OK
      */
     200: GetUserByIdResponse;
 };
 
-export type GetApiUsersResponse = GetApiUsersResponses[keyof GetApiUsersResponses];
+export type GetUserByIdResponse2 = GetUserByIdResponses[keyof GetUserByIdResponses];
 
-export type GetApiPotsData = {
+export type GetAllPotsData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/api/pots';
+    url: '/v1/pots';
 };
 
-export type GetApiPotsResponses = {
+export type GetAllPotsResponses = {
     /**
      * OK
      */
     200: Array<GetAllPotsResponse>;
 };
 
-export type GetApiPotsResponse = GetApiPotsResponses[keyof GetApiPotsResponses];
+export type GetAllPotsResponse2 = GetAllPotsResponses[keyof GetAllPotsResponses];
 
-export type PostApiPotsData = {
+export type CreatePotData = {
     body: CreatePotRequest;
     path?: never;
     query?: never;
-    url: '/api/pots';
+    url: '/v1/pots';
 };
 
-export type PostApiPotsErrors = {
+export type CreatePotErrors = {
     /**
      * Bad Request
      */
     400: ProblemDetails;
 };
 
-export type PostApiPotsError = PostApiPotsErrors[keyof PostApiPotsErrors];
+export type CreatePotError = CreatePotErrors[keyof CreatePotErrors];
 
-export type PostApiPotsResponses = {
+export type CreatePotResponses = {
     /**
      * Created
      */
-    201: CreatePotResponse;
+    201: unknown;
 };
 
-export type PostApiPotsResponse = PostApiPotsResponses[keyof PostApiPotsResponses];
-
-export type PutApiPotsData = {
+export type WithdrawMoneyFromPotData = {
     body: WithdrawMoneyFromPotRequest;
-    path?: never;
+    path: {
+        potId: number;
+    };
     query?: never;
-    url: '/api/pots';
+    url: '/v1/pots/{potId}/withdrawal';
 };
 
-export type PutApiPotsErrors = {
+export type WithdrawMoneyFromPotErrors = {
     /**
      * Unprocessable Entity
      */
     422: ProblemDetails;
 };
 
-export type PutApiPotsError = PutApiPotsErrors[keyof PutApiPotsErrors];
+export type WithdrawMoneyFromPotError = WithdrawMoneyFromPotErrors[keyof WithdrawMoneyFromPotErrors];
 
-export type PutApiPotsResponses = {
+export type WithdrawMoneyFromPotResponses = {
     /**
      * No Content
      */
     204: void;
 };
 
-export type PutApiPotsResponse = PutApiPotsResponses[keyof PutApiPotsResponses];
+export type WithdrawMoneyFromPotResponse = WithdrawMoneyFromPotResponses[keyof WithdrawMoneyFromPotResponses];
 
-export type PostApiAuthSignupData = {
+export type AddMoneyToPotData = {
+    body: AddMoneyToPotRequest;
+    path: {
+        potId: number;
+    };
+    query?: never;
+    url: '/v1/pots/{potId}/addition';
+};
+
+export type AddMoneyToPotResponses = {
+    /**
+     * No Content
+     */
+    204: void;
+};
+
+export type AddMoneyToPotResponse = AddMoneyToPotResponses[keyof AddMoneyToPotResponses];
+
+export type SignUpUserData = {
     body: SignUpUserRequest;
     path?: never;
     query?: never;
-    url: '/api/auth/signup';
+    url: '/v1/auth/signup';
 };
 
-export type PostApiAuthSignupErrors = {
+export type SignUpUserErrors = {
     /**
      * Conflict
      */
     409: ProblemDetails;
 };
 
-export type PostApiAuthSignupError = PostApiAuthSignupErrors[keyof PostApiAuthSignupErrors];
+export type SignUpUserError = SignUpUserErrors[keyof SignUpUserErrors];
 
-export type PostApiAuthSignupResponses = {
+export type SignUpUserResponses = {
     /**
      * Created
      */
     201: SignUpUserResponse;
 };
 
-export type PostApiAuthSignupResponse = PostApiAuthSignupResponses[keyof PostApiAuthSignupResponses];
+export type SignUpUserResponse2 = SignUpUserResponses[keyof SignUpUserResponses];
 
-export type PostApiAuthLoginData = {
+export type LoginUserData = {
     body: LoginUserRequest;
     path?: never;
     query?: never;
-    url: '/api/auth/login';
+    url: '/v1/auth/login';
 };
 
-export type PostApiAuthLoginErrors = {
+export type LoginUserErrors = {
     /**
      * Unauthorized
      */
@@ -202,116 +216,116 @@ export type PostApiAuthLoginErrors = {
     409: ProblemDetails;
 };
 
-export type PostApiAuthLoginError = PostApiAuthLoginErrors[keyof PostApiAuthLoginErrors];
+export type LoginUserError = LoginUserErrors[keyof LoginUserErrors];
 
-export type PostApiAuthLoginResponses = {
+export type LoginUserResponses = {
     /**
      * OK
      */
     200: string;
 };
 
-export type PostApiAuthLoginResponse = PostApiAuthLoginResponses[keyof PostApiAuthLoginResponses];
+export type LoginUserResponse = LoginUserResponses[keyof LoginUserResponses];
 
-export type PostApiAuthLogoutData = {
+export type LogoutUserData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/api/auth/logout';
+    url: '/v1/auth/logout';
 };
 
-export type PostApiAuthLogoutErrors = {
+export type LogoutUserErrors = {
     /**
      * Forbidden
      */
     403: ProblemDetails;
 };
 
-export type PostApiAuthLogoutError = PostApiAuthLogoutErrors[keyof PostApiAuthLogoutErrors];
+export type LogoutUserError = LogoutUserErrors[keyof LogoutUserErrors];
 
-export type PostApiAuthLogoutResponses = {
+export type LogoutUserResponses = {
     /**
      * No Content
      */
     204: void;
 };
 
-export type PostApiAuthLogoutResponse = PostApiAuthLogoutResponses[keyof PostApiAuthLogoutResponses];
+export type LogoutUserResponse = LogoutUserResponses[keyof LogoutUserResponses];
 
-export type GetApiAuthRefreshData = {
+export type CreateRefreshTokenData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/api/auth/refresh';
+    url: '/v1/auth/refresh';
 };
 
-export type GetApiAuthRefreshErrors = {
+export type CreateRefreshTokenErrors = {
     /**
      * Unauthorized
      */
     401: ProblemDetails;
 };
 
-export type GetApiAuthRefreshError = GetApiAuthRefreshErrors[keyof GetApiAuthRefreshErrors];
+export type CreateRefreshTokenError = CreateRefreshTokenErrors[keyof CreateRefreshTokenErrors];
 
-export type GetApiAuthRefreshResponses = {
+export type CreateRefreshTokenResponses = {
     /**
      * OK
      */
     200: CreateRefreshTokenResponse;
 };
 
-export type GetApiAuthRefreshResponse = GetApiAuthRefreshResponses[keyof GetApiAuthRefreshResponses];
+export type CreateRefreshTokenResponse2 = CreateRefreshTokenResponses[keyof CreateRefreshTokenResponses];
 
-export type GetApiAuthLoginGoogleData = {
+export type LoginGoogleUserData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/api/auth/login/google';
+    url: '/v1/auth/login/google';
 };
 
-export type GetApiAuthLoginGoogleResponses = {
+export type LoginGoogleUserResponses = {
     /**
      * OK
      */
     200: unknown;
 };
 
-export type PostApiAuthLogoutGoogleData = {
+export type LogoutGoogleUserData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/api/auth/logout/google';
+    url: '/v1/auth/logout/google';
 };
 
-export type PostApiAuthLogoutGoogleResponses = {
+export type LogoutGoogleUserResponses = {
     /**
      * OK
      */
     200: unknown;
 };
 
-export type GetApiBalancesData = {
+export type GetBalanceByIdData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/api/balances';
+    url: '/v1/balances';
 };
 
-export type GetApiBalancesErrors = {
+export type GetBalanceByIdErrors = {
     /**
      * Unauthorized
      */
     401: ProblemDetails;
 };
 
-export type GetApiBalancesError = GetApiBalancesErrors[keyof GetApiBalancesErrors];
+export type GetBalanceByIdError = GetBalanceByIdErrors[keyof GetBalanceByIdErrors];
 
-export type GetApiBalancesResponses = {
+export type GetBalanceByIdResponses = {
     /**
      * OK
      */
     200: GetBalanceByIdResponse;
 };
 
-export type GetApiBalancesResponse = GetApiBalancesResponses[keyof GetApiBalancesResponses];
+export type GetBalanceByIdResponse2 = GetBalanceByIdResponses[keyof GetBalanceByIdResponses];

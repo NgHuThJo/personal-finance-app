@@ -25,8 +25,8 @@ public static class RouteGrouper
         var group = app.MapGroup("/v1/users");
         group.RequireAuthorization().RequireRateLimiting("per-user");
         group
-            .MapGet("", GetUserByIdEndpoint.GetById)
-            .WithName("GetUserById")
+            .MapGet("", GetUserByIdEndpoint.GetUserById)
+            .WithName(nameof(GetUserByIdEndpoint.GetUserById))
             .ProducesProblem((int)HttpStatusCode.NotFound);
 
         return app;
@@ -38,8 +38,8 @@ public static class RouteGrouper
         var group = app.MapGroup("/v1/balances");
         group.RequireAuthorization().RequireRateLimiting("per-user");
         group
-            .MapGet("", GetBalanceByIdEndpoint.Get)
-            .WithName("GetBalanceById")
+            .MapGet("", GetBalanceByIdEndpoint.GetBalanceById)
+            .WithName(nameof(GetBalanceByIdEndpoint.GetBalanceById))
             .ProducesProblem((int)HttpStatusCode.Unauthorized);
 
         return app;
@@ -51,23 +51,28 @@ public static class RouteGrouper
         var group = app.MapGroup("/v1/pots");
         group.RequireAuthorization().RequireRateLimiting("per-user");
         group
-            .MapPost("", CreatePotEndpoint.Create)
-            .WithName("CreatePot")
+            .MapPost("", CreatePotEndpoint.CreatePot)
+            .WithName(nameof(CreatePotEndpoint.CreatePot))
             .AddValidationFilter<CreatePotRequest>()
             .ProducesProblem((int)HttpStatusCode.BadRequest);
-        group.MapGet("", GetAllPotsEndpoint.GetAll).WithName("GetAllPots");
+        group
+            .MapGet("", GetAllPotsEndpoint.GetAllPots)
+            .WithName(nameof(GetAllPotsEndpoint.GetAllPots));
         group
             .MapPatch(
-                "/{potId:int}/money-withdrawal",
-                WithdrawMoneyFromPotEndpoint.Withdraw
+                "/{potId:int}/withdrawal",
+                WithdrawMoneyFromPotEndpoint.WithdrawMoneyFromPot
             )
-            .WithName("WithdrawMoneyFromPot")
+            .WithName(nameof(WithdrawMoneyFromPotEndpoint.WithdrawMoneyFromPot))
             .AddIdValidationFilter()
             .AddValidationFilter<WithdrawMoneyFromPotRequest>()
             .ProducesProblem((int)HttpStatusCode.UnprocessableEntity);
         group
-            .MapPatch("/{potId:int}/money-addition", AddMoneyToPotEndpoint.Add)
-            .WithName("AddMoneyToPot")
+            .MapPatch(
+                "/{potId:int}/addition",
+                AddMoneyToPotEndpoint.AddMoneyToPot
+            )
+            .WithName(nameof(AddMoneyToPotEndpoint.AddMoneyToPot))
             .AddIdValidationFilter()
             .AddValidationFilter<AddMoneyToPotRequest>();
 
@@ -80,32 +85,32 @@ public static class RouteGrouper
         var group = app.MapGroup("/v1/auth");
         group.RequireRateLimiting("fixed");
         group
-            .MapPost("signup", SignUpUserEndpoint.Create)
-            .WithName("SignUpUser")
+            .MapPost("signup", SignUpUserEndpoint.SignUpUser)
+            .WithName(nameof(SignUpUserEndpoint.SignUpUser))
             .AddValidationFilter<SignUpUserRequest>()
             .ProducesProblem((int)HttpStatusCode.Conflict);
         group
-            .MapPost("login", LoginUserEndpoint.Login)
-            .WithName("LoginUser")
+            .MapPost("login", LoginUserEndpoint.LoginUser)
+            .WithName(nameof(LoginUserEndpoint.LoginUser))
             .AddValidationFilter<LoginUserRequest>()
             .ProducesProblem((int)HttpStatusCode.Conflict)
             .ProducesProblem((int)HttpStatusCode.Unauthorized);
         group
-            .MapPost("logout", LogoutUserEndpoint.Logout)
-            .WithName("LogoutUser")
+            .MapPost("logout", LogoutUserEndpoint.LogoutUser)
+            .WithName(nameof(LogoutUserEndpoint.LogoutUser))
             .ProducesProblem((int)HttpStatusCode.Forbidden);
         group
-            .MapGet("refresh", CreateRefreshTokenEndpoint.Get)
-            .WithName("CreateRefreshToken")
+            .MapGet("refresh", CreateRefreshTokenEndpoint.CreateRefreshToken)
+            .WithName(nameof(CreateRefreshTokenEndpoint.CreateRefreshToken))
             .ProducesProblem((int)HttpStatusCode.Unauthorized);
 
         group
-            .MapGet("login/google", LoginGoogleUserEndpoint.Login)
-            .WithName("LoginGoogleUser")
+            .MapGet("login/google", LoginGoogleUserEndpoint.LoginGoogleUser)
+            .WithName(nameof(LoginGoogleUserEndpoint.LoginGoogleUser))
             .WithSummary("Redirects to Google login");
         group
-            .MapPost("logout/google", LogoutGoogleUserEndpoint.Logout)
-            .WithName("LogoutGoogleUser");
+            .MapPost("logout/google", LogoutGoogleUserEndpoint.LogoutGoogleUser)
+            .WithName(nameof(LogoutGoogleUserEndpoint.LogoutGoogleUser));
 
         return app;
     }

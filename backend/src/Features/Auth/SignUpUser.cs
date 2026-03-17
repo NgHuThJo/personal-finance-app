@@ -62,9 +62,8 @@ public sealed class SignUpUserEndpoint
 {
     public static async Task<
         Results<CreatedAtRoute<SignUpUserResponse>, ProblemHttpResult>
-    > Create(
+    > SignUpUser(
         [FromServices] SignUpUserHandler handler,
-        [FromServices] LinkGenerator linkGenerator,
         [FromBody] SignUpUserRequest command
     )
     {
@@ -74,7 +73,7 @@ public sealed class SignUpUserEndpoint
         {
             SignupSuccessful(var user) => TypedResults.CreatedAtRoute(
                 user,
-                linkGenerator.GetPathByName("GetUserById")
+                "GetUserById"
             ),
             EmailAlreadyInUse(var email) => TypedResultsProblemDetails.Conflict(
                 $"Email address \"{email}\" is already in use"

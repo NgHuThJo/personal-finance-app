@@ -25,7 +25,7 @@ public record GetAllPotsResponse
 
 public sealed class GetAllPotsEndpoint
 {
-    public static async Task<Ok<List<GetAllPotsResponse>>> GetAll(
+    public static async Task<Ok<List<GetAllPotsResponse>>> GetAllPots(
         [FromServices] CurrentUser user,
         [FromServices] GetAllPotsHandler handler
     )

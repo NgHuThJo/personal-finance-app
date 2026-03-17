@@ -4,7 +4,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { useEffect, useEffectEvent } from "react";
 import styles from "./__root.module.css";
 import { Logger } from "#frontend/shared/app/logging";
-import { getApiAuthRefreshOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
+import { createRefreshTokenOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
 import {
   accessTokenStore,
   useAccessToken,
@@ -36,7 +36,7 @@ function Root() {
   const accessToken = useAccessToken();
   const { setAccessToken } = accessTokenStore.getState();
   const { data, error, isPending } = useQuery({
-    ...getApiAuthRefreshOptions({
+    ...createRefreshTokenOptions({
       credentials: "include",
     }),
     throwOnError: false,

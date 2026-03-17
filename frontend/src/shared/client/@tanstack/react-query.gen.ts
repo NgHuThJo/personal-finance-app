@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { getApiAuthLoginGoogle, getApiAuthRefresh, getApiBalances, getApiPots, getApiUsers, type Options, postApiAuthLogin, postApiAuthLogout, postApiAuthLogoutGoogle, postApiAuthSignup, postApiPots, putApiPots } from '../sdk.gen';
-import type { GetApiAuthLoginGoogleData, GetApiAuthRefreshData, GetApiAuthRefreshError, GetApiAuthRefreshResponse, GetApiBalancesData, GetApiBalancesError, GetApiBalancesResponse, GetApiPotsData, GetApiPotsResponse, GetApiUsersData, GetApiUsersError, GetApiUsersResponse, PostApiAuthLoginData, PostApiAuthLoginError, PostApiAuthLoginResponse, PostApiAuthLogoutData, PostApiAuthLogoutError, PostApiAuthLogoutGoogleData, PostApiAuthLogoutResponse, PostApiAuthSignupData, PostApiAuthSignupError, PostApiAuthSignupResponse, PostApiPotsData, PostApiPotsError, PostApiPotsResponse, PutApiPotsData, PutApiPotsError, PutApiPotsResponse } from '../types.gen';
+import { addMoneyToPot, createPot, createRefreshToken, getAllPots, getBalanceById, getUserById, loginGoogleUser, loginUser, logoutGoogleUser, logoutUser, type Options, signUpUser, withdrawMoneyFromPot } from '../sdk.gen';
+import type { AddMoneyToPotData, AddMoneyToPotResponse, CreatePotData, CreatePotError, CreateRefreshTokenData, CreateRefreshTokenError, CreateRefreshTokenResponse2, GetAllPotsData, GetAllPotsResponse2, GetBalanceByIdData, GetBalanceByIdError, GetBalanceByIdResponse2, GetUserByIdData, GetUserByIdError, GetUserByIdResponse2, LoginGoogleUserData, LoginUserData, LoginUserError, LoginUserResponse, LogoutGoogleUserData, LogoutUserData, LogoutUserError, LogoutUserResponse, SignUpUserData, SignUpUserError, SignUpUserResponse2, WithdrawMoneyFromPotData, WithdrawMoneyFromPotError, WithdrawMoneyFromPotResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -39,11 +39,11 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     return [params];
 };
 
-export const getApiUsersQueryKey = (options?: Options<GetApiUsersData>) => createQueryKey('getApiUsers', options);
+export const getUserByIdQueryKey = (options?: Options<GetUserByIdData>) => createQueryKey('getUserById', options);
 
-export const getApiUsersOptions = (options?: Options<GetApiUsersData>) => queryOptions<GetApiUsersResponse, GetApiUsersError, GetApiUsersResponse, ReturnType<typeof getApiUsersQueryKey>>({
+export const getUserByIdOptions = (options?: Options<GetUserByIdData>) => queryOptions<GetUserByIdResponse2, GetUserByIdError, GetUserByIdResponse2, ReturnType<typeof getUserByIdQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await getApiUsers({
+        const { data } = await getUserById({
             ...options,
             ...queryKey[0],
             signal,
@@ -51,14 +51,14 @@ export const getApiUsersOptions = (options?: Options<GetApiUsersData>) => queryO
         });
         return data;
     },
-    queryKey: getApiUsersQueryKey(options)
+    queryKey: getUserByIdQueryKey(options)
 });
 
-export const getApiPotsQueryKey = (options?: Options<GetApiPotsData>) => createQueryKey('getApiPots', options);
+export const getAllPotsQueryKey = (options?: Options<GetAllPotsData>) => createQueryKey('getAllPots', options);
 
-export const getApiPotsOptions = (options?: Options<GetApiPotsData>) => queryOptions<GetApiPotsResponse, DefaultError, GetApiPotsResponse, ReturnType<typeof getApiPotsQueryKey>>({
+export const getAllPotsOptions = (options?: Options<GetAllPotsData>) => queryOptions<GetAllPotsResponse2, DefaultError, GetAllPotsResponse2, ReturnType<typeof getAllPotsQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await getApiPots({
+        const { data } = await getAllPots({
             ...options,
             ...queryKey[0],
             signal,
@@ -66,13 +66,13 @@ export const getApiPotsOptions = (options?: Options<GetApiPotsData>) => queryOpt
         });
         return data;
     },
-    queryKey: getApiPotsQueryKey(options)
+    queryKey: getAllPotsQueryKey(options)
 });
 
-export const postApiPotsMutation = (options?: Partial<Options<PostApiPotsData>>): UseMutationOptions<PostApiPotsResponse, PostApiPotsError, Options<PostApiPotsData>> => {
-    const mutationOptions: UseMutationOptions<PostApiPotsResponse, PostApiPotsError, Options<PostApiPotsData>> = {
+export const createPotMutation = (options?: Partial<Options<CreatePotData>>): UseMutationOptions<unknown, CreatePotError, Options<CreatePotData>> => {
+    const mutationOptions: UseMutationOptions<unknown, CreatePotError, Options<CreatePotData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await postApiPots({
+            const { data } = await createPot({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -83,10 +83,10 @@ export const postApiPotsMutation = (options?: Partial<Options<PostApiPotsData>>)
     return mutationOptions;
 };
 
-export const putApiPotsMutation = (options?: Partial<Options<PutApiPotsData>>): UseMutationOptions<PutApiPotsResponse, PutApiPotsError, Options<PutApiPotsData>> => {
-    const mutationOptions: UseMutationOptions<PutApiPotsResponse, PutApiPotsError, Options<PutApiPotsData>> = {
+export const withdrawMoneyFromPotMutation = (options?: Partial<Options<WithdrawMoneyFromPotData>>): UseMutationOptions<WithdrawMoneyFromPotResponse, WithdrawMoneyFromPotError, Options<WithdrawMoneyFromPotData>> => {
+    const mutationOptions: UseMutationOptions<WithdrawMoneyFromPotResponse, WithdrawMoneyFromPotError, Options<WithdrawMoneyFromPotData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await putApiPots({
+            const { data } = await withdrawMoneyFromPot({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -97,10 +97,10 @@ export const putApiPotsMutation = (options?: Partial<Options<PutApiPotsData>>): 
     return mutationOptions;
 };
 
-export const postApiAuthSignupMutation = (options?: Partial<Options<PostApiAuthSignupData>>): UseMutationOptions<PostApiAuthSignupResponse, PostApiAuthSignupError, Options<PostApiAuthSignupData>> => {
-    const mutationOptions: UseMutationOptions<PostApiAuthSignupResponse, PostApiAuthSignupError, Options<PostApiAuthSignupData>> = {
+export const addMoneyToPotMutation = (options?: Partial<Options<AddMoneyToPotData>>): UseMutationOptions<AddMoneyToPotResponse, DefaultError, Options<AddMoneyToPotData>> => {
+    const mutationOptions: UseMutationOptions<AddMoneyToPotResponse, DefaultError, Options<AddMoneyToPotData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await postApiAuthSignup({
+            const { data } = await addMoneyToPot({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -111,10 +111,10 @@ export const postApiAuthSignupMutation = (options?: Partial<Options<PostApiAuthS
     return mutationOptions;
 };
 
-export const postApiAuthLoginMutation = (options?: Partial<Options<PostApiAuthLoginData>>): UseMutationOptions<PostApiAuthLoginResponse, PostApiAuthLoginError, Options<PostApiAuthLoginData>> => {
-    const mutationOptions: UseMutationOptions<PostApiAuthLoginResponse, PostApiAuthLoginError, Options<PostApiAuthLoginData>> = {
+export const signUpUserMutation = (options?: Partial<Options<SignUpUserData>>): UseMutationOptions<SignUpUserResponse2, SignUpUserError, Options<SignUpUserData>> => {
+    const mutationOptions: UseMutationOptions<SignUpUserResponse2, SignUpUserError, Options<SignUpUserData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await postApiAuthLogin({
+            const { data } = await signUpUser({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -125,10 +125,10 @@ export const postApiAuthLoginMutation = (options?: Partial<Options<PostApiAuthLo
     return mutationOptions;
 };
 
-export const postApiAuthLogoutMutation = (options?: Partial<Options<PostApiAuthLogoutData>>): UseMutationOptions<PostApiAuthLogoutResponse, PostApiAuthLogoutError, Options<PostApiAuthLogoutData>> => {
-    const mutationOptions: UseMutationOptions<PostApiAuthLogoutResponse, PostApiAuthLogoutError, Options<PostApiAuthLogoutData>> = {
+export const loginUserMutation = (options?: Partial<Options<LoginUserData>>): UseMutationOptions<LoginUserResponse, LoginUserError, Options<LoginUserData>> => {
+    const mutationOptions: UseMutationOptions<LoginUserResponse, LoginUserError, Options<LoginUserData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await postApiAuthLogout({
+            const { data } = await loginUser({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -139,11 +139,25 @@ export const postApiAuthLogoutMutation = (options?: Partial<Options<PostApiAuthL
     return mutationOptions;
 };
 
-export const getApiAuthRefreshQueryKey = (options?: Options<GetApiAuthRefreshData>) => createQueryKey('getApiAuthRefresh', options);
+export const logoutUserMutation = (options?: Partial<Options<LogoutUserData>>): UseMutationOptions<LogoutUserResponse, LogoutUserError, Options<LogoutUserData>> => {
+    const mutationOptions: UseMutationOptions<LogoutUserResponse, LogoutUserError, Options<LogoutUserData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await logoutUser({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
 
-export const getApiAuthRefreshOptions = (options?: Options<GetApiAuthRefreshData>) => queryOptions<GetApiAuthRefreshResponse, GetApiAuthRefreshError, GetApiAuthRefreshResponse, ReturnType<typeof getApiAuthRefreshQueryKey>>({
+export const createRefreshTokenQueryKey = (options?: Options<CreateRefreshTokenData>) => createQueryKey('createRefreshToken', options);
+
+export const createRefreshTokenOptions = (options?: Options<CreateRefreshTokenData>) => queryOptions<CreateRefreshTokenResponse2, CreateRefreshTokenError, CreateRefreshTokenResponse2, ReturnType<typeof createRefreshTokenQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await getApiAuthRefresh({
+        const { data } = await createRefreshToken({
             ...options,
             ...queryKey[0],
             signal,
@@ -151,17 +165,17 @@ export const getApiAuthRefreshOptions = (options?: Options<GetApiAuthRefreshData
         });
         return data;
     },
-    queryKey: getApiAuthRefreshQueryKey(options)
+    queryKey: createRefreshTokenQueryKey(options)
 });
 
-export const getApiAuthLoginGoogleQueryKey = (options?: Options<GetApiAuthLoginGoogleData>) => createQueryKey('getApiAuthLoginGoogle', options);
+export const loginGoogleUserQueryKey = (options?: Options<LoginGoogleUserData>) => createQueryKey('loginGoogleUser', options);
 
 /**
  * Redirects to Google login
  */
-export const getApiAuthLoginGoogleOptions = (options?: Options<GetApiAuthLoginGoogleData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof getApiAuthLoginGoogleQueryKey>>({
+export const loginGoogleUserOptions = (options?: Options<LoginGoogleUserData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof loginGoogleUserQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await getApiAuthLoginGoogle({
+        const { data } = await loginGoogleUser({
             ...options,
             ...queryKey[0],
             signal,
@@ -169,13 +183,13 @@ export const getApiAuthLoginGoogleOptions = (options?: Options<GetApiAuthLoginGo
         });
         return data;
     },
-    queryKey: getApiAuthLoginGoogleQueryKey(options)
+    queryKey: loginGoogleUserQueryKey(options)
 });
 
-export const postApiAuthLogoutGoogleMutation = (options?: Partial<Options<PostApiAuthLogoutGoogleData>>): UseMutationOptions<unknown, DefaultError, Options<PostApiAuthLogoutGoogleData>> => {
-    const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<PostApiAuthLogoutGoogleData>> = {
+export const logoutGoogleUserMutation = (options?: Partial<Options<LogoutGoogleUserData>>): UseMutationOptions<unknown, DefaultError, Options<LogoutGoogleUserData>> => {
+    const mutationOptions: UseMutationOptions<unknown, DefaultError, Options<LogoutGoogleUserData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await postApiAuthLogoutGoogle({
+            const { data } = await logoutGoogleUser({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -186,11 +200,11 @@ export const postApiAuthLogoutGoogleMutation = (options?: Partial<Options<PostAp
     return mutationOptions;
 };
 
-export const getApiBalancesQueryKey = (options?: Options<GetApiBalancesData>) => createQueryKey('getApiBalances', options);
+export const getBalanceByIdQueryKey = (options?: Options<GetBalanceByIdData>) => createQueryKey('getBalanceById', options);
 
-export const getApiBalancesOptions = (options?: Options<GetApiBalancesData>) => queryOptions<GetApiBalancesResponse, GetApiBalancesError, GetApiBalancesResponse, ReturnType<typeof getApiBalancesQueryKey>>({
+export const getBalanceByIdOptions = (options?: Options<GetBalanceByIdData>) => queryOptions<GetBalanceByIdResponse2, GetBalanceByIdError, GetBalanceByIdResponse2, ReturnType<typeof getBalanceByIdQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await getApiBalances({
+        const { data } = await getBalanceById({
             ...options,
             ...queryKey[0],
             signal,
@@ -198,5 +212,5 @@ export const getApiBalancesOptions = (options?: Options<GetApiBalancesData>) => 
         });
         return data;
     },
-    queryKey: getApiBalancesQueryKey(options)
+    queryKey: getBalanceByIdQueryKey(options)
 });

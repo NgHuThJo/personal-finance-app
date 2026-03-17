@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import styles from "./signup.module.css";
 import { IconEye } from "#frontend/assets/icons/icons";
 import { Logger } from "#frontend/shared/app/logging";
-import { postApiAuthSignupMutation } from "#frontend/shared/client/@tanstack/react-query.gen";
+import { signUpUserMutation } from "#frontend/shared/client/@tanstack/react-query.gen";
 import type { SignUpUserRequest } from "#frontend/shared/client/types.gen";
 import { useToggle } from "#frontend/shared/hooks/use-toggle";
 import { Button } from "#frontend/shared/primitives/button";
@@ -20,7 +20,7 @@ export function Signup() {
   const { isOpen: isPasswordVisible, toggle: togglePasswordVisibility } =
     useToggle(false);
   const { mutate, isPending } = useMutation({
-    ...postApiAuthSignupMutation(),
+    ...signUpUserMutation(),
     onSuccess: (data) => {
       Logger.info("Signup successful", data);
       route.navigate({
@@ -38,8 +38,6 @@ export function Signup() {
   });
 
   const onSubmit = handleSubmit((data) => {
-    console.table(data);
-
     mutate({
       body: data,
     });

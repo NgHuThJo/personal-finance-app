@@ -12,7 +12,7 @@ namespace backend.IntegrationTests;
 public class PotApiTest(DatabaseFixture dbFixture)
     : IntegrationTestBase(dbFixture)
 {
-    private readonly string _uriPath = "/api/pots";
+    private readonly string _uriPath = "/v1/pots";
 
     // CreatePot
     [Fact]
@@ -29,11 +29,6 @@ public class PotApiTest(DatabaseFixture dbFixture)
         );
         // Assert
         postResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-        var content =
-            await postResponse.Content.ReadFromJsonAsync<CreatePotResponse>(
-                TestContext.Current.CancellationToken
-            );
-        content.Should().NotBeNull();
     }
 
     [Fact]
@@ -81,9 +76,10 @@ public class PotApiTest(DatabaseFixture dbFixture)
         // Arrange
         var fakeData = PotFaker.WithdrawMoneyFromPotRequest();
         var jsonContent = JsonContent.Create(fakeData);
+        var path = $"{_uriPath}/1/withdrawal";
         // Act
-        var putResponse = await Client.PutAsync(
-            _uriPath,
+        var putResponse = await Client.PatchAsync(
+            path,
             jsonContent,
             TestContext.Current.CancellationToken
         );
@@ -97,9 +93,10 @@ public class PotApiTest(DatabaseFixture dbFixture)
         // Arrange
         var fakeData = PotFaker.WithdrawMoneyFromPotRequest();
         var jsonContent = JsonContent.Create(fakeData);
+        var path = $"{_uriPath}/1000/withdrawal";
         // Act
-        var putResponse = await Client.PutAsync(
-            _uriPath,
+        var putResponse = await Client.PatchAsync(
+            path,
             jsonContent,
             TestContext.Current.CancellationToken
         );
@@ -122,9 +119,10 @@ public class PotApiTest(DatabaseFixture dbFixture)
         // Arrange
         var fakeData = PotFaker.AddMoneyToPotRequest();
         var jsonContent = JsonContent.Create(fakeData);
+        var path = $"{_uriPath}/1/addition";
         // Act
-        var putResponse = await Client.PutAsync(
-            _uriPath,
+        var putResponse = await Client.PatchAsync(
+            path,
             jsonContent,
             TestContext.Current.CancellationToken
         );
@@ -138,9 +136,10 @@ public class PotApiTest(DatabaseFixture dbFixture)
         // Arrange
         var fakeData = PotFaker.AddMoneyToPotRequest();
         var jsonContent = JsonContent.Create(fakeData);
+        var path = $"{_uriPath}/1000/addition";
         // Act
-        var putResponse = await Client.PutAsync(
-            _uriPath,
+        var putResponse = await Client.PatchAsync(
+            path,
             jsonContent,
             TestContext.Current.CancellationToken
         );

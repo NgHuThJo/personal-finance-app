@@ -37,7 +37,7 @@ public sealed class GetUserByIdEndpoint
 {
     public static async Task<
         Results<Ok<GetUserByIdResponse>, ProblemHttpResult>
-    > GetById(
+    > GetUserById(
         [FromServices] CurrentUser user,
         [FromServices] GetUserByIdHandler handler
     )

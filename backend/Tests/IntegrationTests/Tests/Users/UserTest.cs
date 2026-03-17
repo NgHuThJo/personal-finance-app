@@ -15,7 +15,7 @@ public class UserApiTest : IntegrationTestBase
         Factory.DefaultUserId = "1";
     }
 
-    private const string _uriPath = "/api/users";
+    private const string _uriPath = "/v1/users";
 
     [Fact]
     public async Task GetUserById_WhenSuccessful_ReturnStatusCode200()

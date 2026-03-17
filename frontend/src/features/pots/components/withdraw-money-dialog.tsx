@@ -9,8 +9,8 @@ import type {
 } from "#frontend/shared/client";
 
 import {
-  getApiPotsQueryKey,
-  putApiPotsMutation,
+  getAllPotsQueryKey,
+  withdrawMoneyFromPotMutation,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { zWithdrawMoneyFromPotRequest } from "#frontend/shared/client/zod.gen";
 import { Button } from "#frontend/shared/primitives/button";
@@ -40,13 +40,13 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
   } = useForm<WithdrawMoneyFromPotRequest>();
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
-    ...putApiPotsMutation({
+    ...withdrawMoneyFromPotMutation({
       client: clientWithAuth,
       credentials: "include",
     }),
     onSuccess: async () => {
       Logger.info("Money successfully withdrawn from pot");
-      await queryClient.invalidateQueries({ queryKey: getApiPotsQueryKey() });
+      await queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
     },
     onError: (error) => {
       Logger.info("Money could not be withdrawn", error);

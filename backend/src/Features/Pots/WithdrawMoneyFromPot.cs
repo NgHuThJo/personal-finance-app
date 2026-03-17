@@ -40,7 +40,9 @@ public class WithdrawMoneyFromPotValidator
 
 public static class WithdrawMoneyFromPotEndpoint
 {
-    public static async Task<Results<ProblemHttpResult, NoContent>> Withdraw(
+    public static async Task<
+        Results<ProblemHttpResult, NoContent>
+    > WithdrawMoneyFromPot(
         [FromRoute] int potId,
         [FromBody] WithdrawMoneyFromPotRequest command,
         [FromServices] WithdrawMoneyFromPotHandler handler

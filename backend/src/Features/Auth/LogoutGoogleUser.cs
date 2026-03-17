@@ -5,7 +5,7 @@ namespace backend.Src.Features;
 
 public static class LogoutGoogleUserEndpoint
 {
-    public static async Task<RedirectHttpResult> Logout(
+    public static async Task<RedirectHttpResult> LogoutGoogleUser(
         HttpContext httpContext,
         CancellationToken _
     )
