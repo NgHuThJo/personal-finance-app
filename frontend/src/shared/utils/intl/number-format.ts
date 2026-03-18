@@ -24,6 +24,7 @@ class NumberFormatter {
   getPercentOptions(): Intl.NumberFormatOptions {
     return {
       style: "percent",
+      minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     };
   }

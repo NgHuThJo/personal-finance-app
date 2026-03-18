@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import styles from "./withdraw-money.module.css";
+import { PotProgressBar } from "#frontend/features/pots/components/pot-progress-bar";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
 import type {
@@ -24,7 +25,6 @@ import {
 } from "#frontend/shared/primitives/dialog";
 import { Field, FieldLabel } from "#frontend/shared/primitives/field";
 import { Input } from "#frontend/shared/primitives/input";
-import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
 import { makeZodErrorsUserFriendly } from "#frontend/shared/utils/zod";
 
 type WithdrawMoneyDialogProps = {
@@ -70,7 +70,6 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
   const handleWithdrawSubmit = handleSubmit((data) => {
     const convertedData: WithdrawMoneyFromPotRequest = {
       ...data,
-      potId: data.potId,
     };
 
     const validationResult = zWithdrawMoneyFromPotRequest.safeParse(
@@ -110,6 +109,9 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
 
     mutate({
       body: validationResult.data,
+      path: {
+        potId: potData.id,
+      },
     });
   });
 
@@ -127,49 +129,15 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
           will reduce the amount you have in this pot.
         </DialogDescription>
         <form className={styles["dialog"]} onSubmit={handleWithdrawSubmit}>
-          <div className={styles["dialog-header"]}>
-            <span className={styles["total-label"]}>Total saved</span>
-            <span className={styles["total-number"]}>
-              {numberFormatter.formatNumber({
-                number: total,
-                options: numberFormatter.getDollarOptions(),
-              })}
-            </span>
-          </div>
-          <div className={styles["dialog-progress"]}>
-            <div
-              className={styles["dialog-progress-bar"]}
-              style={{
-                "--width-progress-bar": `${Math.round((total / target) * 100)}%`,
-              }}
-            ></div>
-          </div>
-          <div className={styles["dialog-footer"]}>
-            <span className={styles["percent-number"]}>
-              {numberFormatter.formatNumber({
-                number: total / target,
-                options: numberFormatter.getPercentOptions(),
-              })}
-            </span>
-            <span className={styles["target-number"]}>
-              Target of&nbsp;
-              {numberFormatter.formatNumber({
-                number: target,
-                options: numberFormatter.getDollarOptions(),
-              })}
-            </span>
-          </div>
+          <PotProgressBar
+            description="New Amount"
+            total={potData.total}
+            target={potData.target}
+          />
           <Field>
             <FieldLabel htmlFor="withdraw-amount">
               Amount to withdraw
             </FieldLabel>
-            <Input
-              type="hidden"
-              {...register("potId", {
-                value: id,
-              })}
-              defaultValue={id}
-            />
             <Input
               type="number"
               id="withdraw-amount"

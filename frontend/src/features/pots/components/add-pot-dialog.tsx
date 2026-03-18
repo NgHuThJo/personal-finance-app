@@ -70,8 +70,6 @@ export function AddPotDialog() {
     },
   });
 
-  console.log("error in addpot", errors);
-
   const handleAddPotSubmit = handleSubmit((data) => {
     const convertedData: CreatePotRequest = {
       name: data.name,
