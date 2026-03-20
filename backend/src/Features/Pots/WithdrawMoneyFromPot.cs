@@ -12,21 +12,40 @@ public static partial class WithdrawMoneyFromPotLogger
 {
     [LoggerMessage(
         Level = LogLevel.Information,
-        Message = "PotId {PotId} does not exist"
+        Message = "Pot with ID {PotId} does not exist"
     )]
-    public static partial void PotIdDoesNotExist(ILogger logger, int potId);
+    public static partial void PotDoesNotExist(ILogger logger, int potId);
+
+    [LoggerMessage(
+        Level = LogLevel.Information,
+        Message = "Balance of user with ID {UserId} does not exist"
+    )]
+    public static partial void BalanceDoesNotExist(ILogger logger, int userId);
+
+    [LoggerMessage(
+        Level = LogLevel.Information,
+        Message = "Insufficient funds to withdraw from pot"
+    )]
+    public static partial void InsufficientFunds(ILogger logger);
 }
 
-public abstract record WithdrawMoneyFromPotResult;
+public abstract record WithdrawMoneyFromPotResult
+{
+    public record PotNotFound(int PotId) : WithdrawMoneyFromPotResult;
 
-public record PotNotFound(int PotId) : WithdrawMoneyFromPotResult;
+    public record BalanceNotFound(int UserId) : WithdrawMoneyFromPotResult;
 
-public record MoneyWithdrawn : WithdrawMoneyFromPotResult;
+    public record InsufficientFunds : WithdrawMoneyFromPotResult;
+
+    public record NegativeAmount : WithdrawMoneyFromPotResult;
+
+    public record Success : WithdrawMoneyFromPotResult;
+}
 
 public record WithdrawMoneyFromPotRequest
 {
     [Range(0, double.MaxValue)]
-    public required decimal MoneyWithdrawn { get; init; }
+    public required decimal WithdrawAmount { get; init; }
 }
 
 public class WithdrawMoneyFromPotValidator
@@ -34,7 +53,7 @@ public class WithdrawMoneyFromPotValidator
 {
     public WithdrawMoneyFromPotValidator()
     {
-        RuleFor(m => m.MoneyWithdrawn).GreaterThan(0);
+        RuleFor(m => m.WithdrawAmount).GreaterThan(0);
     }
 }
 
@@ -44,19 +63,33 @@ public static class WithdrawMoneyFromPotEndpoint
         Results<ProblemHttpResult, NoContent>
     > WithdrawMoneyFromPot(
         [FromRoute] int potId,
+        [FromServices] CurrentUser user,
         [FromBody] WithdrawMoneyFromPotRequest command,
-        [FromServices] WithdrawMoneyFromPotHandler handler
+        [FromServices] WithdrawMoneyFromPotHandler handler,
+        CancellationToken ct
     )
     {
-        var result = await handler.Handle(command, potId);
+        var result = await handler.Handle(command, potId, user.UserId, ct);
 
         return result switch
         {
-            PotNotFound(int notFoundPotId) =>
+            WithdrawMoneyFromPotResult.PotNotFound(int notFoundPotId) =>
                 TypedResultsProblemDetails.UnprocessableContent(
-                    $"PotId {notFoundPotId} not found"
+                    $"Pot with ID {notFoundPotId} not found"
                 ),
-            MoneyWithdrawn => TypedResults.NoContent(),
+            WithdrawMoneyFromPotResult.BalanceNotFound(int notFoundUserId) =>
+                TypedResultsProblemDetails.UnprocessableContent(
+                    $"No balance of user with ID {notFoundUserId} found"
+                ),
+            WithdrawMoneyFromPotResult.NegativeAmount =>
+                TypedResultsProblemDetails.UnprocessableContent(
+                    "Amount must not be negative"
+                ),
+            WithdrawMoneyFromPotResult.InsufficientFunds =>
+                TypedResultsProblemDetails.UnprocessableContent(
+                    "Insufficient funds"
+                ),
+            WithdrawMoneyFromPotResult.Success => TypedResults.NoContent(),
             _ => throw new NotSupportedException(),
         };
     }
@@ -72,26 +105,63 @@ public class WithdrawMoneyFromPotHandler(
 
     public async Task<WithdrawMoneyFromPotResult> Handle(
         WithdrawMoneyFromPotRequest command,
-        int potId
+        int potId,
+        int userId,
+        CancellationToken ct = default
     )
     {
-        var pot = await _context
-            .Pots.Where(p => p.Id == potId)
-            .FirstOrDefaultAsync();
+        // Start transaction
+        await using var transaction =
+            await _context.Database.BeginTransactionAsync(ct);
+
+        var potTask = _context
+            .Pots.Where(p => p.Id == potId && p.UserId == userId)
+            .FirstOrDefaultAsync(ct);
+        var balanceTask = _context
+            .Balances.Where(b => b.UserId == userId)
+            .FirstOrDefaultAsync(ct);
+
+        await Task.WhenAll(potTask, balanceTask);
+
+        var pot = potTask.Result;
+        var balance = balanceTask.Result;
 
         if (pot is null)
         {
-            WithdrawMoneyFromPotLogger.PotIdDoesNotExist(_logger, potId);
-            return new PotNotFound(potId);
+            WithdrawMoneyFromPotLogger.PotDoesNotExist(_logger, potId);
+            return new WithdrawMoneyFromPotResult.PotNotFound(potId);
         }
 
-        var newPotTotal = pot.Total - command.MoneyWithdrawn;
+        if (balance is null)
+        {
+            WithdrawMoneyFromPotLogger.BalanceDoesNotExist(_logger, userId);
+            return new WithdrawMoneyFromPotResult.BalanceNotFound(userId);
+        }
 
-        pot.Total = newPotTotal < 0 ? 0 : newPotTotal;
+        var withdrawalResult = PotsExtensions.WithdrawMoney(
+            balance.Current,
+            pot.Total,
+            command.WithdrawAmount
+        );
 
-        _context.Update(pot);
-        await _context.SaveChangesAsync();
+        if (!withdrawalResult.IsSuccess)
+        {
+            return withdrawalResult.Error switch
+            {
+                PotsError.NegativeAmount =>
+                    new WithdrawMoneyFromPotResult.NegativeAmount(),
+                PotsError.InsufficientFunds =>
+                    new WithdrawMoneyFromPotResult.InsufficientFunds(),
+                _ => throw new InvalidOperationException("Invalid withdrawal"),
+            };
+        }
 
-        return new MoneyWithdrawn();
+        var (newBalance, newPotTotal) = withdrawalResult.Value;
+        balance.Current = newBalance;
+        pot.Total = newPotTotal;
+        await _context.SaveChangesAsync(ct);
+        await transaction.CommitAsync(ct);
+
+        return new WithdrawMoneyFromPotResult.Success();
     }
 }
