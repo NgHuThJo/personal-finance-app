@@ -3,7 +3,7 @@
 import { z } from 'zod';
 
 export const zAddMoneyToPotRequest = z.object({
-    moneyAdded: z.number()
+    addAmount: z.number()
 });
 
 export const zCreatePotRequest = z.object({
@@ -74,7 +74,7 @@ export const zSignUpUserResponse = z.object({
 });
 
 export const zWithdrawMoneyFromPotRequest = z.object({
-    moneyWithdrawn: z.number().gte(0)
+    withdrawAmount: z.number().gte(0)
 });
 
 export const zGetUserByIdData = z.object({

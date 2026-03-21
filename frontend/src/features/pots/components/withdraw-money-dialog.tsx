@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import styles from "./withdraw-money.module.css";
 import { PotProgressBar } from "#frontend/features/pots/components/pot-progress-bar";
 import { clientWithAuth } from "#frontend/shared/api/client";
@@ -23,7 +23,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "#frontend/shared/primitives/dialog";
-import { Field, FieldLabel } from "#frontend/shared/primitives/field";
+import {
+  Field,
+  FieldError,
+  FieldLabel,
+} from "#frontend/shared/primitives/field";
 import { Input } from "#frontend/shared/primitives/input";
 import { makeZodErrorsUserFriendly } from "#frontend/shared/utils/zod";
 
@@ -31,9 +35,11 @@ type WithdrawMoneyDialogProps = {
   potData: GetAllPotsResponse;
 };
 
-export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
+export function WithdrawMoneyDialog({
+  potData: { id, name, target, total },
+}: WithdrawMoneyDialogProps) {
   const {
-    register,
+    control,
     handleSubmit,
     setError,
     formState: { errors },
@@ -65,29 +71,26 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
       }
     },
   });
-  const { id, name, target, total } = potData;
+  const draftAmount = useWatch({
+    control,
+    name: "withdrawAmount",
+    defaultValue: 0,
+  });
 
   const handleWithdrawSubmit = handleSubmit((data) => {
-    const convertedData: WithdrawMoneyFromPotRequest = {
-      ...data,
-    };
-
-    const validationResult = zWithdrawMoneyFromPotRequest.safeParse(
-      convertedData,
-      {
-        error: (iss) => {
-          if (iss.code === "invalid_type") {
-            return `Invalid type expected ${iss.expected}`;
-          }
-          if (iss.code === "too_small") {
-            return `Minimum is ${iss.minimum}`;
-          }
-          if (iss.code === "too_big") {
-            return `Maximum is ${iss.maximum}`;
-          }
-        },
+    const validationResult = zWithdrawMoneyFromPotRequest.safeParse(data, {
+      error: (iss) => {
+        if (iss.code === "invalid_type") {
+          return `Invalid type expected ${iss.expected}`;
+        }
+        if (iss.code === "too_small") {
+          return `Minimum is ${iss.minimum}`;
+        }
+        if (iss.code === "too_big") {
+          return `Maximum is ${iss.maximum}`;
+        }
       },
-    );
+    });
 
     if (!validationResult.success) {
       const userFriendlyErrors = makeZodErrorsUserFriendly(
@@ -110,7 +113,7 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
     mutate({
       body: validationResult.data,
       path: {
-        potId: potData.id,
+        potId: id,
       },
     });
   });
@@ -131,44 +134,59 @@ export function WithdrawMoneyDialog({ potData }: WithdrawMoneyDialogProps) {
         <form className={styles["dialog"]} onSubmit={handleWithdrawSubmit}>
           <PotProgressBar
             description="New Amount"
-            total={potData.total}
-            target={potData.target}
+            total={total - draftAmount}
+            target={target}
           />
           <Field>
             <FieldLabel htmlFor="withdraw-amount">
               Amount to withdraw
             </FieldLabel>
-            <Input
-              type="number"
-              id="withdraw-amount"
-              step="any"
-              placeholder="Enter an amount to withdraw..."
-              {...register("moneyWithdrawn", {
-                required: "Amount to withdraw required",
-                min: {
-                  value: 0.01,
-                  message: "Minimum of 0.01",
+            <Controller
+              control={control}
+              name="withdrawAmount"
+              rules={{
+                required: "Amount is required",
+                validate: {
+                  isNumber: (value) =>
+                    !Number.isNaN(value) || "Must be a number",
+                  positive: (value) => value > 0 || "Must be greater 0",
+                  withinTotal: (value) =>
+                    value <= total || `Max is ${total - value}`,
                 },
-                max: {
-                  value: target,
-                  message: `Maximum of ${target}`,
-                },
-                valueAsNumber: true,
-              })}
-            />
-            {errors.moneyWithdrawn && (
-              <span className={styles["field-error"]}>
-                {errors.moneyWithdrawn?.message}
-              </span>
-            )}
-            {errors.root?.["server-unprocessable-content"] && (
-              <span
-                className={styles["field-error"]}
-                data-testid="server-unprocessable-content"
-              >
-                {errors.root?.["server-unprocessable-content"]?.message}
-              </span>
-            )}
+              }}
+              render={({ field }) => (
+                <>
+                  <Input
+                    {...field}
+                    type="number"
+                    id="withdraw-amount"
+                    step="any"
+                    placeholder="Enter an amount to withdraw..."
+                    onChange={(e) => {
+                      let convertedValue = e.currentTarget.valueAsNumber;
+
+                      if (Number.isNaN(convertedValue) || convertedValue < 0) {
+                        convertedValue = 0;
+                      }
+
+                      if (convertedValue > total) {
+                        convertedValue = total;
+                      }
+
+                      field.onChange(convertedValue);
+                    }}
+                  />
+                  {errors.withdrawAmount && (
+                    <FieldError>{errors.withdrawAmount?.message}</FieldError>
+                  )}
+                  {errors.root?.["server-unprocessable-content"] && (
+                    <FieldError data-testid="server-unprocessable-content">
+                      {errors.root?.["server-unprocessable-content"]?.message}
+                    </FieldError>
+                  )}
+                </>
+              )}
+            ></Controller>
           </Field>
           <Button variant="cta-primary" type="submit">
             Confirm Withdrawal

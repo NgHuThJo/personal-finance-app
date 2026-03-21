@@ -5,7 +5,7 @@ export type ClientOptions = {
 };
 
 export type AddMoneyToPotRequest = {
-    moneyAdded: number;
+    addAmount: number;
 };
 
 export type CreatePotRequest = {
@@ -61,7 +61,7 @@ export type SignUpUserResponse = {
 };
 
 export type WithdrawMoneyFromPotRequest = {
-    moneyWithdrawn: number;
+    withdrawAmount: number;
 };
 
 export type GetUserByIdData = {
@@ -163,6 +163,15 @@ export type AddMoneyToPotData = {
     query?: never;
     url: '/v1/pots/{potId}/addition';
 };
+
+export type AddMoneyToPotErrors = {
+    /**
+     * Unprocessable Entity
+     */
+    422: ProblemDetails;
+};
+
+export type AddMoneyToPotError = AddMoneyToPotErrors[keyof AddMoneyToPotErrors];
 
 export type AddMoneyToPotResponses = {
     /**

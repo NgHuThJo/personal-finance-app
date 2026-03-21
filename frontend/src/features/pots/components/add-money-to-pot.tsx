@@ -4,11 +4,15 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import styles from "./add-money-to-pot.module.css";
 import { PotProgressBar } from "#frontend/features/pots/components/pot-progress-bar";
 import { clientWithAuth } from "#frontend/shared/api/client";
+import { Logger } from "#frontend/shared/app/logging";
 import type {
   AddMoneyToPotRequest,
   GetAllPotsResponse,
 } from "#frontend/shared/client";
-import { addMoneyToPotMutation } from "#frontend/shared/client/@tanstack/react-query.gen";
+import {
+  addMoneyToPotMutation,
+  getAllPotsQueryKey,
+} from "#frontend/shared/client/@tanstack/react-query.gen";
 import { Button } from "#frontend/shared/primitives/button";
 import {
   Dialog,
@@ -28,12 +32,15 @@ type AddMoneyToPotProps = {
   potData: GetAllPotsResponse;
 };
 
-export function AddMoneyToPotDialog({ potData }: AddMoneyToPotProps) {
+export function AddMoneyToPotDialog({
+  potData: { id, name, target, total },
+}: AddMoneyToPotProps) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
   const {
     handleSubmit,
     control,
+    setError,
     formState: { errors },
   } = useForm<AddMoneyToPotRequest>({
     mode: "onChange",
@@ -44,23 +51,40 @@ export function AddMoneyToPotDialog({ potData }: AddMoneyToPotProps) {
       client: clientWithAuth,
       credentials: "include",
     }),
+    onSuccess: async () => {
+      Logger.info("Money successfully deposited in pot");
+      await queryClient.invalidateQueries({
+        queryKey: getAllPotsQueryKey(),
+      });
+    },
+    onError: (error) => {
+      Logger.info("Deposit to pot failed", error);
+
+      switch (error.status) {
+        case 422: {
+          setError("root.server-unprocessable-content", {
+            type: String(error.type),
+            message: String(error.detail),
+          });
+          break;
+        }
+        default: {
+          Logger.error(`Unknown error in ${AddMoneyToPotDialog.name}`);
+        }
+      }
+    },
   });
-  const { id, total, target, name } = potData;
   const amountToAdd = useWatch({
-    name: "moneyAdded",
+    name: "addAmount",
     defaultValue: 0,
     control,
   });
 
   const handleAddPotSubmit = handleSubmit((data) => {
-    const convertedData: AddMoneyToPotRequest = {
-      moneyAdded: 5,
-    };
-
     mutate({
-      body: convertedData,
+      body: data,
       path: {
-        potId: potData.id,
+        potId: id,
       },
     });
   });
@@ -88,14 +112,14 @@ export function AddMoneyToPotDialog({ potData }: AddMoneyToPotProps) {
           <Field>
             <FieldLabel htmlFor="money-added">Amount to add</FieldLabel>
             <Controller
-              name="moneyAdded"
+              name="addAmount"
               control={control}
               rules={{
                 required: "Amount is required",
                 validate: {
                   isNumber: (value) =>
                     !Number.isNaN(value) || "Must be a number",
-                  nonNegative: (value) => value >= 0 || "Cannot be negative",
+                  positive: (value) => value > 0 || "Must be greater 0",
                   withinTarget: (value) =>
                     value + total <= target || `Max is ${target - total}`,
                 },
@@ -122,12 +146,12 @@ export function AddMoneyToPotDialog({ potData }: AddMoneyToPotProps) {
                       field.onChange(convertedValue);
                     }}
                   />
-                  {errors.moneyAdded && (
-                    <FieldError>{errors.moneyAdded?.message}</FieldError>
+                  {errors.addAmount && (
+                    <FieldError>{errors.addAmount?.message}</FieldError>
                   )}
-                  {errors.root?.["server-bad-request"] && (
+                  {errors.root?.["server-unprocessable-content"] && (
                     <FieldError>
-                      {errors.root["server-bad-request"].message}
+                      {errors.root["server-unprocessable-content"].message}
                     </FieldError>
                   )}
                 </>

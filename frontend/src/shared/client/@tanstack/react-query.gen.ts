@@ -4,7 +4,7 @@ import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanst
 
 import { client } from '../client.gen';
 import { addMoneyToPot, createPot, createRefreshToken, getAllPots, getBalanceById, getUserById, loginGoogleUser, loginUser, logoutGoogleUser, logoutUser, type Options, signUpUser, withdrawMoneyFromPot } from '../sdk.gen';
-import type { AddMoneyToPotData, AddMoneyToPotResponse, CreatePotData, CreatePotError, CreateRefreshTokenData, CreateRefreshTokenError, CreateRefreshTokenResponse2, GetAllPotsData, GetAllPotsResponse2, GetBalanceByIdData, GetBalanceByIdError, GetBalanceByIdResponse2, GetUserByIdData, GetUserByIdError, GetUserByIdResponse2, LoginGoogleUserData, LoginUserData, LoginUserError, LoginUserResponse, LogoutGoogleUserData, LogoutUserData, LogoutUserError, LogoutUserResponse, SignUpUserData, SignUpUserError, SignUpUserResponse2, WithdrawMoneyFromPotData, WithdrawMoneyFromPotError, WithdrawMoneyFromPotResponse } from '../types.gen';
+import type { AddMoneyToPotData, AddMoneyToPotError, AddMoneyToPotResponse, CreatePotData, CreatePotError, CreateRefreshTokenData, CreateRefreshTokenError, CreateRefreshTokenResponse2, GetAllPotsData, GetAllPotsResponse2, GetBalanceByIdData, GetBalanceByIdError, GetBalanceByIdResponse2, GetUserByIdData, GetUserByIdError, GetUserByIdResponse2, LoginGoogleUserData, LoginUserData, LoginUserError, LoginUserResponse, LogoutGoogleUserData, LogoutUserData, LogoutUserError, LogoutUserResponse, SignUpUserData, SignUpUserError, SignUpUserResponse2, WithdrawMoneyFromPotData, WithdrawMoneyFromPotError, WithdrawMoneyFromPotResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -97,8 +97,8 @@ export const withdrawMoneyFromPotMutation = (options?: Partial<Options<WithdrawM
     return mutationOptions;
 };
 
-export const addMoneyToPotMutation = (options?: Partial<Options<AddMoneyToPotData>>): UseMutationOptions<AddMoneyToPotResponse, DefaultError, Options<AddMoneyToPotData>> => {
-    const mutationOptions: UseMutationOptions<AddMoneyToPotResponse, DefaultError, Options<AddMoneyToPotData>> = {
+export const addMoneyToPotMutation = (options?: Partial<Options<AddMoneyToPotData>>): UseMutationOptions<AddMoneyToPotResponse, AddMoneyToPotError, Options<AddMoneyToPotData>> => {
+    const mutationOptions: UseMutationOptions<AddMoneyToPotResponse, AddMoneyToPotError, Options<AddMoneyToPotData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await addMoneyToPot({
                 ...options,

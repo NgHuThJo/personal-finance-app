@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AddMoneyToPotData, AddMoneyToPotResponses, CreatePotData, CreatePotErrors, CreatePotResponses, CreateRefreshTokenData, CreateRefreshTokenErrors, CreateRefreshTokenResponses, GetAllPotsData, GetAllPotsResponses, GetBalanceByIdData, GetBalanceByIdErrors, GetBalanceByIdResponses, GetUserByIdData, GetUserByIdErrors, GetUserByIdResponses, LoginGoogleUserData, LoginGoogleUserResponses, LoginUserData, LoginUserErrors, LoginUserResponses, LogoutGoogleUserData, LogoutGoogleUserResponses, LogoutUserData, LogoutUserErrors, LogoutUserResponses, SignUpUserData, SignUpUserErrors, SignUpUserResponses, WithdrawMoneyFromPotData, WithdrawMoneyFromPotErrors, WithdrawMoneyFromPotResponses } from './types.gen';
+import type { AddMoneyToPotData, AddMoneyToPotErrors, AddMoneyToPotResponses, CreatePotData, CreatePotErrors, CreatePotResponses, CreateRefreshTokenData, CreateRefreshTokenErrors, CreateRefreshTokenResponses, GetAllPotsData, GetAllPotsResponses, GetBalanceByIdData, GetBalanceByIdErrors, GetBalanceByIdResponses, GetUserByIdData, GetUserByIdErrors, GetUserByIdResponses, LoginGoogleUserData, LoginGoogleUserResponses, LoginUserData, LoginUserErrors, LoginUserResponses, LogoutGoogleUserData, LogoutGoogleUserResponses, LogoutUserData, LogoutUserErrors, LogoutUserResponses, SignUpUserData, SignUpUserErrors, SignUpUserResponses, WithdrawMoneyFromPotData, WithdrawMoneyFromPotErrors, WithdrawMoneyFromPotResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -40,7 +40,7 @@ export const withdrawMoneyFromPot = <ThrowOnError extends boolean = false>(optio
     }
 });
 
-export const addMoneyToPot = <ThrowOnError extends boolean = false>(options: Options<AddMoneyToPotData, ThrowOnError>) => (options.client ?? client).patch<AddMoneyToPotResponses, unknown, ThrowOnError>({
+export const addMoneyToPot = <ThrowOnError extends boolean = false>(options: Options<AddMoneyToPotData, ThrowOnError>) => (options.client ?? client).patch<AddMoneyToPotResponses, AddMoneyToPotErrors, ThrowOnError>({
     url: '/v1/pots/{potId}/addition',
     ...options,
     headers: {
