@@ -22,13 +22,13 @@ public static class PotFaker
 
     public static WithdrawMoneyFromPotRequest WithdrawMoneyFromPotRequest() =>
         new Faker<WithdrawMoneyFromPotRequest>()
-            .RuleFor(p => p.MoneyWithdrawn, (Faker f) => f.Random.Decimal())
+            .RuleFor(p => p.WithdrawAmount, (Faker f) => f.Random.Decimal())
             .UseSeed(TestConstants.TESTDATA_SEED_IN_TEST_CLASSES)
             .Generate();
 
     public static AddMoneyToPotRequest AddMoneyToPotRequest() =>
         new Faker<AddMoneyToPotRequest>()
-            .RuleFor(p => p.MoneyAdded, (Faker f) => f.Random.Decimal())
+            .RuleFor(p => p.AddAmount, (Faker f) => f.Random.Decimal())
             .UseSeed(TestConstants.TESTDATA_SEED_IN_TEST_CLASSES)
             .Generate();
 }
