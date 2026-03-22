@@ -38,8 +38,8 @@ public static class RouteGrouper
         var group = app.MapGroup("/v1/balances");
         group.RequireAuthorization().RequireRateLimiting("per-user");
         group
-            .MapGet("", GetBalanceByIdEndpoint.GetBalanceById)
-            .WithName(nameof(GetBalanceByIdEndpoint.GetBalanceById))
+            .MapGet("/me", GetBalanceByUserIdEndpoint.GetBalanceByUserId)
+            .WithName(nameof(GetBalanceByUserIdEndpoint.GetBalanceByUserId))
             .ProducesProblem((int)HttpStatusCode.Unauthorized);
 
         return app;
@@ -59,6 +59,16 @@ public static class RouteGrouper
             .MapGet("", GetAllPotsEndpoint.GetAllPots)
             .WithName(nameof(GetAllPotsEndpoint.GetAllPots));
         group
+            .MapDelete("/{potId:int}", DeletePotEndpoint.DeletePot)
+            .WithName(nameof(DeletePotEndpoint.DeletePot))
+            .AddIdValidationFilter()
+            .ProducesProblem((int)HttpStatusCode.UnprocessableEntity);
+        group
+            .MapPut("/{potId:int}", EditPotEndpoint.EditPot)
+            .WithName(nameof(EditPotEndpoint.EditPot))
+            .AddIdValidationFilter()
+            .ProducesProblem((int)HttpStatusCode.UnprocessableEntity);
+        group
             .MapPatch(
                 "/{potId:int}/withdrawal",
                 WithdrawMoneyFromPotEndpoint.WithdrawMoneyFromPot
@@ -74,7 +84,8 @@ public static class RouteGrouper
             )
             .WithName(nameof(AddMoneyToPotEndpoint.AddMoneyToPot))
             .AddIdValidationFilter()
-            .AddValidationFilter<AddMoneyToPotRequest>();
+            .AddValidationFilter<AddMoneyToPotRequest>()
+            .ProducesProblem((int)HttpStatusCode.UnprocessableEntity);
 
         return app;
     }

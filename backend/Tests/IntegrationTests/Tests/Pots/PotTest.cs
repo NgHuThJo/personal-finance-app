@@ -78,13 +78,13 @@ public class PotApiTest(DatabaseFixture dbFixture)
         var jsonContent = JsonContent.Create(fakeData);
         var path = $"{_uriPath}/1/withdrawal";
         // Act
-        var putResponse = await Client.PatchAsync(
+        var patchResponse = await Client.PatchAsync(
             path,
             jsonContent,
             TestContext.Current.CancellationToken
         );
         // Assert
-        putResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        patchResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
 
     [Fact]
@@ -95,17 +95,17 @@ public class PotApiTest(DatabaseFixture dbFixture)
         var jsonContent = JsonContent.Create(fakeData);
         var path = $"{_uriPath}/1000/withdrawal";
         // Act
-        var putResponse = await Client.PatchAsync(
+        var patchResponse = await Client.PatchAsync(
             path,
             jsonContent,
             TestContext.Current.CancellationToken
         );
         // Assert
-        putResponse
+        patchResponse
             .StatusCode.Should()
             .Be(HttpStatusCode.UnprocessableContent);
         var content =
-            await putResponse.Content.ReadFromJsonAsync<ProblemDetails>(
+            await patchResponse.Content.ReadFromJsonAsync<ProblemDetails>(
                 TestContext.Current.CancellationToken
             );
         content.Should().NotBeNull();
@@ -121,13 +121,13 @@ public class PotApiTest(DatabaseFixture dbFixture)
         var jsonContent = JsonContent.Create(fakeData);
         var path = $"{_uriPath}/1/addition";
         // Act
-        var putResponse = await Client.PatchAsync(
+        var patchResponse = await Client.PatchAsync(
             path,
             jsonContent,
             TestContext.Current.CancellationToken
         );
         // Assert
-        putResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        patchResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
 
     [Fact]
@@ -138,19 +138,36 @@ public class PotApiTest(DatabaseFixture dbFixture)
         var jsonContent = JsonContent.Create(fakeData);
         var path = $"{_uriPath}/1000/addition";
         // Act
-        var putResponse = await Client.PatchAsync(
+        var patchResponse = await Client.PatchAsync(
             path,
             jsonContent,
             TestContext.Current.CancellationToken
         );
         // Assert
-        putResponse
+        patchResponse
             .StatusCode.Should()
             .Be(HttpStatusCode.UnprocessableContent);
         var responseBody =
-            await putResponse.Content.ReadFromJsonAsync<ProblemDetails>(
+            await patchResponse.Content.ReadFromJsonAsync<ProblemDetails>(
                 TestContext.Current.CancellationToken
             );
         responseBody?.Detail.Should().NotBeNullOrEmpty();
+    }
+
+    [Fact]
+    public async Task EditPot_IfSuccess_Return204()
+    {
+        // Arrange
+        var fakeData = PotFaker.EditPotRequest();
+        var jsonContent = JsonContent.Create(fakeData);
+        var path = $"{_uriPath}/1";
+        // Act
+        var putResponse = await Client.PutAsync(
+            path,
+            jsonContent,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        putResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
 }

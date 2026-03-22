@@ -1,7 +1,6 @@
 using backend.Src.Invariants;
 using backend.Src.Models;
 using backend.Src.Shared;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace backend.Src.Features;
 

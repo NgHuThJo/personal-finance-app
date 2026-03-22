@@ -20,16 +20,6 @@ public static partial class DeletePotLogger
         Message = "Balance of user with ID {UserId} does not exist"
     )]
     public static partial void BalanceDoesNotExist(ILogger logger, int userId);
-
-    [LoggerMessage(
-        Level = LogLevel.Information,
-        Message = "Invalid Delete in pot with potID {PotId} and userID {UserId}"
-    )]
-    public static partial void TransferFailed(
-        ILogger logger,
-        int potId,
-        int userId
-    );
 }
 
 public static class DeletePotEndpoint
@@ -50,11 +40,11 @@ public static class DeletePotEndpoint
                 {
                     PotError.PotNotFound(int nonExistentPotId) =>
                         TypedResultsProblemDetails.UnprocessableContent(
-                            $"Pot does not exist with Id {nonExistentPotId}"
+                            $"Pot does not exist with ID {nonExistentPotId}"
                         ),
                     PotError.BalanceNotFound(int nonExistentUserId) =>
                         TypedResultsProblemDetails.UnprocessableContent(
-                            $"Balance of user with Id  {nonExistentUserId}"
+                            $"Balance of user with ID  {nonExistentUserId}"
                         ),
                     _ => throw new NotSupportedException(
                         $"An unknown error occurred in {nameof(DeletePot)}"
