@@ -137,12 +137,7 @@ public class WithdrawMoneyFromPotHandler(
             return new WithdrawMoneyFromPotResult.BalanceNotFound(userId);
         }
 
-        var potState = new PotState
-        {
-            BalanceCurrent = balance.Current,
-            PotTotal = pot.Total,
-            PotTarget = pot.Target,
-        };
+        var potState = PotState.From(pot, balance);
 
         var draftResult = PotExtensions.DraftFromPot(
             potState,
@@ -172,15 +167,10 @@ public class WithdrawMoneyFromPotHandler(
             ;
         }
 
-        await using var transaction =
-            await _context.Database.BeginTransactionAsync(ct);
-
         var newState = draftResult.Value;
         balance.Current = newState.BalanceCurrent;
         pot.Total = newState.PotTotal;
         await _context.SaveChangesAsync(ct);
-
-        await transaction.CommitAsync(ct);
 
         return new WithdrawMoneyFromPotResult.Success();
     }

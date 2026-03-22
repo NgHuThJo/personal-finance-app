@@ -49,10 +49,11 @@ public sealed class CreatePotEndpoint
     public static async Task<Results<Created, ProblemHttpResult>> CreatePot(
         [FromBody] CreatePotRequest command,
         [FromServices] CurrentUser user,
-        [FromServices] CreatePotHandler handler
+        [FromServices] CreatePotHandler handler,
+        CancellationToken ct
     )
     {
-        var newPot = await handler.Handle(command, user.UserId);
+        var newPot = await handler.Handle(command, user.UserId, ct);
 
         return newPot switch
         {
@@ -78,13 +79,14 @@ public class CreatePotHandler(
 
     public async Task<CreatePotResult> Handle(
         CreatePotRequest command,
-        int userId
+        int userId,
+        CancellationToken ct
     )
     {
         var usedPotName = await _context
             .Pots.Where(p => p.Name == command.Name)
             .Select(p => p.Name)
-            .SingleOrDefaultAsync();
+            .SingleOrDefaultAsync(ct);
 
         if (usedPotName is not null)
         {
@@ -101,7 +103,7 @@ public class CreatePotHandler(
 
         _context.Pots.Add(newPot);
 
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(ct);
 
         return new PotSuccessfullyCreated();
     }

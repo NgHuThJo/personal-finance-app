@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Src.Features;
 
-public static partial class AddMoneyToPotLogger
+public static partial class EditPotLogger
 {
     [LoggerMessage(
         Level = LogLevel.Error,
@@ -16,47 +16,45 @@ public static partial class AddMoneyToPotLogger
     public static partial void PotDoesNotExist(ILogger logger, int potId);
 
     [LoggerMessage(
-        Level = LogLevel.Information,
+        Level = LogLevel.Error,
         Message = "Balance of user with ID {UserId} does not exist"
     )]
     public static partial void BalanceDoesNotExist(ILogger logger, int userId);
 
     [LoggerMessage(
-        Level = LogLevel.Warning,
-        Message = "Amount cannot be negative"
+        Level = LogLevel.Information,
+        Message = "Invalid edit in pot with potID {PotId} and userID {UserId}"
     )]
-    public static partial void NegativeAmount(ILogger logger);
-
-    [LoggerMessage(
-        Level = LogLevel.Warning,
-        Message = "Insufficient funds to withdraw from pot"
-    )]
-    public static partial void InsufficientFunds(ILogger logger);
+    public static partial void InvalidEdit(
+        ILogger logger,
+        int potId,
+        int userId
+    );
 }
 
-public record AddMoneyToPotRequest
+public record EditPotRequest
 {
-    public required decimal AddAmount { get; set; }
+    public required string PotName { get; set; }
+    public required decimal NewTarget { get; set; }
 }
 
-public class AddMoneyToPotValidator : AbstractValidator<AddMoneyToPotRequest>
+public class EditPotValidator : AbstractValidator<EditPotRequest>
 {
-    public AddMoneyToPotValidator()
+    public EditPotValidator()
     {
-        RuleFor(a => a.AddAmount).GreaterThanOrEqualTo(0);
+        RuleFor(a => a.PotName).MinimumLength(1);
+        RuleFor(a => a.NewTarget).GreaterThanOrEqualTo(0);
     }
 }
 
-public static class AddMoneyToPotEndpoint
+public static class EditPotEndpoint
 {
-    public static async Task<
-        Results<ProblemHttpResult, NoContent>
-    > AddMoneyToPot(
+    public static async Task<Results<ProblemHttpResult, NoContent>> EditPot(
         [FromRoute] int potId,
         [FromServices] CurrentUser user,
-        [FromServices] AddMoneyToPotHandler handler,
-        CancellationToken ct,
-        AddMoneyToPotRequest command
+        [FromServices] EditPotHandler handler,
+        EditPotRequest command,
+        CancellationToken ct
     )
     {
         var result = await handler.Handle(command, potId, user.UserId, ct);
@@ -78,28 +76,28 @@ public static class AddMoneyToPotEndpoint
                         TypedResultsProblemDetails.UnprocessableContent(
                             "Amount cannot be negative"
                         ),
-                    PotError.InsufficientFunds =>
-                        TypedResultsProblemDetails.UnprocessableContent(
-                            "Insufficient funds"
+                    PotError.PotNameAlreadyExists =>
+                        TypedResultsProblemDetails.Conflict(
+                            "Amount cannot be negative"
                         ),
                     _ => throw new NotSupportedException(
-                        $"An unknown error occurred in {nameof(AddMoneyToPot)}"
+                        $"An unknown error occurred in {nameof(EditPot)}"
                     ),
                 }
         );
     }
 }
 
-public class AddMoneyToPotHandler(
+public class EditPotHandler(
     AppDbContext context,
-    ILogger<AddMoneyToPotHandler> logger
+    ILogger<EditPotHandler> logger
 )
 {
     private readonly AppDbContext _context = context;
-    private readonly ILogger<AddMoneyToPotHandler> _logger = logger;
+    private readonly ILogger<EditPotHandler> _logger = logger;
 
     public async Task<Result<Unit, PotError>> Handle(
-        AddMoneyToPotRequest command,
+        EditPotRequest command,
         int potId,
         int userId,
         CancellationToken ct
@@ -114,13 +112,13 @@ public class AddMoneyToPotHandler(
 
         if (pot is null)
         {
-            AddMoneyToPotLogger.PotDoesNotExist(_logger, potId);
+            EditPotLogger.PotDoesNotExist(_logger, potId);
             return Result<Unit, PotError>.Fail(new PotError.PotNotFound(potId));
         }
 
         if (balance is null)
         {
-            AddMoneyToPotLogger.BalanceDoesNotExist(_logger, userId);
+            EditPotLogger.BalanceDoesNotExist(_logger, userId);
             return Result<Unit, PotError>.Fail(
                 new PotError.BalanceNotFound(userId)
             );
@@ -128,36 +126,21 @@ public class AddMoneyToPotHandler(
 
         var state = PotState.From(pot, balance);
 
-        var addMoneyResult = PotExtensions.DepositToPot(
-            state,
-            command.AddAmount
-        );
+        var result = PotExtensions
+            .ChangeName(state, command.PotName)
+            .Bind(s => PotExtensions.ChangeTarget(s, command.NewTarget));
 
-        if (!addMoneyResult.IsSuccess)
+        if (!result.IsSuccess)
         {
-            switch (addMoneyResult.Error)
-            {
-                case PotError.NegativeAmount:
-                {
-                    AddMoneyToPotLogger.NegativeAmount(_logger);
-                    return Result<Unit, PotError>.Fail(addMoneyResult.Error);
-                }
-
-                case PotError.InsufficientFunds:
-                {
-                    AddMoneyToPotLogger.InsufficientFunds(_logger);
-                    return Result<Unit, PotError>.Fail(addMoneyResult.Error);
-                }
-                default:
-                {
-                    throw new InvalidOperationException("Invalid withdrawal");
-                }
-            }
+            EditPotLogger.InvalidEdit(_logger, potId, userId);
+            return Result<Unit, PotError>.Fail(result.Error);
         }
 
-        var newState = addMoneyResult.Value;
+        var newState = result.Value;
 
         balance.Current = newState.BalanceCurrent;
+        pot.Name = newState.PotName;
+        pot.Target = newState.PotTarget;
         pot.Total = newState.PotTotal;
         await _context.SaveChangesAsync(ct);
 

@@ -27,10 +27,11 @@ public sealed class GetAllPotsEndpoint
 {
     public static async Task<Ok<List<GetAllPotsResponse>>> GetAllPots(
         [FromServices] CurrentUser user,
-        [FromServices] GetAllPotsHandler handler
+        [FromServices] GetAllPotsHandler handler,
+        CancellationToken ct
     )
     {
-        var pots = await handler.Handle(user.UserId);
+        var pots = await handler.Handle(user.UserId, ct);
 
         return TypedResults.Ok(pots);
     }
@@ -40,7 +41,10 @@ public class GetAllPotsHandler(AppDbContext context)
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<List<GetAllPotsResponse>> Handle(int userId)
+    public async Task<List<GetAllPotsResponse>> Handle(
+        int userId,
+        CancellationToken ct
+    )
     {
         var pots = await _context
             .Pots.Where(p => p.UserId == userId)
@@ -52,7 +56,7 @@ public class GetAllPotsHandler(AppDbContext context)
                 Name = p.Name,
             })
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(ct);
 
         return pots;
     }

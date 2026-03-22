@@ -1,5 +1,7 @@
 using backend.Src.Invariants;
+using backend.Src.Models;
 using backend.Src.Shared;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace backend.Src.Features;
 
@@ -16,6 +18,8 @@ public abstract record PotError
     public sealed record InsufficientFunds : PotError;
 
     public sealed record PotTargetExceeded : PotError;
+
+    public sealed record PotNameAlreadyExists : PotError;
 }
 
 public record PotState
@@ -23,6 +27,16 @@ public record PotState
     public required decimal BalanceCurrent { get; init; }
     public required decimal PotTotal { get; init; }
     public required decimal PotTarget { get; init; }
+    public required string PotName { get; init; }
+
+    public static PotState From(Pot pot, Balance balance) =>
+        new()
+        {
+            BalanceCurrent = balance.Current,
+            PotName = pot.Name,
+            PotTarget = pot.Target,
+            PotTotal = pot.Total,
+        };
 }
 
 public static class PotExtensions
@@ -93,6 +107,58 @@ public static class PotExtensions
             {
                 BalanceCurrent = newBalance,
                 PotTotal = newPotTotal,
+            }
+        );
+    }
+
+    public static Result<PotState, PotError> ChangeName(
+        PotState state,
+        string name
+    )
+    {
+        if (PotRules.HasSameName(state.PotName, name))
+        {
+            return Result<PotState, PotError>.Fail(
+                new PotError.PotNameAlreadyExists()
+            );
+        }
+
+        return Result<PotState, PotError>.Ok(state with { PotName = name });
+    }
+
+    public static Result<PotState, PotError> ChangeTarget(
+        PotState state,
+        decimal target
+    )
+    {
+        if (target < 0)
+        {
+            return Result<PotState, PotError>.Fail(
+                new PotError.NegativeAmount()
+            );
+        }
+
+        var overflow = Math.Max(0, state.PotTotal - target);
+
+        return Result<PotState, PotError>.Ok(
+            state with
+            {
+                BalanceCurrent = state.BalanceCurrent + overflow,
+                PotTotal = state.PotTotal - overflow,
+                PotTarget = target,
+            }
+        );
+    }
+
+    public static Result<PotState, PotError> TransferDepositToBalance(
+        PotState state
+    )
+    {
+        return Result<PotState, PotError>.Ok(
+            state with
+            {
+                BalanceCurrent = state.BalanceCurrent + state.PotTotal,
+                PotTotal = 0,
             }
         );
     }
