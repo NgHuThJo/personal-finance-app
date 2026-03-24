@@ -5,12 +5,12 @@ namespace backend.Shared.Test;
 
 public static class TransactionFaker
 {
-    public static Faker<Transaction> CreateTransactionFaker() =>
+    public static Faker<Transaction> BaseTransactionFaker() =>
         new Faker<Transaction>()
-            .RuleFor(t => t.Amount, (Faker f) => f.Random.Decimal())
-            .RuleFor(t => t.Created, (Faker f) => f.Date.Recent())
-            .RuleFor(t => t.TransactionDate, (Faker f) => f.Date.Recent())
+            .RuleFor(t => t.Amount, f => f.Random.Decimal(10, 20))
+            .RuleFor(t => t.Created, f => f.Date.Recent())
+            .RuleFor(t => t.TransactionDate, f => f.Date.Recent())
             .RuleFor(t => t.IsRecurring, false)
-            .RuleFor(t => t.Category, (Faker f) => Category.Entertainment)
-            .UseSeed(TestConstants.TESTDATA_SEED_IN_FIXTURE);
+            .RuleFor(t => t.Category, f => FakerExtensions.GetRandomCategory())
+            .UseSeed(TestConstants.TESTDATA_DEV_DB_SEED);
 }

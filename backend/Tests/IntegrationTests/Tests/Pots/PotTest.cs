@@ -170,4 +170,23 @@ public class PotApiTest(DatabaseFixture dbFixture)
         // Assert
         putResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
+
+    [Fact]
+    public async Task EditPot_IfInvalidPotId_Return422()
+    {
+        // Arrange
+        var fakeData = PotFaker.EditPotRequest();
+        var jsonContent = JsonContent.Create(fakeData);
+        var path = $"{_uriPath}/1000";
+        // Act
+        var putResponse = await Client.PutAsync(
+            path,
+            jsonContent,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        putResponse
+            .StatusCode.Should()
+            .Be(HttpStatusCode.UnprocessableContent);
+    }
 }

@@ -5,49 +5,49 @@ namespace backend.Shared.Test;
 
 public static class UserFaker
 {
-    public static Faker<User> CreateUserFaker() =>
+    public static Faker<User> BaseUserFaker() =>
         new Faker<User>()
-            .RuleFor(u => u.Name, (Faker f) => f.Name.FirstName())
-            .RuleFor(u => u.Email, (Faker f) => f.Internet.Email())
-            .RuleFor(u => u.PasswordHash, (Faker f) => f.Internet.Password())
+            .RuleFor(u => u.Name, f => f.Name.FirstName())
+            .RuleFor(u => u.Email, f => f.Internet.Email())
+            .RuleFor(u => u.PasswordHash, f => f.Internet.Password())
             .RuleFor(
                 u => u.Pots,
-                (Faker f) =>
+                f =>
                     PotFaker
-                        .CreatePotFaker()
-                        .Generate(TestConstants.NUMBER_OF_USERS)
+                        .BasePotFaker()
+                        .Generate(TestConstants.TESTDATA_NUMBER_OF_USERS)
             )
             .RuleFor(
                 u => u.Balance,
-                (Faker f) => BalanceFaker.CreateBalanceFaker().Generate()
+                f => BalanceFaker.BaseBalanceFaker().Generate()
             )
             .RuleFor(
                 u => u.Budgets,
-                (Faker f) =>
+                f =>
                     BudgetFaker
-                        .CreateBudgetFaker()
-                        .Generate(TestConstants.NUMBER_OF_USERS)
+                        .BaseBudgetFaker()
+                        .Generate(TestConstants.TESTDATA_NUMBER_OF_USERS)
             )
             // .RuleFor(
             //     u => u.AuthProvider,
-            //     (Faker f) =>
+            //     f =>
             //         UserAuthProviderFaker
             //             .CreateUserAuthProviderFaker()
             //             .Generate()
             // )
             // .RuleFor(
             //     u => u.ReceivedTransactions,
-            //     (Faker f) =>
+            //     f =>
             //         TransactionFaker
             //             .CreateTransactionFaker()
-            //             .Generate(TestConstants.NUMBER_OF_USERS)
+            //             .Generate(TestConstants.TESTDATA_NUMBER_OF_USERS)
             // )
             // .RuleFor(
             //     u => u.SentTransactions,
-            //     (Faker f) =>
+            //     f =>
             //         TransactionFaker
             //             .CreateTransactionFaker()
-            //             .Generate(TestConstants.NUMBER_OF_USERS)
+            //             .Generate(TestConstants.TESTDATA_NUMBER_OF_USERS)
             // )
-            .UseSeed(TestConstants.TESTDATA_SEED_IN_FIXTURE);
+            .UseSeed(TestConstants.TESTDATA_DEV_DB_SEED);
 }

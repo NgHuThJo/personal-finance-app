@@ -16,6 +16,8 @@ public class DatabaseFixture(PostgresContainerFixture containerFixture)
     private NpgsqlConnection _connection = null!;
     public PostgreSqlContainer Container { get; init; } =
         containerFixture.Container;
+
+    public DbContextOptions Options { get; private set; } = null!;
     public string ConnectionString { get; private set; } = null!;
     public string DatabaseName { get; } = $"test_{Guid.NewGuid():N}";
 
@@ -42,13 +44,11 @@ public class DatabaseFixture(PostgresContainerFixture containerFixture)
             Database = DatabaseName,
         }.ToString();
 
-        var options = new DbContextOptionsBuilder<AppDbContext>()
+        Options = new DbContextOptionsBuilder<AppDbContext>()
             .UseNpgsql(ConnectionString)
             .Options;
 
-        await using (
-            var db = new AppDbContext(options, new TimestampInterceptor())
-        )
+        await using (var db = CreateDbContext())
         {
             // First migrate, then seed
             await db.Database.MigrateAsync();
@@ -71,21 +71,17 @@ public class DatabaseFixture(PostgresContainerFixture containerFixture)
         );
     }
 
+    public AppDbContext CreateDbContext() =>
+        new(Options, new TimestampInterceptor());
+
     public async Task SeedTestDb()
     {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseNpgsql(ConnectionString)
-            .Options;
-
-        await using var db = new AppDbContext(
-            options,
-            new TimestampInterceptor()
-        );
+        await using var db = CreateDbContext();
 
         // Seed database here
         var listOfFakeUsers = UserFaker
-            .CreateUserFaker()
-            .Generate(TestConstants.NUMBER_OF_USERS);
+            .BaseUserFaker()
+            .Generate(TestConstants.TESTDATA_NUMBER_OF_USERS);
 
         db.Set<User>().AddRange(listOfFakeUsers);
         await db.SaveChangesAsync();

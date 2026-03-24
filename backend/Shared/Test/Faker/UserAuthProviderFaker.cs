@@ -5,12 +5,12 @@ namespace backend.Shared.Test;
 
 public static class UserAuthProviderFaker
 {
-    public static Faker<UserAuthProvider> CreateUserAuthProviderFaker() =>
+    public static Faker<UserAuthProvider> BaseUserAuthProviderFaker() =>
         new Faker<UserAuthProvider>()
-            .RuleFor(u => u.Provider, (Faker f) => AuthProvider.Google)
+            .RuleFor(u => u.Provider, f => AuthProvider.Google)
             .RuleFor(
                 u => u.ProviderUserId,
-                (Faker f) => $"UserAuthProvider {f.UniqueIndex}"
+                f => $"UserAuthProvider {f.UniqueIndex}"
             )
-            .UseSeed(TestConstants.TESTDATA_SEED_IN_FIXTURE);
+            .UseSeed(TestConstants.TESTDATA_DEV_DB_SEED);
 }
