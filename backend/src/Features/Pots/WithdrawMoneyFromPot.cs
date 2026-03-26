@@ -59,7 +59,9 @@ public class WithdrawMoneyFromPotValidator
 {
     public WithdrawMoneyFromPotValidator()
     {
-        RuleFor(m => m.WithdrawAmount).GreaterThan(0);
+        RuleFor(m => m.WithdrawAmount)
+            .GreaterThan(0)
+            .PrecisionScale(14, 2, true);
     }
 }
 

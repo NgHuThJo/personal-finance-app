@@ -43,7 +43,9 @@ public class EditPotValidator : AbstractValidator<EditPotRequest>
     public EditPotValidator()
     {
         RuleFor(a => a.PotName).MinimumLength(1);
-        RuleFor(a => a.NewTarget).GreaterThanOrEqualTo(0);
+        RuleFor(a => a.NewTarget)
+            .GreaterThanOrEqualTo(0)
+            .PrecisionScale(14, 2, true);
     }
 }
 

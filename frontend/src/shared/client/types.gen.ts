@@ -17,6 +17,11 @@ export type CreateRefreshTokenResponse = {
     accessToken: string;
 };
 
+export type EditPotRequest = {
+    potName: string;
+    newTarget: number;
+};
+
 export type GetAllPotsResponse = {
     id: number;
     total: number;
@@ -24,7 +29,7 @@ export type GetAllPotsResponse = {
     name: string;
 };
 
-export type GetBalanceByIdResponse = {
+export type GetBalanceByUserIdResponse = {
     current: number;
     income: number;
     expense: number;
@@ -127,6 +132,60 @@ export type CreatePotResponses = {
      */
     201: unknown;
 };
+
+export type DeletePotData = {
+    body?: never;
+    path: {
+        potId: number;
+    };
+    query?: never;
+    url: '/v1/pots/{potId}';
+};
+
+export type DeletePotErrors = {
+    /**
+     * Unprocessable Entity
+     */
+    422: ProblemDetails;
+};
+
+export type DeletePotError = DeletePotErrors[keyof DeletePotErrors];
+
+export type DeletePotResponses = {
+    /**
+     * No Content
+     */
+    204: void;
+};
+
+export type DeletePotResponse = DeletePotResponses[keyof DeletePotResponses];
+
+export type EditPotData = {
+    body: EditPotRequest;
+    path: {
+        potId: number;
+    };
+    query?: never;
+    url: '/v1/pots/{potId}';
+};
+
+export type EditPotErrors = {
+    /**
+     * Unprocessable Entity
+     */
+    422: ProblemDetails;
+};
+
+export type EditPotError = EditPotErrors[keyof EditPotErrors];
+
+export type EditPotResponses = {
+    /**
+     * No Content
+     */
+    204: void;
+};
+
+export type EditPotResponse = EditPotResponses[keyof EditPotResponses];
 
 export type WithdrawMoneyFromPotData = {
     body: WithdrawMoneyFromPotRequest;
@@ -314,27 +373,27 @@ export type LogoutGoogleUserResponses = {
     200: unknown;
 };
 
-export type GetBalanceByIdData = {
+export type GetBalanceByUserIdData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/v1/balances';
+    url: '/v1/balances/me';
 };
 
-export type GetBalanceByIdErrors = {
+export type GetBalanceByUserIdErrors = {
     /**
      * Unauthorized
      */
     401: ProblemDetails;
 };
 
-export type GetBalanceByIdError = GetBalanceByIdErrors[keyof GetBalanceByIdErrors];
+export type GetBalanceByUserIdError = GetBalanceByUserIdErrors[keyof GetBalanceByUserIdErrors];
 
-export type GetBalanceByIdResponses = {
+export type GetBalanceByUserIdResponses = {
     /**
      * OK
      */
-    200: GetBalanceByIdResponse;
+    200: GetBalanceByUserIdResponse;
 };
 
-export type GetBalanceByIdResponse2 = GetBalanceByIdResponses[keyof GetBalanceByIdResponses];
+export type GetBalanceByUserIdResponse2 = GetBalanceByUserIdResponses[keyof GetBalanceByUserIdResponses];

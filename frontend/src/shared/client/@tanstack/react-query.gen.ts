@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { addMoneyToPot, createPot, createRefreshToken, getAllPots, getBalanceById, getUserById, loginGoogleUser, loginUser, logoutGoogleUser, logoutUser, type Options, signUpUser, withdrawMoneyFromPot } from '../sdk.gen';
-import type { AddMoneyToPotData, AddMoneyToPotError, AddMoneyToPotResponse, CreatePotData, CreatePotError, CreateRefreshTokenData, CreateRefreshTokenError, CreateRefreshTokenResponse2, GetAllPotsData, GetAllPotsResponse2, GetBalanceByIdData, GetBalanceByIdError, GetBalanceByIdResponse2, GetUserByIdData, GetUserByIdError, GetUserByIdResponse2, LoginGoogleUserData, LoginUserData, LoginUserError, LoginUserResponse, LogoutGoogleUserData, LogoutUserData, LogoutUserError, LogoutUserResponse, SignUpUserData, SignUpUserError, SignUpUserResponse2, WithdrawMoneyFromPotData, WithdrawMoneyFromPotError, WithdrawMoneyFromPotResponse } from '../types.gen';
+import { addMoneyToPot, createPot, createRefreshToken, deletePot, editPot, getAllPots, getBalanceByUserId, getUserById, loginGoogleUser, loginUser, logoutGoogleUser, logoutUser, type Options, signUpUser, withdrawMoneyFromPot } from '../sdk.gen';
+import type { AddMoneyToPotData, AddMoneyToPotError, AddMoneyToPotResponse, CreatePotData, CreatePotError, CreateRefreshTokenData, CreateRefreshTokenError, CreateRefreshTokenResponse2, DeletePotData, DeletePotError, DeletePotResponse, EditPotData, EditPotError, EditPotResponse, GetAllPotsData, GetAllPotsResponse2, GetBalanceByUserIdData, GetBalanceByUserIdError, GetBalanceByUserIdResponse2, GetUserByIdData, GetUserByIdError, GetUserByIdResponse2, LoginGoogleUserData, LoginUserData, LoginUserError, LoginUserResponse, LogoutGoogleUserData, LogoutUserData, LogoutUserError, LogoutUserResponse, SignUpUserData, SignUpUserError, SignUpUserResponse2, WithdrawMoneyFromPotData, WithdrawMoneyFromPotError, WithdrawMoneyFromPotResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -73,6 +73,34 @@ export const createPotMutation = (options?: Partial<Options<CreatePotData>>): Us
     const mutationOptions: UseMutationOptions<unknown, CreatePotError, Options<CreatePotData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await createPot({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const deletePotMutation = (options?: Partial<Options<DeletePotData>>): UseMutationOptions<DeletePotResponse, DeletePotError, Options<DeletePotData>> => {
+    const mutationOptions: UseMutationOptions<DeletePotResponse, DeletePotError, Options<DeletePotData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await deletePot({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const editPotMutation = (options?: Partial<Options<EditPotData>>): UseMutationOptions<EditPotResponse, EditPotError, Options<EditPotData>> => {
+    const mutationOptions: UseMutationOptions<EditPotResponse, EditPotError, Options<EditPotData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await editPot({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -200,11 +228,11 @@ export const logoutGoogleUserMutation = (options?: Partial<Options<LogoutGoogleU
     return mutationOptions;
 };
 
-export const getBalanceByIdQueryKey = (options?: Options<GetBalanceByIdData>) => createQueryKey('getBalanceById', options);
+export const getBalanceByUserIdQueryKey = (options?: Options<GetBalanceByUserIdData>) => createQueryKey('getBalanceByUserId', options);
 
-export const getBalanceByIdOptions = (options?: Options<GetBalanceByIdData>) => queryOptions<GetBalanceByIdResponse2, GetBalanceByIdError, GetBalanceByIdResponse2, ReturnType<typeof getBalanceByIdQueryKey>>({
+export const getBalanceByUserIdOptions = (options?: Options<GetBalanceByUserIdData>) => queryOptions<GetBalanceByUserIdResponse2, GetBalanceByUserIdError, GetBalanceByUserIdResponse2, ReturnType<typeof getBalanceByUserIdQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await getBalanceById({
+        const { data } = await getBalanceByUserId({
             ...options,
             ...queryKey[0],
             signal,
@@ -212,5 +240,5 @@ export const getBalanceByIdOptions = (options?: Options<GetBalanceByIdData>) => 
         });
         return data;
     },
-    queryKey: getBalanceByIdQueryKey(options)
+    queryKey: getBalanceByUserIdQueryKey(options)
 });

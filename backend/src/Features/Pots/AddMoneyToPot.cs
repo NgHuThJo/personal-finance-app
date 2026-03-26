@@ -43,7 +43,9 @@ public class AddMoneyToPotValidator : AbstractValidator<AddMoneyToPotRequest>
 {
     public AddMoneyToPotValidator()
     {
-        RuleFor(a => a.AddAmount).GreaterThanOrEqualTo(0);
+        RuleFor(a => a.AddAmount)
+            .GreaterThanOrEqualTo(0)
+            .PrecisionScale(14, 2, true);
     }
 }
 

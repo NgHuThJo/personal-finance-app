@@ -15,6 +15,11 @@ export const zCreateRefreshTokenResponse = z.object({
     accessToken: z.string()
 });
 
+export const zEditPotRequest = z.object({
+    potName: z.string(),
+    newTarget: z.number()
+});
+
 export const zGetAllPotsResponse = z.object({
     id: z.int().gte(0).lte(2147483647),
     total: z.number().gte(0),
@@ -22,7 +27,7 @@ export const zGetAllPotsResponse = z.object({
     name: z.string().min(1)
 });
 
-export const zGetBalanceByIdResponse = z.object({
+export const zGetBalanceByUserIdResponse = z.object({
     current: z.number(),
     income: z.number(),
     expense: z.number()
@@ -104,6 +109,32 @@ export const zCreatePotData = z.object({
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });
+
+export const zDeletePotData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        potId: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })
+    }),
+    query: z.optional(z.never())
+});
+
+/**
+ * No Content
+ */
+export const zDeletePotResponse = z.void();
+
+export const zEditPotData = z.object({
+    body: zEditPotRequest,
+    path: z.object({
+        potId: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })
+    }),
+    query: z.optional(z.never())
+});
+
+/**
+ * No Content
+ */
+export const zEditPotResponse = z.void();
 
 export const zWithdrawMoneyFromPotData = z.object({
     body: zWithdrawMoneyFromPotRequest,
@@ -187,7 +218,7 @@ export const zLogoutGoogleUserData = z.object({
     query: z.optional(z.never())
 });
 
-export const zGetBalanceByIdData = z.object({
+export const zGetBalanceByUserIdData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.optional(z.never())
@@ -196,4 +227,4 @@ export const zGetBalanceByIdData = z.object({
 /**
  * OK
  */
-export const zGetBalanceByIdResponse2 = zGetBalanceByIdResponse;
+export const zGetBalanceByUserIdResponse2 = zGetBalanceByUserIdResponse;

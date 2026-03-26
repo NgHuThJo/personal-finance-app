@@ -38,7 +38,19 @@ public class AppDbContext(
             .OnDelete(DeleteBehavior.Cascade);
 
         /* Pot */
-        modelBuilder.Entity<Pot>().HasIndex(p => p.Name).IsUnique();
+        modelBuilder.Entity<Pot>(p =>
+        {
+            p.Property(p => p.Total).HasPrecision(14, 2);
+            p.Property(p => p.Target).HasPrecision(14, 2);
+
+            p.HasIndex(p => p.Name).IsUnique();
+        });
+
+        /* Budget */
+        modelBuilder.Entity<Budget>(b =>
+        {
+            b.Property(b => b.Maximum).HasPrecision(14, 2);
+        });
 
         /* Transaction */
         modelBuilder

@@ -39,7 +39,9 @@ public class CreatePotValidator : AbstractValidator<CreatePotRequest>
 {
     public CreatePotValidator()
     {
-        RuleFor(p => p.Target).GreaterThanOrEqualTo(0);
+        RuleFor(p => p.Target)
+            .GreaterThanOrEqualTo(0)
+            .PrecisionScale(14, 2, true);
         RuleFor(p => p.Name).MinimumLength(1);
     }
 }

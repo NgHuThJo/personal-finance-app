@@ -1,12 +1,12 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import styles from "./balance-summary.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
-import { getBalanceByIdOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
+import { getBalanceByUserIdOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
 
 export function BalanceSummary() {
   const { data } = useSuspenseQuery({
-    ...getBalanceByIdOptions({
+    ...getBalanceByUserIdOptions({
       client: clientWithAuth,
     }),
   });

@@ -9,14 +9,14 @@ public static class BalanceFaker
         int seed = TestConstants.TESTDATA_DEV_DB_SEED
     ) =>
         new Faker<Balance>()
-            .RuleFor(b => b.Current, f => f.Random.Decimal(10000, 20000))
-            .RuleFor(b => b.Income, f => f.Random.Decimal(5000, 10000))
-            .RuleFor(b => b.Expense, f => f.Random.Decimal(1000, 2000))
+            .RuleFor(b => b.Current, f => f.Random.Int(0, 10000) / 100m)
+            .RuleFor(b => b.Income, f => f.Random.Int(0, 1000) / 100m)
+            .RuleFor(b => b.Expense, f => f.Random.Int(0, 500) / 100m)
             .UseSeed(seed);
 
     public static Faker<Balance> BalanceFakerForTesting() =>
         new Faker<Balance>()
-            .RuleFor(b => b.Current, f => f.Random.Decimal(10000, 20000))
-            .RuleFor(b => b.Income, f => f.Random.Decimal(5000, 10000))
-            .RuleFor(b => b.Expense, f => f.Random.Decimal(1000, 2000));
+            .RuleFor(b => b.Current, f => f.Random.Int(0, 10000) / 100m)
+            .RuleFor(b => b.Income, f => f.Random.Int(0, 1000) / 100m)
+            .RuleFor(b => b.Expense, f => f.Random.Int(0, 500) / 100m);
 }
