@@ -36,4 +36,5 @@
 
   /* Status */
   --color-status-error: var(--red);
+  --color-status-success: var(--green);
 }

@@ -1,13 +1,12 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import styles from "./board.module.css";
-import { Dots } from "#frontend/assets/icons/icons";
 import { AddMoneyToPotDialog } from "#frontend/features/pots/components/add-money-to-pot";
 import { AddPotDialog } from "#frontend/features/pots/components/add-pot-dialog";
+import { PotCardPopup } from "#frontend/features/pots/components/pot-card-popup";
 import { PotProgressBar } from "#frontend/features/pots/components/pot-progress-bar";
 import { WithdrawMoneyDialog } from "#frontend/features/pots/components/withdraw-money-dialog";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { getAllPotsOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
-import { Button } from "#frontend/shared/primitives/button";
 
 export function PotsBoard() {
   const { data } = useSuspenseQuery({
@@ -28,9 +27,7 @@ export function PotsBoard() {
             <li key={pot.id} className={styles.card}>
               <header className={styles["card-header"]}>
                 <h2 className={styles["card-heading"]}>{pot.name}</h2>
-                <Button variant="icon">
-                  <Dots />
-                </Button>
+                <PotCardPopup potData={pot} />
               </header>
               <PotProgressBar
                 description="Total saved"
