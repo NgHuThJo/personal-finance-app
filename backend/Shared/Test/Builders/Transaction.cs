@@ -16,7 +16,9 @@ public static class TransactionBuilder
             );
         }
 
-        var transaction = TransactionFaker.BaseTransactionFaker().Generate();
+        var transaction = TransactionFaker
+            .TransactionFakerForTesting()
+            .Generate();
         var random = new Random();
         var userListLength = state.UserList.Count;
         int senderId = random.Next(userListLength);
@@ -54,7 +56,7 @@ public static class TransactionBuilder
         for (int i = 0; i < count; i++)
         {
             var transaction = TransactionFaker
-                .BaseTransactionFaker()
+                .TransactionFakerForTesting()
                 .Generate();
             var random = new Random();
             var userListLength = state.UserList.Count;

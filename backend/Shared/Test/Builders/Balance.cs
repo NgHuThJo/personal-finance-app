@@ -6,13 +6,18 @@ public static class BalanceBuilder
 {
     public static TestState WithBalance(
         this TestState state,
-        Action<Balance> configure
+        Action<Balance> configure,
+        out Balance balance,
+        User? user = null
     )
     {
-        var balance = BalanceFaker.BaseBalanceFaker().Generate();
-        configure(balance);
+        var newBalance = BalanceFaker.BalanceFakerForTesting().Generate();
+        configure(newBalance);
+        newBalance.User = user ?? state.DefaultUser;
 
-        state.Context.Add(balance);
+        state.Context.Add(newBalance);
+
+        balance = newBalance;
 
         return state;
     }

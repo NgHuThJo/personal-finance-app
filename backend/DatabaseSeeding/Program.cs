@@ -36,10 +36,8 @@ namespace backend.DatabaseSeeding
                         (context, _) =>
                         {
                             var users = UserFaker
-                                .BaseUserFaker()
-                                .Generate(
-                                    TestConstants.TESTDATA_NUMBER_OF_USERS
-                                );
+                                .UserFakerForSeeding()
+                                .Generate(TestConstants.TESTDATA_ENTITY_COUNT);
 
                             var contains = context.Set<User>().FirstOrDefault();
 
@@ -54,10 +52,8 @@ namespace backend.DatabaseSeeding
                         async (context, _, cancellationToken) =>
                         {
                             var users = UserFaker
-                                .BaseUserFaker()
-                                .Generate(
-                                    TestConstants.TESTDATA_NUMBER_OF_USERS
-                                );
+                                .UserFakerForSeeding()
+                                .Generate(TestConstants.TESTDATA_ENTITY_COUNT);
 
                             var contains = await context
                                 .Set<User>()

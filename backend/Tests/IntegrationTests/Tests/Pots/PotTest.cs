@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Http.Json;
 using backend.Shared.Test;
 using backend.Src.Features;
-using backend.Src.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
@@ -12,7 +11,7 @@ namespace backend.IntegrationTests;
 public class PotApiTest(DatabaseFixture dbFixture)
     : IntegrationTestBase(dbFixture)
 {
-    private readonly string _uriPath = "/v1/pots";
+    private const string _uriPath = "/v1/pots";
 
     // CreatePot
     [Fact]
@@ -35,7 +34,11 @@ public class PotApiTest(DatabaseFixture dbFixture)
     public async Task CreatePot_IfValidationFails_ReturnStatusCode400()
     {
         // Arrange
-        var fakeData = new Pot() { Target = -1, Name = "" };
+        var fakeData = PotFaker.CreatePotRequest() with
+        {
+            Target = -1,
+            Name = "",
+        };
         var jsonContent = JsonContent.Create(fakeData);
         // Act
         var postResponse = await Client.PostAsync(
@@ -182,6 +185,97 @@ public class PotApiTest(DatabaseFixture dbFixture)
         var putResponse = await Client.PutAsync(
             path,
             jsonContent,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        putResponse
+            .StatusCode.Should()
+            .Be(HttpStatusCode.UnprocessableContent);
+    }
+
+    [Fact]
+    public async Task EditPot_IfDuplicateName_Return409()
+    {
+        // Arrange
+        var dbContext = Db.CreateDbContext();
+        var duplicateName = "duplicate";
+
+        var state = TestState
+            .New(dbContext)
+            .WithPot(
+                p =>
+                {
+                    p.Name = duplicateName;
+                },
+                out var pot
+            );
+        await state.SaveAsync();
+
+        var fakeData = PotFaker.EditPotRequest() with
+        {
+            PotName = duplicateName,
+        };
+        var jsonContent = JsonContent.Create(fakeData);
+        var path = $"{_uriPath}/{pot.Id}";
+        var request = new HttpRequestMessage(HttpMethod.Put, path);
+        request.Headers.Add(
+            TestAuthHandler.UserIdHeader,
+            state.DefaultUser.Id.ToString()
+        );
+        request.Content = jsonContent;
+        // Act
+        var putResponse = await Client.SendAsync(
+            request,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        putResponse.StatusCode.Should().Be(HttpStatusCode.Conflict);
+    }
+
+    [Fact]
+    public async Task EditPot_IfTargetNegative_Return422()
+    {
+        // Arrange
+        var fakeData = PotFaker.EditPotRequest() with
+        {
+            NewTarget = -1,
+        };
+        var jsonContent = JsonContent.Create(fakeData);
+        var path = $"{_uriPath}/1";
+        // Act
+        var putResponse = await Client.PutAsync(
+            path,
+            jsonContent,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        putResponse
+            .StatusCode.Should()
+            .Be(HttpStatusCode.UnprocessableContent);
+    }
+
+    [Fact]
+    public async Task DeletePot_IfSuccessful_Return204()
+    {
+        // Arrange
+        var path = $"{_uriPath}/1";
+        // Act
+        var putResponse = await Client.DeleteAsync(
+            path,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        putResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
+    public async Task DeletePot_IfPotIdInvalid_Return422()
+    {
+        // Arrange
+        var path = $"{_uriPath}/10000";
+        // Act
+        var putResponse = await Client.DeleteAsync(
+            path,
             TestContext.Current.CancellationToken
         );
         // Assert

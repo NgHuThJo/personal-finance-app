@@ -4,12 +4,19 @@ namespace backend.Shared.Test;
 
 public static class PotBuilder
 {
-    public static TestState WithPot(this TestState state, Action<Pot> configure)
+    public static TestState WithPot(
+        this TestState state,
+        Action<Pot> configure,
+        out Pot pot,
+        User? user = null
+    )
     {
-        var pot = PotFaker.BasePotFaker().Generate();
-        configure(pot);
+        var newPot = PotFaker.PotFakerForTesting().Generate();
+        configure(newPot);
+        newPot.User = user ?? state.DefaultUser;
 
-        state.Context.Add(pot);
+        state.Context.Add(newPot);
+        pot = newPot;
 
         return state;
     }
@@ -20,8 +27,13 @@ public static class PotBuilder
         int count
     )
     {
-        var pots = PotFaker.BasePotFaker().Generate(count);
+        var pots = PotFaker.PotFakerForTesting().Generate(count);
         configure(pots);
+
+        foreach (var pot in pots)
+        {
+            pot.User = state.DefaultUser;
+        }
 
         state.Context.AddRange(pots);
 

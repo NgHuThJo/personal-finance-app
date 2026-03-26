@@ -1,4 +1,5 @@
 using FluentValidation;
+using FluentValidation.Results;
 
 namespace backend.Src.Shared;
 
@@ -12,42 +13,61 @@ public static partial class EndpointFilterLogger
         ILogger logger,
         string? routeValue
     );
+
+    [LoggerMessage(
+        Level = LogLevel.Error,
+        Message = "Request payload of type {RequestType} could not be found"
+    )]
+    public static partial void RequestPayloadNotFound(
+        ILogger logger,
+        string requestType
+    );
+
+    [LoggerMessage(
+        Level = LogLevel.Error,
+        Message = "Validation failed for {RequestType}: {@Errors}"
+    )]
+    public static partial void ValidationFailed(
+        ILogger logger,
+        string requestType,
+        List<ValidationFailure> errors
+    );
 }
 
-public class ValidationFilter<TRequest> : IEndpointFilter
+public class ValidationFilter<TRequest>(
+    IValidator<TRequest> validator,
+    ILogger<ValidationFilter<TRequest>> logger
+) : IEndpointFilter
 {
+    private readonly ILogger<ValidationFilter<TRequest>> _logger = logger;
+
     public async ValueTask<object?> InvokeAsync(
         EndpointFilterInvocationContext context,
         EndpointFilterDelegate next
     )
     {
-        var validation = context.HttpContext.RequestServices.GetService<
-            IValidator<TRequest>
-        >();
-
-        if (validation is null)
-        {
-            Console.WriteLine(
-                $"Validator for request type {nameof(TRequest)} could not be found"
-            );
-            return await next(context);
-        }
-
-        var entity = context.Arguments.OfType<TRequest>().FirstOrDefault();
+        var entity = context.Arguments.OfType<TRequest>().SingleOrDefault();
 
         if (entity is null)
         {
-            Console.WriteLine(
-                $"Request object of type {nameof(TRequest)} could not be found"
+            EndpointFilterLogger.RequestPayloadNotFound(
+                _logger,
+                typeof(TRequest).Name
             );
-            return await next(context);
+            throw new InvalidOperationException(
+                $"Validator for request type {typeof(TRequest).Name} could not be found"
+            );
         }
 
-        var validationResult = await validation.ValidateAsync(entity);
+        var validationResult = await validator.ValidateAsync(entity);
 
         if (!validationResult.IsValid)
         {
-            Console.WriteLine($"Validation error: {validationResult.Errors}");
+            EndpointFilterLogger.ValidationFailed(
+                _logger,
+                typeof(TRequest).Name,
+                validationResult.Errors
+            );
             return TypedResults.ValidationProblem(
                 validationResult.ToDictionary()
             );

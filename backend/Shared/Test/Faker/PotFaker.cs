@@ -6,63 +6,55 @@ namespace backend.Shared.Test;
 
 public static class PotFaker
 {
-    public static Faker<Pot> BasePotFaker() =>
+    public static Faker<Pot> PotFakerForSeeding(
+        int seed = TestConstants.TESTDATA_DEV_DB_SEED
+    ) =>
         new Faker<Pot>()
             .RuleFor(p => p.Name, f => $"Pot {f.UniqueIndex}")
             .RuleFor(p => p.Total, f => f.Random.Decimal(50, 100))
             .RuleFor(p => p.Target, f => f.Random.Decimal(100, 200))
-            .UseSeed(TestConstants.TESTDATA_DEV_DB_SEED);
+            .UseSeed(seed);
 
-    public static CreatePotRequest CreatePotRequest(
-        Action<CreatePotRequest>? configure = null
-    )
+    public static Faker<Pot> PotFakerForTesting() =>
+        new Faker<Pot>()
+            .RuleFor(p => p.Name, f => $"Pot {f.UniqueIndex}")
+            .RuleFor(p => p.Total, f => f.Random.Decimal(50, 100))
+            .RuleFor(p => p.Target, f => f.Random.Decimal(100, 200));
+
+    public static CreatePotRequest CreatePotRequest()
     {
         var pot = new Faker<CreatePotRequest>()
             .RuleFor(p => p.Name, f => $"Pot {f.UniqueIndex}")
             .RuleFor(p => p.Target, f => f.Random.Decimal(100, 200))
-            .UseSeed(TestConstants.TESTDATA_DTO_SEED)
             .Generate();
-        configure?.Invoke(pot);
 
         return pot;
     }
 
-    public static WithdrawMoneyFromPotRequest WithdrawMoneyFromPotRequest(
-        Action<WithdrawMoneyFromPotRequest>? configure = null
-    )
+    public static WithdrawMoneyFromPotRequest WithdrawMoneyFromPotRequest()
     {
         var pot = new Faker<WithdrawMoneyFromPotRequest>()
             .RuleFor(p => p.WithdrawAmount, f => f.Random.Decimal(10, 20))
-            .UseSeed(TestConstants.TESTDATA_DTO_SEED)
             .Generate();
-        configure?.Invoke(pot);
 
         return pot;
     }
 
-    public static AddMoneyToPotRequest AddMoneyToPotRequest(
-        Action<AddMoneyToPotRequest>? configure = null
-    )
+    public static AddMoneyToPotRequest AddMoneyToPotRequest()
     {
         var pot = new Faker<AddMoneyToPotRequest>()
             .RuleFor(p => p.AddAmount, f => f.Random.Decimal(10, 20))
-            .UseSeed(TestConstants.TESTDATA_DTO_SEED)
             .Generate();
-        configure?.Invoke(pot);
 
         return pot;
     }
 
-    public static EditPotRequest EditPotRequest(
-        Action<EditPotRequest>? configure = null
-    )
+    public static EditPotRequest EditPotRequest()
     {
         var pot = new Faker<EditPotRequest>()
             .RuleFor(p => p.PotName, f => $"Pot {f.UniqueIndex}")
             .RuleFor(p => p.NewTarget, f => f.Random.Decimal(50, 150))
-            .UseSeed(TestConstants.TESTDATA_DTO_SEED)
             .Generate();
-        configure?.Invoke(pot);
 
         return pot;
     }

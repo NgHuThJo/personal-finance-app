@@ -7,7 +7,7 @@ public class User
     public required string Name { get; set; }
     public string? PasswordHash { get; set; }
     public Balance Balance { get; set; } = null!;
-    public UserAuthProvider AuthProvider { get; set; } = null!;
+    public UserAuthProvider? AuthProvider { get; set; }
     public List<Transaction> SentTransactions { get; set; } = [];
     public List<Transaction> ReceivedTransactions { get; set; } = [];
     public List<Budget> Budgets { get; set; } = [];

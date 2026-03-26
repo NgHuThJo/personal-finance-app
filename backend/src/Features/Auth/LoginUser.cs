@@ -45,7 +45,7 @@ public record LoginUserRequest
     [EmailAddress(ErrorMessage = "Email address is invalid")]
     public required string Email { get; init; }
 
-    [MinLength(8)]
+    [MinLength(8, ErrorMessage = "Minimum length of 8 characters")]
     public required string Password { get; init; }
 }
 

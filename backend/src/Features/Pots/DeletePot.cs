@@ -42,10 +42,6 @@ public static class DeletePotEndpoint
                         TypedResultsProblemDetails.UnprocessableContent(
                             $"Pot does not exist with ID {nonExistentPotId}"
                         ),
-                    PotError.BalanceNotFound(int nonExistentUserId) =>
-                        TypedResultsProblemDetails.UnprocessableContent(
-                            $"Balance of user with ID  {nonExistentUserId}"
-                        ),
                     _ => throw new NotSupportedException(
                         $"An unknown error occurred in {nameof(DeletePot)}"
                     ),
@@ -84,8 +80,8 @@ public class DeletePotHandler(
         if (balance is null)
         {
             DeletePotLogger.BalanceDoesNotExist(_logger, userId);
-            return Result<Unit, PotError>.Fail(
-                new PotError.BalanceNotFound(userId)
+            throw new InvalidOperationException(
+                $"Balance must not be null in {nameof(EditPotHandler)}"
             );
         }
 

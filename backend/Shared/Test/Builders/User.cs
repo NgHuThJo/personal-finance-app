@@ -6,13 +6,15 @@ public static class UserBuilder
 {
     public static TestState WithUser(
         this TestState state,
-        Action<User> configure
+        Action<User> configure,
+        out User user
     )
     {
-        var user = UserFaker.BaseUserFaker().Generate();
-        configure(user);
+        var newUser = UserFaker.UserFakerForTesting().Generate();
+        configure(newUser);
 
-        state.Context.Add(user);
+        state.Context.Add(newUser);
+        user = newUser;
 
         return state;
     }
@@ -23,7 +25,7 @@ public static class UserBuilder
         int count
     )
     {
-        var users = UserFaker.BaseUserFaker().Generate(count);
+        var users = UserFaker.UserFakerForTesting().Generate(count);
         configure(users);
 
         state.Context.AddRange(users);

@@ -80,8 +80,8 @@ public class DatabaseFixture(PostgresContainerFixture containerFixture)
 
         // Seed database here
         var listOfFakeUsers = UserFaker
-            .BaseUserFaker()
-            .Generate(TestConstants.TESTDATA_NUMBER_OF_USERS);
+            .UserFakerForSeeding()
+            .Generate(TestConstants.TESTDATA_ENTITY_COUNT);
 
         db.Set<User>().AddRange(listOfFakeUsers);
         await db.SaveChangesAsync();
