@@ -1,25 +1,22 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import styles from "./add-pot-dialog.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
 import type {
-  CreatePotRequest,
+  EditPotRequest,
   GetAllPotsResponse,
 } from "#frontend/shared/client";
 import {
-  createPotMutation,
+  editPotMutation,
   getAllPotsQueryKey,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
-import { zCreatePotRequest } from "#frontend/shared/client/zod.gen";
 import { Button } from "#frontend/shared/primitives/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
-  DialogTrigger,
 } from "#frontend/shared/primitives/dialog";
 import {
   Field,
@@ -27,37 +24,42 @@ import {
   FieldLabel,
 } from "#frontend/shared/primitives/field";
 import { Input } from "#frontend/shared/primitives/input";
-import { makeZodErrorsUserFriendly } from "#frontend/shared/utils/zod";
 
 type EditPotDialogProps = {
   potData: GetAllPotsResponse;
+  isEditDialogOpen: boolean;
+  toggleEditDialog: (shouldOpen: boolean) => void;
 };
 
 export function EditPotDialog({
-  potData: { id, name, target, total },
+  potData: { id, name, target },
+  isEditDialogOpen,
+  toggleEditDialog,
 }: EditPotDialogProps) {
-  const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
   const {
     register,
     setError,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreatePotRequest>({
-    defaultValues: {},
+  } = useForm<EditPotRequest>({
+    defaultValues: {
+      potName: name,
+      newTarget: target,
+    },
   });
   const { mutate } = useMutation({
-    ...createPotMutation({
+    ...editPotMutation({
       client: clientWithAuth,
       credentials: "include",
     }),
     onSuccess: async () => {
-      Logger.info("Money successfully withdrawn from pot");
+      Logger.info("Pot successfully edited");
       await queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
-      setOpen(false);
+      toggleEditDialog(false);
     },
     onError: (error) => {
-      Logger.error("Pot could not be created", error);
+      Logger.error("Pot could not be edited", error);
 
       switch (error.status) {
         case 400: {
@@ -82,52 +84,23 @@ export function EditPotDialog({
   });
 
   const handleAddPotSubmit = handleSubmit((data) => {
-    const convertedData: CreatePotRequest = {
-      name: data.name,
-      target: data.target,
+    const convertedData: EditPotRequest = {
+      potName: data.potName,
+      newTarget: data.newTarget,
     };
-
-    const validationResult = zCreatePotRequest.safeParse(convertedData, {
-      error: (iss) => {
-        if (iss.code === "invalid_type") {
-          return `Invalid type, expected ${iss.expected}`;
-        }
-        if (iss.code === "too_small") {
-          return `Minimum is ${iss.minimum}`;
-        }
-      },
-    });
-
-    if (!validationResult.success) {
-      const userFriendlyErrors = makeZodErrorsUserFriendly(
-        validationResult.error,
-      );
-
-      for (const error in userFriendlyErrors) {
-        const convertedError = error as keyof typeof userFriendlyErrors;
-
-        userFriendlyErrors[convertedError].forEach((errorMessage) => {
-          setError(convertedError, {
-            message: errorMessage,
-          });
-        });
-      }
-    }
 
     mutate({
       body: convertedData,
+      path: {
+        potId: id,
+      },
     });
   });
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button type="button" variant="cta-primary">
-          Edit Pot
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isEditDialogOpen} onOpenChange={toggleEditDialog}>
       <DialogContent>
-        <DialogTitle>Add New Pot</DialogTitle>
+        <DialogTitle>Edit Pot</DialogTitle>
         <DialogDescription>
           If your saving targets change, feel free to update your pots.
         </DialogDescription>
@@ -138,11 +111,13 @@ export function EditPotDialog({
               type="text"
               id="name"
               placeholder="e.g. Rainy Days"
-              {...register("name", {
+              {...register("potName", {
                 required: "Pot name required",
               })}
             />
-            {errors.name && <FieldError>{errors.name?.message}</FieldError>}
+            {errors.potName && (
+              <FieldError>{errors.potName?.message}</FieldError>
+            )}
             {errors.root?.["server-conflict"] && (
               <FieldError>{errors.root["server-conflict"].message}</FieldError>
             )}
@@ -154,7 +129,7 @@ export function EditPotDialog({
               step="any"
               id="target"
               placeholder="$ e.g. 2000"
-              {...register("target", {
+              {...register("newTarget", {
                 valueAsNumber: true,
                 required: "Target amount required",
                 min: {
@@ -163,7 +138,9 @@ export function EditPotDialog({
                 },
               })}
             />
-            {errors.target && <FieldError>{errors.target?.message}</FieldError>}
+            {errors.newTarget && (
+              <FieldError>{errors.newTarget?.message}</FieldError>
+            )}
             {errors.root?.["server-bad-request"] && (
               <FieldError>
                 {errors.root["server-bad-request"].message}
@@ -171,7 +148,7 @@ export function EditPotDialog({
             )}
           </Field>
           <Button type="submit" variant="cta-primary">
-            +Add New Pot
+            Submit
           </Button>
         </form>
       </DialogContent>

@@ -10,6 +10,9 @@ const buttonVariants = cva(styles.button, {
       default: styles["default-variant"],
       link: styles.link,
       icon: styles.icon,
+      ghost: styles.ghost,
+      destructive: styles.destructive,
+      abort: styles.abort,
       ["cta-primary"]: styles["cta-primary"],
       ["cta-secondary"]: styles["cta-secondary"],
     },
@@ -21,6 +24,8 @@ const buttonVariants = cva(styles.button, {
     },
     intent: {
       default: "",
+      success: styles.success,
+      error: styles.error,
     },
   },
   defaultVariants: {

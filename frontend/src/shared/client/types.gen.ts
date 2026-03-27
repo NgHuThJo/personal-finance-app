@@ -171,6 +171,10 @@ export type EditPotData = {
 
 export type EditPotErrors = {
     /**
+     * Conflict
+     */
+    409: ProblemDetails;
+    /**
      * Unprocessable Entity
      */
     422: ProblemDetails;

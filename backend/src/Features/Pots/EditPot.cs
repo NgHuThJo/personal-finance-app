@@ -22,6 +22,12 @@ public static partial class EditPotLogger
     public static partial void BalanceDoesNotExist(ILogger logger, int userId);
 
     [LoggerMessage(
+        Level = LogLevel.Error,
+        Message = "Pot name {PotName} does already exist in the database"
+    )]
+    public static partial void DuplicateName(ILogger logger, string potName);
+
+    [LoggerMessage(
         Level = LogLevel.Information,
         Message = "Invalid edit in pot with potID {PotId} and userID {UserId}"
     )]
@@ -80,7 +86,7 @@ public static class EditPotEndpoint
                         ),
                     PotError.PotNameAlreadyExists =>
                         TypedResultsProblemDetails.Conflict(
-                            "Amount cannot be negative"
+                            "Pot name is already in use"
                         ),
                     _ => throw new NotSupportedException(
                         $"An unknown error occurred in {nameof(EditPot)}"
@@ -123,6 +129,18 @@ public class EditPotHandler(
             EditPotLogger.BalanceDoesNotExist(_logger, userId);
             return Result<Unit, PotError>.Fail(
                 new PotError.BalanceNotFound(userId)
+            );
+        }
+
+        var duplicateName = await _context
+            .Pots.Where(p => p.Name == command.PotName)
+            .SingleOrDefaultAsync(ct);
+
+        if (duplicateName is not null)
+        {
+            EditPotLogger.DuplicateName(_logger, command.PotName);
+            return Result<Unit, PotError>.Fail(
+                new PotError.PotNameAlreadyExists()
             );
         }
 

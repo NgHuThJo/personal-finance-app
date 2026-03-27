@@ -67,6 +67,7 @@ public static class RouteGrouper
             .MapPut("/{potId:int}", EditPotEndpoint.EditPot)
             .WithName(nameof(EditPotEndpoint.EditPot))
             .AddIdValidationFilter()
+            .ProducesProblem((int)HttpStatusCode.Conflict)
             .ProducesProblem((int)HttpStatusCode.UnprocessableEntity);
         group
             .MapPatch(

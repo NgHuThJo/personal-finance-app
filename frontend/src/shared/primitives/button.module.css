@@ -48,6 +48,18 @@
   }
 }
 
+.destructive {
+  padding: var(--spacing-6);
+  color: var(--color-text-cta-primary);
+  background-color: var(--color-status-error);
+}
+
+.abort {
+  padding: var(--spacing-6);
+  color: var(--color-text-cta-secondary);
+  background-color: var(--color-background-canvas-primary);
+}
+
 .link {
   color: var(--color-text-cta-primary);
   text-underline-offset: 4px;
@@ -55,6 +67,11 @@
   &:hover {
     text-decoration: underline;
   }
+}
+
+.ghost {
+  border-color: transparent;
+  font-size: var(--font-size-action);
 }
 
 .icon {
@@ -97,6 +114,14 @@
 .icon {
   width: 1.75rem;
   height: 1.75rem;
+}
+
+/* Intent */
+.success {
+  color: var(--color-status-success);
+}
+.error {
+  color: var(--color-status-error);
 }
 
 /* Custom */

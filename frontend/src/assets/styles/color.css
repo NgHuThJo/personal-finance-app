@@ -24,6 +24,7 @@
   --color-text-inverse: var(--white);
   --color-text-link-primary: var(--grey-500);
   --color-text-cta-primary: var(--white);
+  --color-text-cta-secondary: var(--grey-900);
 
   /* Background */
   --color-background-canvas-primary: var(--beige-100);
