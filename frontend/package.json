@@ -10,7 +10,7 @@
     "dev-test": "cross-env VITE_IS_E2E=true vite",
     "build": "vite build",
     "vitest": "vitest",
-    "playwright": "npx playwright test --ui",
+    "playwright": "npx playwright test tests/e2e/pot/ --project=chromium --headed",
     "test-codegen": "npx playwright codegen --viewport-size=1920,1080 http://localhost:5173",
     "preview": "vite preview",
     "check-for-errors": "npx tsc --noEmit",

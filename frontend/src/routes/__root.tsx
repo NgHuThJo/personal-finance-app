@@ -1,5 +1,9 @@
 import { useQuery, type QueryClient } from "@tanstack/react-query";
-import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
+import {
+  createRootRouteWithContext,
+  Outlet,
+  useLocation,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { useEffect, useEffectEvent } from "react";
 import styles from "./__root.module.css";
@@ -43,15 +47,28 @@ function Root() {
     enabled: !isAuthBootstrapped,
     retry: 1,
   });
+  const location = useLocation();
+  console.log(
+    "location in root and pending and data",
+    location.pathname,
+    isPending,
+    data,
+  );
 
   useEffect(() => {
     window.addEventListener("message", onOpenIdConnectDone);
 
+    console.log(
+      "location in root-useeffect and access token:",
+      location.pathname,
+      accessToken,
+    );
     if (error) {
       Logger.error("Access token creation with refresh token failed", error);
     }
 
     if (data?.accessToken) {
+      console.log("set access token");
       setAccessToken(data.accessToken);
     }
 

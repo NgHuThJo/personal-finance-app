@@ -210,7 +210,12 @@ export function Login() {
           {errors.root?.["server-unauthorized"]?.message}
         </span>
       </label>
-      <Button type="submit" variant="cta-primary" disabled={isPending}>
+      <Button
+        type="submit"
+        variant="cta-primary"
+        disabled={isPending}
+        data-testid="normal-login"
+      >
         Login
       </Button>
       <Button
@@ -218,6 +223,7 @@ export function Login() {
         variant="cta-primary"
         disabled={isPending}
         onClick={onGoogleLogin}
+        data-testid="google-login"
       >
         Login with Google
       </Button>

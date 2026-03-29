@@ -1,4 +1,4 @@
-import styles from "./pot-card-popup.module.css";
+import styles from "./pot-card-popover.module.css";
 import { Dots } from "#frontend/assets/icons/icons";
 import { Button } from "#frontend/shared/primitives/button";
 import {
@@ -14,7 +14,7 @@ type PotCardProps = {
   };
 };
 
-export function PotCardPopup({
+export function PotCardPopover({
   dialogHandlers: { openDeleteDialog, openEditDialog },
 }: PotCardProps) {
   return (

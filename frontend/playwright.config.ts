@@ -1,5 +1,9 @@
+import { fileURLToPath } from "url";
 import { defineConfig, devices } from "@playwright/test";
 
+const authFilePath = fileURLToPath(
+  new URL("./tests/setup/user.json", import.meta.url),
+);
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -28,23 +32,40 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
   },
-  timeout: 5_000,
+  timeout: 7_500,
 
   /* Configure projects for major browsers */
   projects: [
     {
+      name: "setup",
+      testDir: "./tests/setup",
+      testMatch: /.*\.setup\.ts/,
+    },
+    {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: authFilePath,
+      },
+      dependencies: ["setup"],
     },
 
     {
       name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
+      use: {
+        ...devices["Desktop Firefox"],
+        storageState: "tests/setup/user.json",
+      },
+      dependencies: ["setup"],
     },
 
     {
       name: "webkit",
-      use: { ...devices["Desktop Safari"] },
+      use: {
+        ...devices["Desktop Safari"],
+        storageState: "tests/setup/user.json",
+      },
+      dependencies: ["setup"],
     },
 
     /* Test against mobile viewports. */

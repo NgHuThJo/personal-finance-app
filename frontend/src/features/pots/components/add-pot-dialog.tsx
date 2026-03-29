@@ -134,7 +134,9 @@ export function AddPotDialog() {
             />
             {errors.name && <FieldError>{errors.name?.message}</FieldError>}
             {errors.root?.["server-conflict"] && (
-              <FieldError>{errors.root["server-conflict"].message}</FieldError>
+              <FieldError data-testid="add-pot-server-conflict">
+                {errors.root["server-conflict"].message}
+              </FieldError>
             )}
           </Field>
           <Field>
@@ -155,7 +157,7 @@ export function AddPotDialog() {
             />
             {errors.target && <FieldError>{errors.target?.message}</FieldError>}
             {errors.root?.["server-bad-request"] && (
-              <FieldError>
+              <FieldError data-testid="add-pot-server-bad-request">
                 {errors.root["server-bad-request"].message}
               </FieldError>
             )}

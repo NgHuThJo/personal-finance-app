@@ -43,12 +43,12 @@ test.describe("signup", () => {
   }) => {
     await page.goto("/signup");
 
-    await page.route("**/api/auth/signup", (r) =>
+    await page.route("**/v1/auth/signup", (r) =>
       r.fulfill({
         status: 409,
         body: JSON.stringify({
           detail: "email is already in use",
-          status: 401,
+          status: 409,
         }),
       }),
     );

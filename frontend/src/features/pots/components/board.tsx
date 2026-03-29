@@ -5,7 +5,7 @@ import { AddMoneyToPotDialog } from "#frontend/features/pots/components/add-mone
 import { AddPotDialog } from "#frontend/features/pots/components/add-pot-dialog";
 import { DeletePotDialog } from "#frontend/features/pots/components/delete-pot";
 import { EditPotDialog } from "#frontend/features/pots/components/edit-pot.dialog";
-import { PotCardPopup } from "#frontend/features/pots/components/pot-card-popup";
+import { PotCardPopover } from "#frontend/features/pots/components/pot-card-popover";
 import { PotProgressBar } from "#frontend/features/pots/components/pot-progress-bar";
 import { WithdrawMoneyDialog } from "#frontend/features/pots/components/withdraw-money-dialog";
 import { clientWithAuth } from "#frontend/shared/api/client";
@@ -45,7 +45,7 @@ export function PotsBoard() {
             <li key={pot.id} className={styles.card}>
               <header className={styles["card-header"]}>
                 <h2 className={styles["card-heading"]}>{pot.name}</h2>
-                <PotCardPopup
+                <PotCardPopover
                   dialogHandlers={{
                     openDeleteDialog: openDeleteDialogInPopup,
                     openEditDialog: openEditDialogInPopup,
@@ -61,17 +61,21 @@ export function PotsBoard() {
                 <AddMoneyToPotDialog potData={pot} />
                 <WithdrawMoneyDialog potData={pot} />
               </div>
-              <EditPotDialog
-                potData={pot}
-                isEditDialogOpen={isEditDialogOpen}
-                toggleEditDialog={toggleEditDialog}
-              />
+              {isEditDialogOpen && (
+                <EditPotDialog
+                  potData={pot}
+                  isEditDialogOpen={isEditDialogOpen}
+                  toggleEditDialog={toggleEditDialog}
+                />
+              )}
               <div className={styles.separator} />
-              <DeletePotDialog
-                potData={pot}
-                isDeleteDialogOpen={isDeleteDialogOpen}
-                toggleDeleteDialog={toggleDeleteDialog}
-              />
+              {isDeleteDialogOpen && (
+                <DeletePotDialog
+                  potData={pot}
+                  isDeleteDialogOpen={isDeleteDialogOpen}
+                  toggleDeleteDialog={toggleDeleteDialog}
+                />
+              )}
             </li>
           ))}
         </ul>

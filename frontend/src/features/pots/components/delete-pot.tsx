@@ -67,7 +67,7 @@ export function DeletePotDialog({
 
   return (
     <Dialog open={isDeleteDialogOpen} onOpenChange={toggleDeleteDialog}>
-      <DialogContent>
+      <DialogContent showCloseButton={false}>
         <DialogTitle>Delete "{name}"</DialogTitle>
         <DialogDescription>
           Are you sure you want to delete this pot? This action cannot be

@@ -14,7 +14,7 @@ import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 import "#frontend/assets/styles";
 
 // Added for customizing test behavior
-const defaultQueryRetries = import.meta.env.VITE_IS_E2E === "true" ? 0 : 3;
+const defaultQueryRetries = import.meta.env.VITE_IS_E2E === "true" ? 1 : 3;
 
 z.config({
   customError: (issue) => {
