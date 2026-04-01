@@ -1,36 +1,27 @@
-import {
-  createFileRoute,
-  Outlet,
-  useLocation,
-  useNavigate,
-} from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
 import styles from "./_pathless-dashboard-layout.module.css";
 import { DashboardNavigation } from "#frontend/features/dashboard/components/dashboard-navigation";
-import { useAccessToken } from "#frontend/shared/store/access-token";
+import { Logger } from "#frontend/shared/app/logging";
+import { createRefreshTokenOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
 
 export const Route = createFileRoute("/_pathless-dashboard-layout")({
   component: DashboardLayout,
 });
 
 function DashboardLayout() {
-  const accessToken = useAccessToken();
-  const navigate = useNavigate();
-  const currentLocation = useLocation();
+  const { data } = useQuery({
+    ...createRefreshTokenOptions({
+      credentials: "include",
+    }),
+    throwOnError: false,
+    enabled: false,
+  });
 
-  console.log(
-    "in dashboard layout route and access token",
-    currentLocation,
-    accessToken,
-  );
-
-  useEffect(() => {
-    if (!accessToken) {
-      navigate({
-        to: "/login",
-      });
-    }
-  }, [accessToken, currentLocation, navigate]);
+  if (!data) {
+    Logger.info("Access token generation from refresh token failed");
+    return <Navigate to="/login" />;
+  }
 
   return (
     <div className={styles.page}>

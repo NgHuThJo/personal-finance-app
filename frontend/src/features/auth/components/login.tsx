@@ -1,15 +1,20 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
 import { useSyncExternalStore } from "react";
 import { useForm } from "react-hook-form";
 import styles from "./login.module.css";
 import { IconEye } from "#frontend/assets/icons/icons";
 import { Logger } from "#frontend/shared/app/logging";
-import type { LoginUserRequest } from "#frontend/shared/client";
-import { loginUserMutation } from "#frontend/shared/client/@tanstack/react-query.gen";
+import type {
+  CreateRefreshTokenResponse,
+  LoginUserRequest,
+} from "#frontend/shared/client";
+import {
+  createRefreshTokenQueryKey,
+  loginUserMutation,
+} from "#frontend/shared/client/@tanstack/react-query.gen";
 import { useToggle } from "#frontend/shared/hooks/use-toggle";
 import { Button } from "#frontend/shared/primitives/button";
-import { accessTokenStore } from "#frontend/shared/store/access-token";
 
 const getPageSizes = () => {
   return {
@@ -71,8 +76,8 @@ export function Login() {
   const pageSizeObject = useSyncExternalStore(subscribe, getSnapshot);
   const { isOpen: isPasswordVisible, toggle: togglePasswordVisibility } =
     useToggle(false);
+  const queryClient = useQueryClient();
   const route = useRouter();
-  const setAccessToken = accessTokenStore.getState().setAccessToken;
   const {
     register,
     handleSubmit,
@@ -85,9 +90,16 @@ export function Login() {
     }),
     onSuccess: async (accessToken) => {
       Logger.info(`Login successful, access token:`, accessToken);
-      setAccessToken(accessToken);
+      /* Make sure you use the response type of the createRefreshToken endpoint
+      because it differs from the loginUser response type */
+      queryClient.setQueryData<CreateRefreshTokenResponse>(
+        createRefreshTokenQueryKey(),
+        {
+          accessToken,
+        },
+      );
 
-      route.navigate({
+      await route.navigate({
         to: "/dashboard",
         replace: true,
       });

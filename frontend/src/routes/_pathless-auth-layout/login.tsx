@@ -1,19 +1,7 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Login } from "#frontend/features/auth/components/login";
-import { accessTokenStore } from "#frontend/shared/store/access-token";
 
-export const Route = createFileRoute(
-  "/_pathless-auth-layout/login",
-)({
-  beforeLoad: () => {
-    const accessToken = accessTokenStore.getState().accessToken;
-
-    if (accessToken) {
-      throw redirect({
-        to: "/dashboard",
-      });
-    }
-  },
+export const Route = createFileRoute("/_pathless-auth-layout/login")({
   component: LoginRoute,
 });
 

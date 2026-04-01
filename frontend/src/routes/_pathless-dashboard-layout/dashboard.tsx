@@ -1,13 +1,17 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { Suspense } from "react";
 import styles from "./dashboard.module.css";
 import { Logout } from "#frontend/assets/icons/icons";
 import { AccountSummary } from "#frontend/features/dashboard/components/account-summary";
 import { BalanceSummary } from "#frontend/features/dashboard/components/balance-summary";
 import { Logger } from "#frontend/shared/app/logging";
-import { logoutUserMutation } from "#frontend/shared/client/@tanstack/react-query.gen";
+import {
+  createRefreshTokenQueryKey,
+  logoutUserMutation,
+} from "#frontend/shared/client/@tanstack/react-query.gen";
 import { Button } from "#frontend/shared/primitives/button";
-import { accessTokenStore } from "#frontend/shared/store/access-token";
+import { Loader } from "#frontend/shared/primitives/loader";
 
 export const Route = createFileRoute("/_pathless-dashboard-layout/dashboard")({
   component: Index,
@@ -15,7 +19,7 @@ export const Route = createFileRoute("/_pathless-dashboard-layout/dashboard")({
 
 function Index() {
   const router = useRouter();
-  const logout = accessTokenStore.getState().logout;
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     ...logoutUserMutation({
       credentials: "include",
@@ -28,7 +32,10 @@ function Index() {
     },
     onSettled: () => {
       Logger.info("User logout settled");
-      logout();
+      queryClient.removeQueries({
+        queryKey: createRefreshTokenQueryKey(),
+      });
+
       router.invalidate();
     },
   });
@@ -46,7 +53,9 @@ function Index() {
           Logout
         </Button>
       </header>
-      <BalanceSummary />
+      <Suspense fallback={<Loader />}>
+        <BalanceSummary />
+      </Suspense>
       <AccountSummary />
     </div>
   );

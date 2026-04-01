@@ -1,36 +1,25 @@
-import {
-  createFileRoute,
-  Outlet,
-  useLocation,
-  useNavigate,
-} from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
 import styles from "./_pathless-auth-layout.module.css";
 import { Logo } from "#frontend/assets/icons/icons";
-import { useAccessToken } from "#frontend/shared/store/access-token";
+import { createRefreshTokenOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
 
 export const Route = createFileRoute("/_pathless-auth-layout")({
   component: AuthLayout,
 });
 
 function AuthLayout() {
-  const currentLocation = useLocation();
-  const accessToken = useAccessToken();
-  const navigate = useNavigate();
+  const { data } = useQuery({
+    ...createRefreshTokenOptions({
+      credentials: "include",
+    }),
+    throwOnError: false,
+    enabled: false,
+  });
 
-  console.log(
-    "in auth layout route and access token:",
-    currentLocation,
-    accessToken,
-  );
-
-  useEffect(() => {
-    if (accessToken) {
-      navigate({
-        to: currentLocation.pathname,
-      });
-    }
-  }, [accessToken, currentLocation, navigate]);
+  if (data?.accessToken) {
+    return <Navigate to="/dashboard" />;
+  }
 
   return (
     <main className={styles.page}>

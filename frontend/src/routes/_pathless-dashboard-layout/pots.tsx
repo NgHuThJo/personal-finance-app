@@ -1,23 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Suspense } from "react";
 import { PotsBoard } from "#frontend/features/pots/components/board";
-import { clientWithAuth } from "#frontend/shared/api/client";
-import { getAllPotsOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
+import { Loader } from "#frontend/shared/primitives/loader";
 
 export const Route = createFileRoute("/_pathless-dashboard-layout/pots")({
   component: Pots,
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData({
-      ...getAllPotsOptions({
-        client: clientWithAuth,
-      }),
-    });
-  },
 });
 
 function Pots() {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<Loader />}>
       <PotsBoard />
     </Suspense>
   );

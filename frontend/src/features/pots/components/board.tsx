@@ -68,7 +68,6 @@ export function PotsBoard() {
                   toggleEditDialog={toggleEditDialog}
                 />
               )}
-              <div className={styles.separator} />
               {isDeleteDialogOpen && (
                 <DeletePotDialog
                   potData={pot}

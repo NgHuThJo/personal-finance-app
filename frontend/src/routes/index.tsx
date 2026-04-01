@@ -1,9 +1,19 @@
-import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { createFileRoute, Navigate, useLocation } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
 function Index() {
-  return <Navigate to="/login" />;
+  const currentLocation = useLocation();
+
+  return (
+    <Navigate
+      to={
+        currentLocation.pathname === "/"
+          ? "/dashboard"
+          : currentLocation.pathname
+      }
+    />
+  );
 }

@@ -1,20 +1,12 @@
-import {
-  QueryCache,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
-import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { z } from "zod";
 import { routeTree } from "#frontend/routeTree.gen";
+import { queryClient } from "#frontend/shared/api/client";
 import { ErrorBoundary } from "#frontend/shared/app/error-boundary";
-import { Logger } from "#frontend/shared/app/logging";
 import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 import "#frontend/assets/styles";
-
-// Added for customizing test behavior
-const defaultQueryRetries = import.meta.env.VITE_IS_E2E === "true" ? 1 : 3;
 
 z.config({
   customError: (issue) => {
@@ -45,25 +37,6 @@ z.config({
   },
 });
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      throwOnError: true,
-      retry: defaultQueryRetries,
-    },
-  },
-  queryCache: new QueryCache({
-    onError(error, query) {
-      if (query.state.data !== undefined) {
-        Logger.error("Background update failed:", error);
-        return;
-      }
-
-      Logger.error("Something went wrong:", error);
-    },
-  }),
-});
-
 const router = createRouter({
   routeTree,
   context: {
@@ -86,11 +59,11 @@ if (!root) {
 }
 
 ReactDOM.createRoot(root, {}).render(
-  <StrictMode>
-    <ErrorBoundary fallback={<div>Some error happened.</div>}>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    </ErrorBoundary>
-  </StrictMode>,
+  // <StrictMode>
+  <ErrorBoundary fallback={<div>Some error happened.</div>}>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  </ErrorBoundary>,
+  // </StrictMode>,
 );
