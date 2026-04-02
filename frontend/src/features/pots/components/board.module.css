@@ -27,32 +27,3 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
-
-.card {
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  gap: var(--spacing-8);
-  padding: var(--spacing-6) var(--spacing-5);
-  border-radius: var(--border-radius-6);
-  background-color: var(--color-background-surface-secondary);
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--spacing-4);
-}
-
-.card-footer {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-4);
-  align-items: center;
-  gap: var(--spacing-4);
-}
-
-.status-report {
-  font-weight: var(--font-weight-heading);
-  color: var(--color-text-secondary);
-}

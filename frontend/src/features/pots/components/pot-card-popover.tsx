@@ -20,7 +20,7 @@ export function PotCardPopover({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="icon">
+        <Button variant="icon" data-testid="popover">
           <Dots />
         </Button>
       </PopoverTrigger>

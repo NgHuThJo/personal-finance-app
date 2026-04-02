@@ -147,10 +147,12 @@ export function AddMoneyToPotDialog({
                     }}
                   />
                   {errors.addAmount && (
-                    <FieldError>{errors.addAmount?.message}</FieldError>
+                    <FieldError data-testid="money-added-error">
+                      {errors.addAmount?.message}
+                    </FieldError>
                   )}
                   {errors.root?.["server-unprocessable-content"] && (
-                    <FieldError>
+                    <FieldError data-testid="server-unprocessable-content">
                       {errors.root["server-unprocessable-content"].message}
                     </FieldError>
                   )}

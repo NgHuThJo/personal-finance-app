@@ -127,6 +127,7 @@ export function AddPotDialog() {
             <Input
               type="text"
               id="name"
+              data-testid="name-error"
               placeholder="e.g. Rainy Days"
               {...register("name", {
                 required: "Pot name required",
@@ -145,6 +146,7 @@ export function AddPotDialog() {
               type="number"
               step="any"
               id="target"
+              data-testid="target-error"
               placeholder="$ e.g. 2000"
               {...register("target", {
                 valueAsNumber: true,

@@ -1,10 +1,21 @@
 import { test as base } from "@playwright/test";
 import { zocker } from "zocker";
 import {
+  zGetAllPotsResponse,
   zGetBalanceByUserIdResponse,
   zLoginUserResponse,
   zSignUpUserResponse,
 } from "#frontend/shared/client/zod.gen";
+
+type ProblemDetails = {
+  title?: string;
+  detail: string;
+  status: number;
+  type?: string;
+  instance?: string;
+};
+
+export const createProblemDetails = (problems: ProblemDetails) => problems;
 
 export const test = base.extend({
   context: async ({ browser }, use) => {
@@ -36,14 +47,35 @@ export const test = base.extend({
     );
 
     // Pot
-    await context.route(`**/v1/pots`, (r) =>
+    await context.route(`**/v1/pots`, (r) => {
+      let idCounter = 1;
+
+      return r.fulfill({
+        json: zocker(zGetAllPotsResponse)
+          .supply(zGetAllPotsResponse, {
+            id: ++idCounter,
+            name: "some-random-name",
+            target: 1000,
+            total: 500,
+          })
+          .generateMany(3),
+        status: 200,
+      });
+    });
+
+    await context.route("**/v1/pots/*", (r) =>
       r.fulfill({
-        json: {},
         status: 204,
       }),
     );
 
     await context.route(`**/v1/pots/*/addition`, (r) =>
+      r.fulfill({
+        status: 204,
+      }),
+    );
+
+    await context.route(`**/v1/pots/*/withdrawal`, (r) =>
       r.fulfill({
         status: 204,
       }),
@@ -59,7 +91,7 @@ export const test = base.extend({
             income: 750,
           })
           .generate(),
-        status: 204,
+        status: 200,
       }),
     );
 
@@ -68,15 +100,15 @@ export const test = base.extend({
 
     await context.close();
   },
-  page: async ({ page }, use) => {
-    page.on("requestfailed", (req) => {
-      console.log(req.url(), req.failure()?.errorText);
-    });
+  // page: async ({ page }, use) => {
+  //   page.on("requestfailed", (req) => {
+  //     console.log(req.url(), req.failure()?.errorText);
+  //   });
 
-    page.on("console", (msg) => {
-      console.log("app log:", msg.location(), msg.text());
-    });
-    // page.on("request", (r) => console.log("REQ:", r.url()));
-    await use(page);
-  },
+  //   page.on("console", (msg) => {
+  //     console.log("app log:", msg.location(), msg.text());
+  //   });
+  //   // page.on("request", (r) => console.log("REQ:", r.url()));
+  //   await use(page);
+  // },
 });

@@ -177,7 +177,9 @@ export function WithdrawMoneyDialog({
                     }}
                   />
                   {errors.withdrawAmount && (
-                    <FieldError>{errors.withdrawAmount?.message}</FieldError>
+                    <FieldError data-testid="withdraw-money-error">
+                      {errors.withdrawAmount?.message}
+                    </FieldError>
                   )}
                   {errors.root?.["server-unprocessable-content"] && (
                     <FieldError data-testid="server-unprocessable-content">

@@ -116,10 +116,14 @@ export function EditPotDialog({
               })}
             />
             {errors.potName && (
-              <FieldError>{errors.potName?.message}</FieldError>
+              <FieldError data-testid="edit-pot-potname-error">
+                {errors.potName?.message}
+              </FieldError>
             )}
             {errors.root?.["server-conflict"] && (
-              <FieldError>{errors.root["server-conflict"].message}</FieldError>
+              <FieldError data-testid="server-conflict">
+                {errors.root["server-conflict"].message}
+              </FieldError>
             )}
           </Field>
           <Field>
@@ -139,15 +143,21 @@ export function EditPotDialog({
               })}
             />
             {errors.newTarget && (
-              <FieldError>{errors.newTarget?.message}</FieldError>
+              <FieldError data-testid="edit-pot-target-error">
+                {errors.newTarget?.message}
+              </FieldError>
             )}
             {errors.root?.["server-bad-request"] && (
-              <FieldError>
+              <FieldError data-testid="server-bad-request">
                 {errors.root["server-bad-request"].message}
               </FieldError>
             )}
           </Field>
-          <Button type="submit" variant="cta-primary">
+          <Button
+            type="submit"
+            variant="cta-primary"
+            data-testid="edit-pot-submit-button"
+          >
             Submit
           </Button>
         </form>
