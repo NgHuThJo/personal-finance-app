@@ -91,6 +91,19 @@ public static class RouteGrouper
         return app;
     }
 
+    /* Budget */
+    public static WebApplication MapBudgetApi(this WebApplication app)
+    {
+        var group = app.MapGroup("/v1/budgets");
+        group.RequireAuthorization().RequireRateLimiting("per-user");
+        group
+            .MapGet("", GetAllBudgetsEndpoint.GetAllBudgets)
+            .WithName(nameof(GetAllBudgetsEndpoint.GetAllBudgets))
+            .ProducesProblem((int)HttpStatusCode.BadRequest);
+
+        return app;
+    }
+
     /* Auth */
     public static WebApplication MapAuthApi(this WebApplication app)
     {
