@@ -63,11 +63,25 @@ export const test = base.extend({
       });
     });
 
-    await context.route("**/v1/pots/*", (r) =>
-      r.fulfill({
-        status: 204,
-      }),
-    );
+    await context.route("**/v1/pots/*", (r) => {
+      if (r.request().method() === "DELETE") {
+        return r.fulfill({
+          status: 204,
+        });
+      }
+
+      return r.fallback();
+    });
+
+    await context.route("**/v1/pots/*", (r) => {
+      if (r.request().method() === "PUT") {
+        return r.fulfill({
+          status: 204,
+        });
+      }
+
+      return r.fallback();
+    });
 
     await context.route(`**/v1/pots/*/addition`, (r) =>
       r.fulfill({

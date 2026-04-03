@@ -1,5 +1,7 @@
 import { expect } from "@playwright/test";
+import { zocker } from "zocker";
 import { createProblemDetails, test } from "../../fixtures/api";
+import { zGetAllPotsResponse } from "#frontend/shared/client/zod.gen";
 
 test.describe("pot", () => {
   test.describe("add new pot", () => {
@@ -241,9 +243,127 @@ test.describe("pot", () => {
 
       await page.getByLabel(/pot name/i).fill("some random valid name");
       await page.getByLabel(/target amount/i).fill("20");
-      await page.getByTestId("edit-pot-submit-button").first().click();
+      await page.getByRole("button", { name: /submit/i }).click();
+
+      await expect(
+        page.getByTestId("edit-pot-potname-error"),
+      ).not.toBeVisible();
+    });
+
+    test("should open edit pot dialog and show errors after form submission with invalid data", async ({
+      page,
+    }) => {
+      await page.goto("/pots");
+
+      await page.getByTestId("popover").first().click();
+      await page.getByRole("button", { name: /edit pot/i }).click();
+
+      await page.getByLabel(/pot name/i).fill("");
+      await page.getByLabel(/target amount/i).fill("");
+      await page.getByRole("button", { name: /submit/i }).click();
 
       await expect(page.getByTestId("edit-pot-potname-error")).toBeVisible();
+      await expect(page.getByTestId("edit-pot-target-error")).toBeVisible();
+    });
+
+    test("should open edit pot dialog and show bad request server error after form submission with invalid new target data", async ({
+      page,
+    }) => {
+      await page.route("**/v1/pots/*", (r) =>
+        r.fulfill({
+          status: 400,
+          json: createProblemDetails({
+            status: 400,
+            detail: "some bad request erro",
+          }),
+        }),
+      );
+
+      await page.goto("/pots");
+
+      await page.getByTestId("popover").first().click();
+      await page.getByRole("button", { name: /edit pot/i }).click();
+
+      await page.getByLabel(/pot name/i).fill("some-random-pot-name");
+      await page.getByLabel(/target amount/i).fill("2000");
+      await page.getByRole("button", { name: /submit/i }).click();
+
+      await expect(page.getByTestId("server-bad-request")).toBeVisible();
+    });
+
+    test("should open edit pot dialog and show conflict server error after form submission with duplicate potname data", async ({
+      page,
+    }) => {
+      await page.route("**/v1/pots/*", (r) =>
+        r.fulfill({
+          status: 409,
+          json: createProblemDetails({
+            status: 409,
+            detail: "some conflict error",
+          }),
+        }),
+      );
+
+      await page.goto("/pots");
+
+      await page.getByTestId("popover").first().click();
+      await page.getByRole("button", { name: /edit pot/i }).click();
+
+      await page.getByLabel(/pot name/i).fill("some-random-pot-name");
+      await page.getByLabel(/target amount/i).fill("2000");
+      await page.getByRole("button", { name: /submit/i }).click();
+
+      await expect(page.getByTestId("server-conflict")).toBeVisible();
+    });
+  });
+
+  test.describe("delete pot", () => {
+    test("should open delete pot dialog and show no error messages after confirmation", async ({
+      page,
+    }) => {
+      await page.goto("/pots");
+      const listItems = page.getByRole("listitem");
+      await expect(listItems.first()).toBeVisible();
+
+      await page.route(`**/v1/pots`, (r) => {
+        let idCounter = 1;
+
+        return r.fulfill({
+          json: zocker(zGetAllPotsResponse)
+            .supply(zGetAllPotsResponse, {
+              id: ++idCounter,
+              name: "some-random-name",
+              target: 1000,
+              total: 500,
+            })
+            .generateMany(2),
+          status: 200,
+        });
+      });
+
+      const popover = page.getByTestId("popover").first();
+      await popover.click();
+      await page.getByRole("button", { name: /delete pot/i }).click();
+
+      await page.getByRole("button", { name: /confirm deletion/i }).click();
+
+      await expect(page.getByRole("listitem")).toHaveCount(2);
+    });
+
+    test("should open delete pot dialog and close the dialog after clicking close", async ({
+      page,
+    }) => {
+      await page.goto("/pots");
+      const listItems = page.getByRole("listitem");
+      await expect(listItems.first()).toBeVisible();
+
+      const popover = page.getByTestId("popover").first();
+      await popover.click();
+      await page.getByRole("button", { name: /delete pot/i }).click();
+      const deleteDialog = page.getByTestId("delete-dialog");
+      await deleteDialog.getByRole("button", { name: /close/i }).click();
+
+      await expect(deleteDialog).not.toBeVisible();
     });
   });
 });

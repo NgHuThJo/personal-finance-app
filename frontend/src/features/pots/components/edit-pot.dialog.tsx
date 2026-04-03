@@ -153,11 +153,7 @@ export function EditPotDialog({
               </FieldError>
             )}
           </Field>
-          <Button
-            type="submit"
-            variant="cta-primary"
-            data-testid="edit-pot-submit-button"
-          >
+          <Button type="submit" variant="cta-primary">
             Submit
           </Button>
         </form>
