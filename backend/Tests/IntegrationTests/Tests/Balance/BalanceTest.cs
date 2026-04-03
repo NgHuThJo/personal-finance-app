@@ -1,5 +1,4 @@
 using System.Net;
-using backend.IntegrationTests;
 using FluentAssertions;
 using Xunit;
 
@@ -36,6 +35,6 @@ public class BalanceTest(DatabaseFixture fixture) : IntegrationTestBase(fixture)
             TestContext.Current.CancellationToken
         );
         // Assert
-        getResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        getResponse.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
     }
 }

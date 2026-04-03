@@ -1,10 +1,11 @@
-using backend.IntegrationTests;
 using Testcontainers.PostgreSql;
 using Xunit;
 
-[assembly: AssemblyFixture(typeof(PostgresContainerFixture))]
+[assembly: AssemblyFixture(
+    typeof(backend.Tests.IntegrationTests.PostgresContainerFixture)
+)]
 
-namespace backend.IntegrationTests;
+namespace backend.Tests.IntegrationTests;
 
 public class PostgresContainerFixture : IAsyncLifetime
 {

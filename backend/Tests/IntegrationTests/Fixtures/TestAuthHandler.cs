@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 
-namespace backend.IntegrationTests;
+namespace backend.Tests.IntegrationTests;
 
 public class TestAuthHandlerOptions : AuthenticationSchemeOptions
 {

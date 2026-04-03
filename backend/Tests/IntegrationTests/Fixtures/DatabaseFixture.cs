@@ -7,7 +7,7 @@ using Respawn;
 using Testcontainers.PostgreSql;
 using Xunit;
 
-namespace backend.IntegrationTests;
+namespace backend.Tests.IntegrationTests;
 
 public class DatabaseFixture(PostgresContainerFixture containerFixture)
     : IAsyncLifetime

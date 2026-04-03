@@ -73,7 +73,7 @@ public sealed class SignUpUserEndpoint
         {
             SignupSuccessful(var user) => TypedResults.CreatedAtRoute(
                 user,
-                "GetUserById"
+                nameof(GetUserByIdEndpoint.GetUserById)
             ),
             EmailAlreadyInUse(var email) => TypedResultsProblemDetails.Conflict(
                 $"Email address \"{email}\" is already in use"

@@ -1,3 +1,4 @@
+using backend.Src.Features;
 using backend.Src.Models;
 using Bogus;
 
@@ -17,4 +18,12 @@ public static class BudgetFaker
         new Faker<Budget>()
             .RuleFor(b => b.Maximum, f => f.Random.Int(1, 1000) / 100m)
             .RuleFor(b => b.Category, f => FakerExtensions.GetRandomCategory());
+
+    public static CreateBudgetRequest CreateBudgetRequest() =>
+        new Faker<CreateBudgetRequest>()
+            .RuleFor(b => b.Maximum, (Faker f) => f.Random.Int(1, 1000) / 100m)
+            .RuleFor(
+                b => b.Category,
+                (Faker f) => FakerExtensions.GetRandomCategory()
+            );
 }

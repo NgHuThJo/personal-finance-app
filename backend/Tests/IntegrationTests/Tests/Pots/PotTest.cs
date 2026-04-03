@@ -6,7 +6,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
-namespace backend.IntegrationTests;
+namespace backend.Tests.IntegrationTests;
 
 public class PotApiTest(DatabaseFixture dbFixture)
     : IntegrationTestBase(dbFixture)

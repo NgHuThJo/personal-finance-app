@@ -13,7 +13,7 @@ public record GetAllBudgetsResponse
     [Range(1, int.MaxValue)]
     public required int Id { get; init; }
 
-    [Range(1, double.MaxValue)]
+    [Range(0, double.MaxValue)]
     public required decimal Maximum { get; init; }
 
     public required Category Category { get; init; }
@@ -29,19 +29,15 @@ public static class GetAllBudgetsEndpoint
     {
         var budgets = await handler.Handle(user.UserId, ct);
 
-        return TypedResults.Ok(budgets.Value);
+        return TypedResults.Ok(budgets);
     }
 }
 
-public class GetAllBudgetsHandler(
-    AppDbContext context,
-    ILogger<GetAllBudgetsHandler> logger
-)
+public class GetAllBudgetsHandler(AppDbContext context)
 {
     private readonly AppDbContext _context = context;
-    private readonly ILogger<GetAllBudgetsHandler> _logger = logger;
 
-    public async Task<Result<List<GetAllBudgetsResponse>, BudgetError>> Handle(
+    public async Task<List<GetAllBudgetsResponse>> Handle(
         int userId,
         CancellationToken ct
     )
@@ -57,6 +53,6 @@ public class GetAllBudgetsHandler(
             .AsNoTracking()
             .ToListAsync(ct);
 
-        return Result<List<GetAllBudgetsResponse>, BudgetError>.Ok(budgets);
+        return budgets;
     }
 }

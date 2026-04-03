@@ -15,7 +15,7 @@ public static class BalanceBuilder
         configure(newBalance);
         newBalance.User = user ?? state.DefaultUser;
 
-        state.Context.Add(newBalance);
+        state.Context.Balances.Add(newBalance);
 
         balance = newBalance;
 

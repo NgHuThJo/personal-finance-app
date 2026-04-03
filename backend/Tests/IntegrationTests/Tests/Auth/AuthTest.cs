@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using Xunit;
 
-namespace backend.IntegrationTests;
+namespace backend.Tests.IntegrationTests;
 
 public class AuthApiTest(DatabaseFixture fixture) : IntegrationTestBase(fixture)
 {

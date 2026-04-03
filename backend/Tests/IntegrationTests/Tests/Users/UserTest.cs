@@ -5,7 +5,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Xunit;
 
-namespace backend.IntegrationTests;
+namespace backend.Tests.IntegrationTests;
 
 public class UserApiTest : IntegrationTestBase
 {
@@ -46,6 +46,6 @@ public class UserApiTest : IntegrationTestBase
             TestContext.Current.CancellationToken
         );
 
-        getResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        getResponse.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
     }
 }

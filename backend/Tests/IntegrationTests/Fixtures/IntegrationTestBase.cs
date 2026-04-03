@@ -1,7 +1,7 @@
 using System.Net.Http.Headers;
 using Xunit;
 
-namespace backend.IntegrationTests;
+namespace backend.Tests.IntegrationTests;
 
 public abstract class IntegrationTestBase
     : IClassFixture<DatabaseFixture>,

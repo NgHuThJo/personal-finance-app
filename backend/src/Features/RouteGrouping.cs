@@ -99,6 +99,12 @@ public static class RouteGrouper
         group
             .MapGet("", GetAllBudgetsEndpoint.GetAllBudgets)
             .WithName(nameof(GetAllBudgetsEndpoint.GetAllBudgets))
+            .ProducesProblem((int)HttpStatusCode.Unauthorized);
+        group
+            .MapPost("", CreateBudgetEndpoint.CreateBudget)
+            .WithName(nameof(CreateBudgetEndpoint.CreateBudget))
+            .AddValidationFilter<CreateBudgetRequest>()
+            .ProducesProblem((int)HttpStatusCode.Unauthorized)
             .ProducesProblem((int)HttpStatusCode.BadRequest);
 
         return app;

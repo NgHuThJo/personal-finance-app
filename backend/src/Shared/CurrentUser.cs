@@ -22,11 +22,9 @@ public class CurrentUser
         var idClaim = currentUser?.FindFirstValue("sub");
 
         // userId becomes int default value which is zero
-        if (!int.TryParse(idClaim, out int userId))
+        if (!int.TryParse(idClaim, out int userId) || userId <= 0)
         {
-            throw new SecurityException(
-                $"""UserId {userId} has invalid type"""
-            );
+            throw new SecurityException($"UserId {userId} has invalid type");
         }
 
         UserId = userId;
