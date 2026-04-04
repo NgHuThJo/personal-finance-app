@@ -488,6 +488,7 @@ export type CreateBudgetResponses = {
      */
     201: unknown;
 };
+<<<<<<< HEAD
 
 export type GetAllTransactionsData = {
     body?: never;
@@ -567,3 +568,5 @@ export type GetAllCategoriesResponses = {
 };
 
 export type GetAllCategoriesResponse = GetAllCategoriesResponses[keyof GetAllCategoriesResponses];
+=======
+>>>>>>> 76ced0e (feat: create budget card)
