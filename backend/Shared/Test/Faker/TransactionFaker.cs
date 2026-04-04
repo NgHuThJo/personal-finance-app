@@ -11,7 +11,10 @@ public static class TransactionFaker
         new Faker<Transaction>()
             .RuleFor(t => t.Amount, f => f.Random.Int(100, 200) / 100m)
             .RuleFor(t => t.Created, f => f.Date.Recent())
-            .RuleFor(t => t.TransactionDate, f => DateTime.UtcNow.AddDays(7))
+            .RuleFor(
+                t => t.TransactionDate,
+                f => DateTimeOffset.UtcNow.AddDays(1)
+            )
             .RuleFor(t => t.IsRecurring, false)
             .RuleFor(t => t.Category, f => FakerExtensions.GetRandomCategory())
             .UseSeed(seed);
@@ -20,7 +23,10 @@ public static class TransactionFaker
         new Faker<Transaction>()
             .RuleFor(t => t.Amount, f => f.Random.Decimal(100, 200) / 100m)
             .RuleFor(t => t.Created, f => f.Date.Recent())
-            .RuleFor(t => t.TransactionDate, f => DateTime.UtcNow.AddDays(7))
+            .RuleFor(
+                t => t.TransactionDate,
+                f => DateTimeOffset.UtcNow.AddDays(1)
+            )
             .RuleFor(t => t.IsRecurring, false)
             .RuleFor(t => t.Category, f => FakerExtensions.GetRandomCategory());
 }

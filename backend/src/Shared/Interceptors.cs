@@ -5,7 +5,7 @@ namespace backend.Src.Shared;
 
 public interface IHasTimestamps
 {
-    DateTime Created { get; set; }
+    DateTimeOffset Created { get; set; }
 }
 
 public class TimestampInterceptor : SaveChangesInterceptor
@@ -23,7 +23,7 @@ public class TimestampInterceptor : SaveChangesInterceptor
         }
 
         var entries = context.ChangeTracker.Entries<IHasTimestamps>();
-        var now = DateTime.Now;
+        var now = DateTimeOffset.UtcNow;
 
         foreach (var entry in entries)
         {
@@ -34,5 +34,32 @@ public class TimestampInterceptor : SaveChangesInterceptor
         }
 
         return base.SavingChanges(eventData, result);
+    }
+
+    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
+        DbContextEventData eventData,
+        InterceptionResult<int> result,
+        CancellationToken ct
+    )
+    {
+        var context = eventData.Context;
+
+        if (context == null)
+        {
+            return ValueTask.FromResult(result);
+        }
+
+        var entries = context.ChangeTracker.Entries<IHasTimestamps>();
+        var now = DateTimeOffset.UtcNow;
+
+        foreach (var entry in entries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.Created = now;
+            }
+        }
+
+        return base.SavingChangesAsync(eventData, result, ct);
     }
 }

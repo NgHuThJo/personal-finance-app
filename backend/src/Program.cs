@@ -41,7 +41,9 @@ foreach (var interceptorType in interceptorTypes)
     builder.Services.AddScoped(interceptorType);
 }
 
-// Register JwtTokenProvider
+// Register hosted service for due transactions
+builder.Services.AddHostedService<TransactionBackgroundService>();
+
 builder.Services.AddSingleton<JwtTokenProvider>();
 builder.Services.AddScoped<CurrentUser>();
 builder.Services.AddProblemDetails(options =>

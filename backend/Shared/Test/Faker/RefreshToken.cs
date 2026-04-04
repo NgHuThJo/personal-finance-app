@@ -16,6 +16,6 @@ public static class RefreshTokenFaker
             .RuleFor(r => r.IsRevoked, false)
             .RuleFor(
                 r => r.ExpiresAtUtc,
-                (Faker f) => DateTime.UtcNow.AddDays(7)
+                (Faker f) => DateTimeOffset.UtcNow.AddDays(7)
             );
 }
