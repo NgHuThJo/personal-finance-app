@@ -1,0 +1,19 @@
+.layout {
+  display: grid;
+}
+
+.separator {
+  border: 1px solid currentColor;
+}
+
+.cta-primary {
+  padding: 0.5rem;
+  font-weight: var(--font-weight-heading);
+  color: var(--color-status-success);
+}
+
+.cta-secondary {
+  padding: 0.5rem;
+  font-weight: var(--font-weight-heading);
+  color: var(--color-status-error);
+}

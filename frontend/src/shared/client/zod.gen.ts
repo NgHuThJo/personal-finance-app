@@ -6,6 +6,22 @@ export const zAddMoneyToPotRequest = z.object({
     addAmount: z.number()
 });
 
+export const zCategory = z.enum([
+    'entertainment',
+    'bills',
+    'groceries',
+    'transportation',
+    'education',
+    'lifestyle',
+    'shopping',
+    'general'
+]);
+
+export const zCreateBudgetRequest = z.object({
+    maximum: z.number().gte(0),
+    category: zCategory
+});
+
 export const zCreatePotRequest = z.object({
     target: z.number().gte(0),
     name: z.string().min(1)
@@ -18,6 +34,12 @@ export const zCreateRefreshTokenResponse = z.object({
 export const zEditPotRequest = z.object({
     potName: z.string(),
     newTarget: z.number()
+});
+
+export const zGetAllBudgetsResponse = z.object({
+    id: z.int().gte(1).lte(2147483647),
+    maximum: z.number().gte(0),
+    category: zCategory
 });
 
 export const zGetAllPotsResponse = z.object({
@@ -228,3 +250,20 @@ export const zGetBalanceByUserIdData = z.object({
  * OK
  */
 export const zGetBalanceByUserIdResponse2 = zGetBalanceByUserIdResponse;
+
+export const zGetAllBudgetsData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+/**
+ * OK
+ */
+export const zGetAllBudgetsResponse2 = z.array(zGetAllBudgetsResponse);
+
+export const zCreateBudgetData = z.object({
+    body: zCreateBudgetRequest,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});

@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { addMoneyToPot, createPot, createRefreshToken, deletePot, editPot, getAllPots, getBalanceByUserId, getUserById, loginGoogleUser, loginUser, logoutGoogleUser, logoutUser, type Options, signUpUser, withdrawMoneyFromPot } from '../sdk.gen';
-import type { AddMoneyToPotData, AddMoneyToPotError, AddMoneyToPotResponse, CreatePotData, CreatePotError, CreateRefreshTokenData, CreateRefreshTokenError, CreateRefreshTokenResponse2, DeletePotData, DeletePotError, DeletePotResponse, EditPotData, EditPotError, EditPotResponse, GetAllPotsData, GetAllPotsResponse2, GetBalanceByUserIdData, GetBalanceByUserIdError, GetBalanceByUserIdResponse2, GetUserByIdData, GetUserByIdError, GetUserByIdResponse2, LoginGoogleUserData, LoginUserData, LoginUserError, LoginUserResponse, LogoutGoogleUserData, LogoutUserData, LogoutUserError, LogoutUserResponse, SignUpUserData, SignUpUserError, SignUpUserResponse2, WithdrawMoneyFromPotData, WithdrawMoneyFromPotError, WithdrawMoneyFromPotResponse } from '../types.gen';
+import { addMoneyToPot, createBudget, createPot, createRefreshToken, deletePot, editPot, getAllBudgets, getAllPots, getBalanceByUserId, getUserById, loginGoogleUser, loginUser, logoutGoogleUser, logoutUser, type Options, signUpUser, withdrawMoneyFromPot } from '../sdk.gen';
+import type { AddMoneyToPotData, AddMoneyToPotError, AddMoneyToPotResponse, CreateBudgetData, CreateBudgetError, CreatePotData, CreatePotError, CreateRefreshTokenData, CreateRefreshTokenError, CreateRefreshTokenResponse2, DeletePotData, DeletePotError, DeletePotResponse, EditPotData, EditPotError, EditPotResponse, GetAllBudgetsData, GetAllBudgetsError, GetAllBudgetsResponse2, GetAllPotsData, GetAllPotsResponse2, GetBalanceByUserIdData, GetBalanceByUserIdError, GetBalanceByUserIdResponse2, GetUserByIdData, GetUserByIdError, GetUserByIdResponse2, LoginGoogleUserData, LoginUserData, LoginUserError, LoginUserResponse, LogoutGoogleUserData, LogoutUserData, LogoutUserError, LogoutUserResponse, SignUpUserData, SignUpUserError, SignUpUserResponse2, WithdrawMoneyFromPotData, WithdrawMoneyFromPotError, WithdrawMoneyFromPotResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -242,3 +242,32 @@ export const getBalanceByUserIdOptions = (options?: Options<GetBalanceByUserIdDa
     },
     queryKey: getBalanceByUserIdQueryKey(options)
 });
+
+export const getAllBudgetsQueryKey = (options?: Options<GetAllBudgetsData>) => createQueryKey('getAllBudgets', options);
+
+export const getAllBudgetsOptions = (options?: Options<GetAllBudgetsData>) => queryOptions<GetAllBudgetsResponse2, GetAllBudgetsError, GetAllBudgetsResponse2, ReturnType<typeof getAllBudgetsQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getAllBudgets({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getAllBudgetsQueryKey(options)
+});
+
+export const createBudgetMutation = (options?: Partial<Options<CreateBudgetData>>): UseMutationOptions<unknown, CreateBudgetError, Options<CreateBudgetData>> => {
+    const mutationOptions: UseMutationOptions<unknown, CreateBudgetError, Options<CreateBudgetData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await createBudget({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};

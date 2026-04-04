@@ -8,6 +8,13 @@ export type AddMoneyToPotRequest = {
     addAmount: number;
 };
 
+export type Category = 'entertainment' | 'bills' | 'groceries' | 'transportation' | 'education' | 'lifestyle' | 'shopping' | 'general';
+
+export type CreateBudgetRequest = {
+    maximum: number;
+    category: Category;
+};
+
 export type CreatePotRequest = {
     target: number;
     name: string;
@@ -20,6 +27,12 @@ export type CreateRefreshTokenResponse = {
 export type EditPotRequest = {
     potName: string;
     newTarget: number;
+};
+
+export type GetAllBudgetsResponse = {
+    id: number;
+    maximum: number;
+    category: Category;
 };
 
 export type GetAllPotsResponse = {
@@ -401,3 +414,55 @@ export type GetBalanceByUserIdResponses = {
 };
 
 export type GetBalanceByUserIdResponse2 = GetBalanceByUserIdResponses[keyof GetBalanceByUserIdResponses];
+
+export type GetAllBudgetsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/budgets';
+};
+
+export type GetAllBudgetsErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ProblemDetails;
+};
+
+export type GetAllBudgetsError = GetAllBudgetsErrors[keyof GetAllBudgetsErrors];
+
+export type GetAllBudgetsResponses = {
+    /**
+     * OK
+     */
+    200: Array<GetAllBudgetsResponse>;
+};
+
+export type GetAllBudgetsResponse2 = GetAllBudgetsResponses[keyof GetAllBudgetsResponses];
+
+export type CreateBudgetData = {
+    body: CreateBudgetRequest;
+    path?: never;
+    query?: never;
+    url: '/v1/budgets';
+};
+
+export type CreateBudgetErrors = {
+    /**
+     * Bad Request
+     */
+    400: ProblemDetails;
+    /**
+     * Unauthorized
+     */
+    401: ProblemDetails;
+};
+
+export type CreateBudgetError = CreateBudgetErrors[keyof CreateBudgetErrors];
+
+export type CreateBudgetResponses = {
+    /**
+     * Created
+     */
+    201: unknown;
+};

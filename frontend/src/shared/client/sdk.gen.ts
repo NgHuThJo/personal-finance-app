@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AddMoneyToPotData, AddMoneyToPotErrors, AddMoneyToPotResponses, CreatePotData, CreatePotErrors, CreatePotResponses, CreateRefreshTokenData, CreateRefreshTokenErrors, CreateRefreshTokenResponses, DeletePotData, DeletePotErrors, DeletePotResponses, EditPotData, EditPotErrors, EditPotResponses, GetAllPotsData, GetAllPotsResponses, GetBalanceByUserIdData, GetBalanceByUserIdErrors, GetBalanceByUserIdResponses, GetUserByIdData, GetUserByIdErrors, GetUserByIdResponses, LoginGoogleUserData, LoginGoogleUserResponses, LoginUserData, LoginUserErrors, LoginUserResponses, LogoutGoogleUserData, LogoutGoogleUserResponses, LogoutUserData, LogoutUserErrors, LogoutUserResponses, SignUpUserData, SignUpUserErrors, SignUpUserResponses, WithdrawMoneyFromPotData, WithdrawMoneyFromPotErrors, WithdrawMoneyFromPotResponses } from './types.gen';
+import type { AddMoneyToPotData, AddMoneyToPotErrors, AddMoneyToPotResponses, CreateBudgetData, CreateBudgetErrors, CreateBudgetResponses, CreatePotData, CreatePotErrors, CreatePotResponses, CreateRefreshTokenData, CreateRefreshTokenErrors, CreateRefreshTokenResponses, DeletePotData, DeletePotErrors, DeletePotResponses, EditPotData, EditPotErrors, EditPotResponses, GetAllBudgetsData, GetAllBudgetsErrors, GetAllBudgetsResponses, GetAllPotsData, GetAllPotsResponses, GetBalanceByUserIdData, GetBalanceByUserIdErrors, GetBalanceByUserIdResponses, GetUserByIdData, GetUserByIdErrors, GetUserByIdResponses, LoginGoogleUserData, LoginGoogleUserResponses, LoginUserData, LoginUserErrors, LoginUserResponses, LogoutGoogleUserData, LogoutGoogleUserResponses, LogoutUserData, LogoutUserErrors, LogoutUserResponses, SignUpUserData, SignUpUserErrors, SignUpUserResponses, WithdrawMoneyFromPotData, WithdrawMoneyFromPotErrors, WithdrawMoneyFromPotResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -90,3 +90,14 @@ export const loginGoogleUser = <ThrowOnError extends boolean = false>(options?: 
 export const logoutGoogleUser = <ThrowOnError extends boolean = false>(options?: Options<LogoutGoogleUserData, ThrowOnError>) => (options?.client ?? client).post<LogoutGoogleUserResponses, unknown, ThrowOnError>({ url: '/v1/auth/logout/google', ...options });
 
 export const getBalanceByUserId = <ThrowOnError extends boolean = false>(options?: Options<GetBalanceByUserIdData, ThrowOnError>) => (options?.client ?? client).get<GetBalanceByUserIdResponses, GetBalanceByUserIdErrors, ThrowOnError>({ url: '/v1/balances/me', ...options });
+
+export const getAllBudgets = <ThrowOnError extends boolean = false>(options?: Options<GetAllBudgetsData, ThrowOnError>) => (options?.client ?? client).get<GetAllBudgetsResponses, GetAllBudgetsErrors, ThrowOnError>({ url: '/v1/budgets', ...options });
+
+export const createBudget = <ThrowOnError extends boolean = false>(options: Options<CreateBudgetData, ThrowOnError>) => (options.client ?? client).post<CreateBudgetResponses, CreateBudgetErrors, ThrowOnError>({
+    url: '/v1/budgets',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});

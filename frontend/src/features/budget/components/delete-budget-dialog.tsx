@@ -1,12 +1,12 @@
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import styles from "./delete-pot.module.css";
+import styles from "./delete-Budget.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
-import type { GetAllPotsResponse } from "#frontend/shared/client";
+import type { GetAllBudgetsResponse } from "#frontend/shared/client";
 import {
-  deletePotMutation,
-  getAllPotsQueryKey,
+  deleteBudgetMutation,
+  getAllBudgetsQueryKey,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { Button } from "#frontend/shared/primitives/button";
 import {
@@ -17,34 +17,36 @@ import {
 } from "#frontend/shared/primitives/dialog";
 import { FieldError } from "#frontend/shared/primitives/field";
 
-type DeletePotProps = {
-  potData: GetAllPotsResponse;
+type DeleteBudgetProps = {
+  BudgetData: GetAllBudgetsResponse;
   isDeleteDialogOpen: boolean;
   toggleDeleteDialog: (shouldOpen: boolean) => void;
 };
 
-export function DeletePotDialog({
-  potData: { id, name },
+export function DeleteBudgetDialog({
+  BudgetData: { id, maximum, category },
   isDeleteDialogOpen,
   toggleDeleteDialog,
-}: DeletePotProps) {
+}: DeleteBudgetProps) {
   const queryClient = useQueryClient();
   const {
     setError,
     formState: { errors },
   } = useForm();
   const { mutate } = useMutation({
-    ...deletePotMutation({
+    ...deleteBudgetMutation({
       client: clientWithAuth,
       credentials: "include",
     }),
     onSuccess: async () => {
-      Logger.info("Pot successfully deleted");
-      await queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
+      Logger.info("Budget successfully deleted");
+      await queryClient.invalidateQueries({
+        queryKey: getAllBudgetsQueryKey(),
+      });
       toggleDeleteDialog(false);
     },
     onError: (error) => {
-      Logger.error("Pot could not be deleted", error);
+      Logger.error("Budget could not be deleted", error);
 
       setError(`root.server`, {
         type: String(error.type),
@@ -56,7 +58,7 @@ export function DeletePotDialog({
   const handleDelete = () => {
     mutate({
       path: {
-        potId: id,
+        BudgetId: id,
       },
     });
   };
@@ -70,7 +72,7 @@ export function DeletePotDialog({
       <DialogContent showCloseButton={false} data-testid="delete-dialog">
         <DialogTitle>Delete "{name}"</DialogTitle>
         <DialogDescription>
-          Are you sure you want to delete this pot? This action cannot be
+          Are you sure you want to delete this Budget? This action cannot be
           reversed, and all the data inside it will be removed forever.
         </DialogDescription>
         {errors.root?.["server"] && (
