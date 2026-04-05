@@ -24,6 +24,14 @@ export type CreateRefreshTokenResponse = {
     accessToken: string;
 };
 
+export type CreateTransactionRequest = {
+    amount: number;
+    transactionDate: string;
+    isRecurring: boolean;
+    category: Category;
+    recipientEmail: string;
+};
+
 export type EditPotRequest = {
     potName: string;
     newTarget: number;
@@ -40,6 +48,20 @@ export type GetAllPotsResponse = {
     total: number;
     target: number;
     name: string;
+};
+
+export type GetAllTransactionsResponse = {
+    id: number;
+    amount: number;
+    transactionDate: string;
+    isRecurring: boolean;
+    category: Category;
+    user: GetAllTransactionsUserDto;
+};
+
+export type GetAllTransactionsUserDto = {
+    name: string;
+    email: string;
 };
 
 export type GetBalanceByUserIdResponse = {
@@ -466,3 +488,82 @@ export type CreateBudgetResponses = {
      */
     201: unknown;
 };
+
+export type GetAllTransactionsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/transactions';
+};
+
+export type GetAllTransactionsErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ProblemDetails;
+};
+
+export type GetAllTransactionsError = GetAllTransactionsErrors[keyof GetAllTransactionsErrors];
+
+export type GetAllTransactionsResponses = {
+    /**
+     * OK
+     */
+    200: Array<GetAllTransactionsResponse>;
+};
+
+export type GetAllTransactionsResponse2 = GetAllTransactionsResponses[keyof GetAllTransactionsResponses];
+
+export type CreateTransactionData = {
+    body: CreateTransactionRequest;
+    path?: never;
+    query?: never;
+    url: '/v1/transactions';
+};
+
+export type CreateTransactionErrors = {
+    /**
+     * Bad Request
+     */
+    400: unknown;
+    /**
+     * Unprocessable Entity
+     */
+    422: ProblemDetails;
+};
+
+export type CreateTransactionError = CreateTransactionErrors[keyof CreateTransactionErrors];
+
+export type CreateTransactionResponses = {
+    /**
+     * No Content
+     */
+    204: void;
+};
+
+export type CreateTransactionResponse = CreateTransactionResponses[keyof CreateTransactionResponses];
+
+export type GetAllCategoriesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/categories';
+};
+
+export type GetAllCategoriesErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ProblemDetails;
+};
+
+export type GetAllCategoriesError = GetAllCategoriesErrors[keyof GetAllCategoriesErrors];
+
+export type GetAllCategoriesResponses = {
+    /**
+     * OK
+     */
+    200: Array<Category>;
+};
+
+export type GetAllCategoriesResponse = GetAllCategoriesResponses[keyof GetAllCategoriesResponses];

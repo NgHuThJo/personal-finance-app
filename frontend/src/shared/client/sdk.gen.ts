@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AddMoneyToPotData, AddMoneyToPotErrors, AddMoneyToPotResponses, CreateBudgetData, CreateBudgetErrors, CreateBudgetResponses, CreatePotData, CreatePotErrors, CreatePotResponses, CreateRefreshTokenData, CreateRefreshTokenErrors, CreateRefreshTokenResponses, DeletePotData, DeletePotErrors, DeletePotResponses, EditPotData, EditPotErrors, EditPotResponses, GetAllBudgetsData, GetAllBudgetsErrors, GetAllBudgetsResponses, GetAllPotsData, GetAllPotsResponses, GetBalanceByUserIdData, GetBalanceByUserIdErrors, GetBalanceByUserIdResponses, GetUserByIdData, GetUserByIdErrors, GetUserByIdResponses, LoginGoogleUserData, LoginGoogleUserResponses, LoginUserData, LoginUserErrors, LoginUserResponses, LogoutGoogleUserData, LogoutGoogleUserResponses, LogoutUserData, LogoutUserErrors, LogoutUserResponses, SignUpUserData, SignUpUserErrors, SignUpUserResponses, WithdrawMoneyFromPotData, WithdrawMoneyFromPotErrors, WithdrawMoneyFromPotResponses } from './types.gen';
+import type { AddMoneyToPotData, AddMoneyToPotErrors, AddMoneyToPotResponses, CreateBudgetData, CreateBudgetErrors, CreateBudgetResponses, CreatePotData, CreatePotErrors, CreatePotResponses, CreateRefreshTokenData, CreateRefreshTokenErrors, CreateRefreshTokenResponses, CreateTransactionData, CreateTransactionErrors, CreateTransactionResponses, DeletePotData, DeletePotErrors, DeletePotResponses, EditPotData, EditPotErrors, EditPotResponses, GetAllBudgetsData, GetAllBudgetsErrors, GetAllBudgetsResponses, GetAllCategoriesData, GetAllCategoriesErrors, GetAllCategoriesResponses, GetAllPotsData, GetAllPotsResponses, GetAllTransactionsData, GetAllTransactionsErrors, GetAllTransactionsResponses, GetBalanceByUserIdData, GetBalanceByUserIdErrors, GetBalanceByUserIdResponses, GetUserByIdData, GetUserByIdErrors, GetUserByIdResponses, LoginGoogleUserData, LoginGoogleUserResponses, LoginUserData, LoginUserErrors, LoginUserResponses, LogoutGoogleUserData, LogoutGoogleUserResponses, LogoutUserData, LogoutUserErrors, LogoutUserResponses, SignUpUserData, SignUpUserErrors, SignUpUserResponses, WithdrawMoneyFromPotData, WithdrawMoneyFromPotErrors, WithdrawMoneyFromPotResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -101,3 +101,16 @@ export const createBudget = <ThrowOnError extends boolean = false>(options: Opti
         ...options.headers
     }
 });
+
+export const getAllTransactions = <ThrowOnError extends boolean = false>(options?: Options<GetAllTransactionsData, ThrowOnError>) => (options?.client ?? client).get<GetAllTransactionsResponses, GetAllTransactionsErrors, ThrowOnError>({ url: '/v1/transactions', ...options });
+
+export const createTransaction = <ThrowOnError extends boolean = false>(options: Options<CreateTransactionData, ThrowOnError>) => (options.client ?? client).post<CreateTransactionResponses, CreateTransactionErrors, ThrowOnError>({
+    url: '/v1/transactions',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const getAllCategories = <ThrowOnError extends boolean = false>(options?: Options<GetAllCategoriesData, ThrowOnError>) => (options?.client ?? client).get<GetAllCategoriesResponses, GetAllCategoriesErrors, ThrowOnError>({ url: '/v1/categories', ...options });

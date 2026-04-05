@@ -1,0 +1,20 @@
+.layout {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.heading {
+  font-size: var(--font-size-heading);
+}
+
+.body {
+  display: grid;
+  gap: var(--spacing-6);
+}

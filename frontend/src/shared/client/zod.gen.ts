@@ -31,6 +31,14 @@ export const zCreateRefreshTokenResponse = z.object({
     accessToken: z.string()
 });
 
+export const zCreateTransactionRequest = z.object({
+    amount: z.number(),
+    transactionDate: z.iso.datetime(),
+    isRecurring: z.boolean(),
+    category: zCategory,
+    recipientEmail: z.string()
+});
+
 export const zEditPotRequest = z.object({
     potName: z.string(),
     newTarget: z.number()
@@ -47,6 +55,20 @@ export const zGetAllPotsResponse = z.object({
     total: z.number().gte(0),
     target: z.number().gte(0),
     name: z.string().min(1)
+});
+
+export const zGetAllTransactionsUserDto = z.object({
+    name: z.string(),
+    email: z.string()
+});
+
+export const zGetAllTransactionsResponse = z.object({
+    id: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+    amount: z.number(),
+    transactionDate: z.iso.datetime(),
+    isRecurring: z.boolean(),
+    category: zCategory,
+    user: zGetAllTransactionsUserDto
 });
 
 export const zGetBalanceByUserIdResponse = z.object({
@@ -267,3 +289,36 @@ export const zCreateBudgetData = z.object({
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });
+
+export const zGetAllTransactionsData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+/**
+ * OK
+ */
+export const zGetAllTransactionsResponse2 = z.array(zGetAllTransactionsResponse);
+
+export const zCreateTransactionData = z.object({
+    body: zCreateTransactionRequest,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+/**
+ * No Content
+ */
+export const zCreateTransactionResponse = z.void();
+
+export const zGetAllCategoriesData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+/**
+ * OK
+ */
+export const zGetAllCategoriesResponse = z.array(zCategory);

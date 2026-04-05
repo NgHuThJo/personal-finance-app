@@ -1,5 +1,8 @@
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
+import styles from "./budget-card.module.css";
 import { Dots } from "#frontend/assets/icons/icons";
+import { BudgetProgressBar } from "#frontend/features/budget/components/budget-progressbar";
 import type { GetAllBudgetsResponse } from "#frontend/shared/client";
 import {
   Card,
@@ -12,9 +15,10 @@ import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 
 type BudgetCardProps = {
   budgetData: GetAllBudgetsResponse;
+  transactionAmount: number;
 };
 
-export function BudgetCard({ budgetData }: BudgetCardProps) {
+export function BudgetCard({ budgetData, transactionAmount }: BudgetCardProps) {
   const [isEditDialogOpen, setEditDialog] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialog] = useState(false);
   const { id, category, maximum } = budgetData;
@@ -38,40 +42,18 @@ export function BudgetCard({ budgetData }: BudgetCardProps) {
         <CardTitle>{capitalizeFirstLetter(category)}</CardTitle>
         <Dots />
       </CardHeader>
-      <CardContent></CardContent>
+      <CardContent>
+        <BudgetProgressBar maximum={maximum} spent={transactionAmount} />
+      </CardContent>
       <CardFooter>
-        <p>Card Footer</p>
+        <div className={styles["footer-header"]}>
+          <h2 className={styles["footer-heading"]}>Latest Spending</h2>
+          <Link to="/transactions">See All</Link>
+        </div>
+        <p className={styles["footer-text"]}>
+          You haven't made any spendings yet.
+        </p>
       </CardFooter>
     </Card>
-    // <li key={id} className={styles.card}>
-    //   <header className={styles["card-header"]}>
-    //     <h2 className={styles["card-heading"]}>{category}</h2>
-    //     <BudgetCardPopover
-    //       dialogHandlers={{
-    //         openDeleteDialog: openDeleteDialogInPopup,
-    //         openEditDialog: openEditDialogInPopup,
-    //       }}
-    //     />
-    //   </header>
-    //   {/* <BudgetProgressBar
-    //     description="Total saved"
-    //     total={total}
-    //     target={target}
-    //   /> */}
-    //   {/* {isEditDialogOpen && (
-    //     <EditBudgetDialog
-    //       BudgetData={budgetData}
-    //       isEditDialogOpen={isEditDialogOpen}
-    //       toggleEditDialog={toggleEditDialog}
-    //     />
-    //   )}
-    //   {isDeleteDialogOpen && (
-    //     <DeleteBudgetDialog
-    //       BudgetData={budgetData}
-    //       isDeleteDialogOpen={isDeleteDialogOpen}
-    //       toggleDeleteDialog={toggleDeleteDialog}
-    //     />
-    //   )} */}
-    // </li>
   );
 }
