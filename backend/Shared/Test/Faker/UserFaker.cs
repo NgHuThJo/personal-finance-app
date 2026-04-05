@@ -37,20 +37,6 @@ public static class UserFaker
             //             .CreateUserAuthProviderFaker()
             //             .Generate()
             // )
-            // .RuleFor(
-            //     u => u.ReceivedTransactions,
-            //     f =>
-            //         TransactionFaker
-            //             .CreateTransactionFaker()
-            //             .Generate(TestConstants.TESTDATA_NUMBER_OF_USERS)
-            // )
-            // .RuleFor(
-            //     u => u.SentTransactions,
-            //     f =>
-            //         TransactionFaker
-            //             .CreateTransactionFaker()
-            //             .Generate(TestConstants.TESTDATA_NUMBER_OF_USERS)
-            // )
             .UseSeed(seed);
 
     public static Faker<User> UserFakerForTesting() =>

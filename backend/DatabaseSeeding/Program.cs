@@ -39,35 +39,111 @@ namespace backend.DatabaseSeeding
                                 .UserFakerForSeeding()
                                 .Generate(TestConstants.TESTDATA_ENTITY_COUNT);
 
-                            var contains = context.Set<User>().FirstOrDefault();
+                            var hasAnyElement = context.Set<User>().Any();
 
-                            if (contains is null)
+                            if (hasAnyElement)
                             {
-                                context.AddRange(users);
-                                context.SaveChanges();
+                                return;
                             }
+
+                            context.AddRange(users);
+
+                            var random = new Random(
+                                TestConstants.TESTDATA_DEV_DB_SEED
+                            );
+
+                            foreach (User user in users)
+                            {
+                                var sender = user;
+
+                                for (
+                                    int i = 0;
+                                    i < TestConstants.TESTDATA_ENTITY_COUNT;
+                                    i++
+                                )
+                                {
+                                    int recipientIndex = default;
+
+                                    do
+                                    {
+                                        recipientIndex = random.Next(
+                                            users.Count
+                                        );
+                                    } while (sender == users[recipientIndex]);
+
+                                    var transaction = TransactionFaker
+                                        .TransactionFakerForSeeding(
+                                            random.Next(int.MaxValue)
+                                        )
+                                        .Generate();
+
+                                    transaction.Sender = sender;
+                                    transaction.Recipient = users[
+                                        recipientIndex
+                                    ];
+
+                                    context.Set<Transaction>().Add(transaction);
+                                }
+                            }
+
+                            context.SaveChanges();
                         }
                     )
                     .UseAsyncSeeding(
-                        async (context, _, cancellationToken) =>
+                        async (context, _, ct) =>
                         {
                             var users = UserFaker
                                 .UserFakerForSeeding()
                                 .Generate(TestConstants.TESTDATA_ENTITY_COUNT);
 
-                            var contains = await context
-                                .Set<User>()
-                                .FirstOrDefaultAsync(
-                                    cancellationToken: cancellationToken
-                                );
+                            var hasAnyElement = context.Set<User>().Any();
 
-                            if (contains is null)
+                            if (hasAnyElement)
                             {
-                                context.AddRange(users);
-                                await context.SaveChangesAsync(
-                                    cancellationToken
-                                );
+                                return;
                             }
+
+                            context.AddRange(users);
+
+                            var random = new Random(
+                                TestConstants.TESTDATA_DEV_DB_SEED
+                            );
+
+                            foreach (User user in users)
+                            {
+                                var sender = user;
+
+                                for (
+                                    int i = 0;
+                                    i < TestConstants.TESTDATA_ENTITY_COUNT;
+                                    i++
+                                )
+                                {
+                                    int recipientIndex = default;
+
+                                    do
+                                    {
+                                        recipientIndex = random.Next(
+                                            users.Count
+                                        );
+                                    } while (sender == users[recipientIndex]);
+
+                                    var transaction = TransactionFaker
+                                        .TransactionFakerForSeeding(
+                                            random.Next(int.MaxValue)
+                                        )
+                                        .Generate();
+
+                                    transaction.Sender = sender;
+                                    transaction.Recipient = users[
+                                        recipientIndex
+                                    ];
+
+                                    context.Set<Transaction>().Add(transaction);
+                                }
+                            }
+
+                            await context.SaveChangesAsync(ct);
                         }
                     );
             });
