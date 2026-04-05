@@ -356,6 +356,7 @@ app.MapUserApi()
     .MapAuthApi()
     .MapBalanceApi()
     .MapBudgetApi()
-    .MapTransactionApi();
+    .MapTransactionApi()
+    .MapCategoryApi();
 
 app.Run();

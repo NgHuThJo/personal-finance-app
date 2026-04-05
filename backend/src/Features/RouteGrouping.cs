@@ -128,6 +128,19 @@ public static class RouteGrouper
         return app;
     }
 
+    /* Categorr */
+    public static WebApplication MapCategoryApi(this WebApplication app)
+    {
+        var group = app.MapGroup("/v1/categories");
+        group.RequireAuthorization().RequireRateLimiting("per-user");
+        group
+            .MapGet("", GetAllCategoriesEndpoint.GetAllCategories)
+            .WithName(nameof(GetAllCategoriesEndpoint.GetAllCategories))
+            .ProducesProblem((int)HttpStatusCode.Unauthorized);
+
+        return app;
+    }
+
     /* Auth */
     public static WebApplication MapAuthApi(this WebApplication app)
     {
