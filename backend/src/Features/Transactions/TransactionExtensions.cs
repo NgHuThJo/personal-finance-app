@@ -10,6 +10,9 @@ public abstract record TransactionError
     public sealed record TransactionNotFound(int TransactionId)
         : TransactionError;
 
+    public sealed record SenderAndReceiverAreSameUser(int UserId)
+        : TransactionError;
+
     public sealed record EmailNotFound(string Email) : TransactionError;
 
     // Domain errors

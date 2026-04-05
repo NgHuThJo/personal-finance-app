@@ -110,6 +110,24 @@ public static class RouteGrouper
         return app;
     }
 
+    /* Transaction */
+    public static WebApplication MapTransactionApi(this WebApplication app)
+    {
+        var group = app.MapGroup("/v1/transactions");
+        group.RequireAuthorization().RequireRateLimiting("per-user");
+        group
+            .MapGet("", GetAllTransactionsEndpoint.GetAllTransactions)
+            .WithName(nameof(GetAllTransactionsEndpoint.GetAllTransactions))
+            .ProducesProblem((int)HttpStatusCode.Unauthorized);
+        group
+            .MapPost("", CreateTransactionEndpoint.CreateTransaction)
+            .WithName(nameof(CreateTransactionEndpoint.CreateTransaction))
+            .AddValidationFilter<CreateTransactionRequest>()
+            .ProducesProblem((int)HttpStatusCode.UnprocessableContent);
+
+        return app;
+    }
+
     /* Auth */
     public static WebApplication MapAuthApi(this WebApplication app)
     {

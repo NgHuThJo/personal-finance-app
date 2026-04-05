@@ -33,9 +33,9 @@ public class CreateTransactionValidator
 public static class CreateTransactionEndpoint
 {
     public static async Task<
-        Results<NoContent, ProblemHttpResult>
+        Results<NoContent, BadRequest, ProblemHttpResult>
     > CreateTransaction(
-        [FromServices] CreateTransactionRequest command,
+        [FromBody] CreateTransactionRequest command,
         [FromServices] CurrentUser user,
         [FromServices] CreateTransactionHandler handler,
         CancellationToken ct
@@ -43,11 +43,15 @@ public static class CreateTransactionEndpoint
     {
         var result = await handler.Handle(command, user.UserId, ct);
 
-        return result.Match<Results<NoContent, ProblemHttpResult>>(
+        return result.Match<Results<NoContent, BadRequest, ProblemHttpResult>>(
             _ => TypedResults.NoContent(),
             e =>
                 e switch
                 {
+                    TransactionError.SenderAndReceiverAreSameUser(int userId) =>
+                        TypedResultsProblemDetails.BadRequest(
+                            $"Sender and recipient are the same user with ID {userId}"
+                        ),
                     TransactionError.EmailNotFound(string email) =>
                         TypedResultsProblemDetails.UnprocessableContent(
                             $"Recipient with email address {email} does not exist"
@@ -74,15 +78,22 @@ public class CreateTransactionHandler(AppDbContext context)
         CancellationToken ct
     )
     {
-        var recipientEmail = await _context
+        var recipientEmailAndId = await _context
             .Users.Select(u => new { u.Email, u.Id })
             .Where(u => u.Email == command.RecipientEmail)
             .FirstOrDefaultAsync(ct);
 
-        if (recipientEmail is null)
+        if (recipientEmailAndId is null)
         {
             return Result<Unit, TransactionError>.Fail(
                 new TransactionError.EmailNotFound(command.RecipientEmail)
+            );
+        }
+
+        if (recipientEmailAndId.Id == userId)
+        {
+            return Result<Unit, TransactionError>.Fail(
+                new TransactionError.SenderAndReceiverAreSameUser(userId)
             );
         }
 
@@ -96,13 +107,11 @@ public class CreateTransactionHandler(AppDbContext context)
             );
         var recipientBalance =
             await _context
-                .Balances.Where(b =>
-                    recipientEmail.Email == command.RecipientEmail
-                )
+                .Balances.Where(b => b.UserId == recipientEmailAndId.Id)
                 .Include(b => b.User)
                 .FirstOrDefaultAsync(ct)
             ?? throw new InvalidDataException(
-                $"Recipient with ID {recipientEmail.Id} does not have balance"
+                $"Recipient with ID {recipientEmailAndId.Id} does not have balance"
             );
 
         if (

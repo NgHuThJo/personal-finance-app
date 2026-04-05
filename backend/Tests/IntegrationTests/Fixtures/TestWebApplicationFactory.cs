@@ -1,5 +1,4 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using backend.Src.Features;
 using backend.Src.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -33,13 +32,22 @@ public class TestWebApplicationFactory(string connectionString)
                     options => { }
                 );
 
-            var descriptor = services.FirstOrDefault(s =>
+            var dbContextDescriptor = services.FirstOrDefault(s =>
                 s.ServiceType == typeof(DbContextOptions<AppDbContext>)
             );
+            var transactionBackgroundServiceDescriptor =
+                services.FirstOrDefault(s =>
+                    s.ServiceType == typeof(TransactionBackgroundService)
+                );
 
-            if (descriptor is not null)
+            if (dbContextDescriptor is not null)
             {
-                services.Remove(descriptor);
+                services.Remove(dbContextDescriptor);
+            }
+
+            if (transactionBackgroundServiceDescriptor is not null)
+            {
+                services.Remove(transactionBackgroundServiceDescriptor);
             }
 
             services.AddDbContext<AppDbContext>(options =>

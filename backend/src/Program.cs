@@ -351,6 +351,11 @@ app.UseExceptionHandler();
 app.UseStatusCodePages();
 
 // Always map controllers last
-app.MapUserApi().MapPotApi().MapAuthApi().MapBalanceApi().MapBudgetApi();
+app.MapUserApi()
+    .MapPotApi()
+    .MapAuthApi()
+    .MapBalanceApi()
+    .MapBudgetApi()
+    .MapTransactionApi();
 
 app.Run();
