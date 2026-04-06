@@ -25,5 +25,15 @@ public static class BudgetFaker
             .RuleFor(
                 b => b.Category,
                 (Faker f) => FakerExtensions.GetRandomCategory()
-            );
+            )
+            .Generate();
+
+    public static EditBudgetRequest EditBudgetRequest() =>
+        new Faker<EditBudgetRequest>()
+            .RuleFor(b => b.Maximum, (Faker f) => f.Random.Int(1, 1000) / 100m)
+            .RuleFor(
+                b => b.Category,
+                (Faker f) => FakerExtensions.GetRandomCategory()
+            )
+            .Generate();
 }

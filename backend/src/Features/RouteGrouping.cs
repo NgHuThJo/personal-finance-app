@@ -106,6 +106,17 @@ public static class RouteGrouper
             .AddValidationFilter<CreateBudgetRequest>()
             .ProducesProblem((int)HttpStatusCode.Unauthorized)
             .ProducesProblem((int)HttpStatusCode.BadRequest);
+        group
+            .MapPut("/{budgetId:int}", EditBudgetEndpoint.EditBudget)
+            .WithName(nameof(EditBudgetEndpoint.EditBudget))
+            .AddIdValidationFilter()
+            .AddValidationFilter<EditBudgetRequest>()
+            .ProducesProblem((int)HttpStatusCode.Unauthorized);
+        group
+            .MapDelete("/{budgetId:int}", DeleteBudgetEndpoint.DeleteBudget)
+            .WithName(nameof(DeleteBudgetEndpoint.DeleteBudget))
+            .AddIdValidationFilter()
+            .ProducesProblem((int)HttpStatusCode.Unauthorized);
 
         return app;
     }

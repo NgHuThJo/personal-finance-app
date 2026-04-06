@@ -2,8 +2,10 @@ using System.Net;
 using System.Net.Http.Json;
 using backend.Shared.Test;
 using backend.Src.Features;
+using backend.Src.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace backend.Tests.IntegrationTests;
@@ -83,5 +85,102 @@ public class BudgetTest(DatabaseFixture fixture) : IntegrationTestBase(fixture)
             );
 
         validationResult?.Errors.Should().ContainKey("Maximum");
+    }
+
+    [Fact]
+    public async Task EditBudget_IfSuccessful_Return204()
+    {
+        var dbContext = Db.CreateDbContext();
+        var state = TestState
+            .New(dbContext)
+            .WithBudget(b => { }, out Budget budget);
+        await state.SaveAsync();
+        var userId = state.DefaultUser.Id;
+        var path = $"{_uriPath}/{budget.Id}";
+
+        var request = new HttpRequestMessage(HttpMethod.Put, path);
+        request.Headers.Add(TestAuthHandler.UserIdHeader, userId.ToString());
+
+        // Arrange
+        var fakeData = BudgetFaker.EditBudgetRequest();
+        var jsonContent = JsonContent.Create(fakeData);
+        request.Content = jsonContent;
+        // Act
+        var getResponse = await Client.SendAsync(
+            request,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        getResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        await dbContext
+            .Entry(budget)
+            .ReloadAsync(TestContext.Current.CancellationToken);
+        budget.Maximum.Should().Be(fakeData.Maximum);
+        budget.Category.Should().Be(fakeData.Category);
+    }
+
+    [Fact]
+    public async Task EditBudget_IfBudgetDoesNotExist_Return401()
+    {
+        var path = $"{_uriPath}/{1000}";
+        // Arrange
+        var fakeData = BudgetFaker.EditBudgetRequest();
+        var jsonContent = JsonContent.Create(fakeData);
+        // Act
+        var getResponse = await Client.PutAsync(
+            path,
+            jsonContent,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        getResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task DeleteBudget_IfSuccessful_Return204()
+    {
+        // Arrange
+        var dbContext = Db.CreateDbContext();
+        var state = TestState
+            .New(dbContext)
+            .WithBudget(b => { }, out Budget budget);
+        await state.SaveAsync();
+
+        var path = $"{_uriPath}/{budget.Id}";
+
+        var request = new HttpRequestMessage(HttpMethod.Delete, path);
+        request.Headers.Add(
+            TestAuthHandler.UserIdHeader,
+            state.DefaultUser.Id.ToString()
+        );
+        // Act
+        var getResponse = await Client.SendAsync(
+            request,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        getResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        await dbContext
+            .Entry(budget)
+            .ReloadAsync(TestContext.Current.CancellationToken);
+        var isBudgetDeleted = await dbContext
+            .Budgets.Where(b =>
+                b.Id == budget.Id && b.UserId == state.DefaultUser.Id
+            )
+            .FirstOrDefaultAsync(TestContext.Current.CancellationToken);
+        isBudgetDeleted.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task DeleteBudget_IfBudgetDoesNotExit_Return401()
+    {
+        var path = $"{_uriPath}/{int.MaxValue}";
+        // Act
+        var getResponse = await Client.DeleteAsync(
+            path,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        getResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 }
