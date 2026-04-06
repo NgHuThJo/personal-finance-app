@@ -1,5 +1,4 @@
 import { useState } from "react";
-import styles from "./pot-card.module.css";
 import { AddMoneyToPotDialog } from "#frontend/features/pots/components/add-money-to-pot";
 import { DeletePotDialog } from "#frontend/features/pots/components/delete-pot";
 import { EditPotDialog } from "#frontend/features/pots/components/edit-pot.dialog";
@@ -7,6 +6,13 @@ import { PotCardPopover } from "#frontend/features/pots/components/pot-card-popo
 import { PotProgressBar } from "#frontend/features/pots/components/pot-progress-bar";
 import { WithdrawMoneyDialog } from "#frontend/features/pots/components/withdraw-money-dialog";
 import type { GetAllPotsResponse } from "#frontend/shared/client";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "#frontend/shared/primitives/card";
 
 type PotCardProps = {
   potData: GetAllPotsResponse;
@@ -31,35 +37,41 @@ export function PotCard({ potData }: PotCardProps) {
   };
 
   return (
-    <li key={id} className={styles.card}>
-      <header className={styles["card-header"]}>
-        <h2 className={styles["card-heading"]}>{name}</h2>
+    <Card>
+      <CardHeader>
+        <CardTitle>{name}</CardTitle>
         <PotCardPopover
           dialogHandlers={{
             openDeleteDialog: openDeleteDialogInPopup,
             openEditDialog: openEditDialogInPopup,
           }}
         />
-      </header>
-      <PotProgressBar description="Total saved" total={total} target={target} />
-      <div className={styles["card-footer"]}>
-        <AddMoneyToPotDialog potData={potData} />
-        <WithdrawMoneyDialog potData={potData} />
-      </div>
-      {isEditDialogOpen && (
-        <EditPotDialog
-          potData={potData}
-          isEditDialogOpen={isEditDialogOpen}
-          toggleEditDialog={toggleEditDialog}
+      </CardHeader>
+      <CardContent>
+        <PotProgressBar
+          description="Total saved"
+          total={total}
+          target={target}
         />
-      )}
-      {isDeleteDialogOpen && (
-        <DeletePotDialog
-          potData={potData}
-          isDeleteDialogOpen={isDeleteDialogOpen}
-          toggleDeleteDialog={toggleDeleteDialog}
-        />
-      )}
-    </li>
+        <CardFooter>
+          <AddMoneyToPotDialog potData={potData} />
+          <WithdrawMoneyDialog potData={potData} />
+        </CardFooter>
+        {isEditDialogOpen && (
+          <EditPotDialog
+            potData={potData}
+            isEditDialogOpen={isEditDialogOpen}
+            toggleEditDialog={toggleEditDialog}
+          />
+        )}
+        {isDeleteDialogOpen && (
+          <DeletePotDialog
+            potData={potData}
+            isDeleteDialogOpen={isDeleteDialogOpen}
+            toggleDeleteDialog={toggleDeleteDialog}
+          />
+        )}
+      </CardContent>
+    </Card>
   );
 }

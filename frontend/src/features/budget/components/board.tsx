@@ -1,5 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import styles from "./board.module.css";
+import { AddBudgetDialog } from "#frontend/features/budget/components/add-budget-dialog";
 import { BudgetCard } from "#frontend/features/budget/components/budget-card";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import type { Category } from "#frontend/shared/client";
@@ -45,6 +46,7 @@ export function BudgetBoard() {
     <div className={styles.layout}>
       <header className={styles.header}>
         <h1 className={styles.heading}>Budgets</h1>
+        <AddBudgetDialog />
       </header>
       {budgetData.length ? (
         <div>

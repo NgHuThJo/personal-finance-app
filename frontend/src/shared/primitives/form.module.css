@@ -20,7 +20,7 @@
   grid-template-columns: auto 1fr;
   padding-inline: var(--spacing-3);
   border-radius: 0.25rem;
-  background-color: var(--c-bg-cancel);
+  background-color: var(--color-background-canvas-primary);
 }
 
 .form-message {
@@ -33,7 +33,7 @@
   width: 100%;
   min-width: 0;
   border-radius: 0.375rem; /* rounded-md */
-  border: 1px solid var(--c-tertiary);
+  border: 1px solid var(--color-border-input-primary);
   background-color: transparent;
   padding: 0.25rem 0.75rem; /* py-1 px-3 */
   font-size: 1rem; /* text-base */
@@ -45,11 +45,11 @@
 }
 
 .form-control::placeholder {
-  color: var(--c-primary);
+  color: var(--color-text-cta-secondary);
 }
 
 .form-control::selection {
-  background-color: var(--c-primary);
+  background-color: var(--color-background-canvas-primary);
   color: var(--color-status-error);
 }
 
@@ -70,20 +70,20 @@
 
 /* Focus-visible styles */
 .form-control:focus-visible {
-  border-color: var(--c-primary);
-  box-shadow: 0 0 0 3px var(--c-primary);
+  border-color: var(--color-border-input-primary);
+  box-shadow: 0 0 0 3px var(--color-background-cta-primary);
 }
 
 /* ARIA invalid styles */
 .form-control[aria-invalid="true"] {
-  border-color: var(--);
-  box-shadow: 0 0 0 1px var(--c-bg-error);
+  border-color: var(--color-border-input-primary);
+  box-shadow: 0 0 0 1px var(--color-status-error);
 }
 
 /* Dark mode ARIA invalid */
 @media (prefers-color-scheme: dark) {
   .form-control[aria-invalid="true"] {
-    box-shadow: 0 0 0 1px var(--c-tertiary);
+    box-shadow: 0 0 0 1px var(--color-background-cta-primary);
   }
 
   /* .form-control {
@@ -102,9 +102,9 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: var(--font-size-label);
+  font-size: var(--font-size-action);
   line-height: 1;
-  font-weight: var(--font-weight-label);
+  font-weight: var(--font-weight-action);
   user-select: none;
 }
 

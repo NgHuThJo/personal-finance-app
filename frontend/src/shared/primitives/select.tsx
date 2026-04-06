@@ -5,8 +5,7 @@ import {
   ChevronDown,
   CheckIcon,
   ChevronUp,
-} from "#frontend/components/ui/icon";
-
+} from "#frontend/assets/icons/icons";
 import { cn } from "#frontend/shared/utils/cn";
 
 function Select({
