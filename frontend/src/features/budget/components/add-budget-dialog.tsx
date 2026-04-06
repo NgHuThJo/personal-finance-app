@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import styles from "./add-budget-dialog.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
@@ -40,6 +40,8 @@ export function AddBudgetDialog() {
   const {
     register,
     setError,
+    control,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<CreateBudgetRequest>();
@@ -54,7 +56,7 @@ export function AddBudgetDialog() {
       credentials: "include",
     }),
     onSuccess: async () => {
-      Logger.info("Money successfully withdrawn from Budget");
+      Logger.info("Budget successfully created");
       await queryClient.invalidateQueries({
         queryKey: getAllBudgetsQueryKey(),
       });
@@ -71,24 +73,20 @@ export function AddBudgetDialog() {
           });
           break;
         }
-        case 409: {
-          setError(`root.server-conflict`, {
-            type: String(error.type),
-            message: String(error.detail),
-          });
-          break;
-        }
         default: {
           Logger.error(`Unknown error in ${AddBudgetDialog.name}`);
         }
       }
     },
+    onSettled: () => {
+      reset();
+    },
   });
 
   const handleAddBudgetSubmit = handleSubmit((data) => {
     const convertedData: CreateBudgetRequest = {
-      name: data.name,
-      target: data.target,
+      category: data.category,
+      maximum: data.maximum,
     };
 
     mutate({
@@ -99,9 +97,7 @@ export function AddBudgetDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button type="button" variant="cta-primary">
-          +Add New Budget
-        </Button>
+        <Button variant="cta-primary">+Add New Budget</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>Add New Budget</DialogTitle>
@@ -112,28 +108,37 @@ export function AddBudgetDialog() {
         <form className={styles.dialog} onSubmit={handleAddBudgetSubmit}>
           <Field>
             <FieldLabel htmlFor="category">Category</FieldLabel>
-            <Select>
-              <SelectTrigger id="category">
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {categoryData?.map((category) => (
-                    <SelectItem value={category} key={category}>
-                      {capitalizeFirstLetter(category)}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            {errors.category && (
-              <FieldError>{errors.category?.message}</FieldError>
-            )}
-            {errors.root?.["server-conflict"] && (
-              <FieldError data-testid="add-Budget-server-conflict">
-                {errors.root["server-conflict"].message}
-              </FieldError>
-            )}
+            <Controller
+              name="category"
+              defaultValue="bills"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger id="category">
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {categoryData?.map((category) => (
+                          <SelectItem value={category} key={category}>
+                            {capitalizeFirstLetter(category)}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {errors.category && (
+                    <FieldError>{errors.category?.message}</FieldError>
+                  )}
+                  {errors.root?.["server-conflict"] && (
+                    <FieldError data-testid="add-Budget-server-conflict">
+                      {errors.root["server-conflict"].message}
+                    </FieldError>
+                  )}
+                </>
+              )}
+            ></Controller>
           </Field>
           <Field>
             <FieldLabel htmlFor="maximum">Maximum Spend</FieldLabel>
@@ -145,7 +150,7 @@ export function AddBudgetDialog() {
               placeholder="$ e.g. 2000"
               {...register("maximum", {
                 valueAsNumber: true,
-                required: "Target amount required",
+                required: "Maximum spend required",
                 min: {
                   value: 0.01,
                   message: "Minimum of 0.01",

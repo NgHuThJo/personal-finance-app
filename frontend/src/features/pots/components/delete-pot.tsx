@@ -31,6 +31,7 @@ export function DeletePotDialog({
   const queryClient = useQueryClient();
   const {
     setError,
+    reset,
     formState: { errors },
   } = useForm();
   const { mutate } = useMutation({
@@ -50,6 +51,10 @@ export function DeletePotDialog({
         type: String(error.type),
         message: String(error.detail),
       });
+    },
+
+    onSettled: () => {
+      reset();
     },
   });
 

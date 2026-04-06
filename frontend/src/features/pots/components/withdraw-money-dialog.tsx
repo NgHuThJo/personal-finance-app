@@ -42,6 +42,7 @@ export function WithdrawMoneyDialog({
     control,
     handleSubmit,
     setError,
+    reset,
     formState: { errors },
   } = useForm<WithdrawMoneyFromPotRequest>();
   const queryClient = useQueryClient();
@@ -69,6 +70,9 @@ export function WithdrawMoneyDialog({
           Logger.error(`Unknown error in ${WithdrawMoneyDialog.name}`);
         }
       }
+    },
+    onSettled: () => {
+      reset();
     },
   });
   const draftAmount = useWatch({

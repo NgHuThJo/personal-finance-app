@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import styles from "./budget-card.module.css";
-import { Dots } from "#frontend/assets/icons/icons";
+import { BudgetCardPopover } from "#frontend/features/budget/components/budget-popover";
 import { BudgetProgressBar } from "#frontend/features/budget/components/budget-progressbar";
 import type { GetAllBudgetsResponse } from "#frontend/shared/client";
 import {
@@ -40,7 +40,12 @@ export function BudgetCard({ budgetData, transactionAmount }: BudgetCardProps) {
     <Card>
       <CardHeader>
         <CardTitle>{capitalizeFirstLetter(category)}</CardTitle>
-        <Dots />
+        <BudgetCardPopover
+          dialogHandlers={{
+            openEditDialog: openEditDialogInPopup,
+            openDeleteDialog: openDeleteDialogInPopup,
+          }}
+        />
       </CardHeader>
       <CardContent>
         <BudgetProgressBar maximum={maximum} spent={transactionAmount} />

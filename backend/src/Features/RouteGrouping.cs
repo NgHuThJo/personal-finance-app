@@ -139,7 +139,7 @@ public static class RouteGrouper
         return app;
     }
 
-    /* Categorr */
+    /* Category */
     public static WebApplication MapCategoryApi(this WebApplication app)
     {
         var group = app.MapGroup("/v1/categories");

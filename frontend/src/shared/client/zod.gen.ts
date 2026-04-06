@@ -289,7 +289,6 @@ export const zCreateBudgetData = z.object({
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });
-<<<<<<< HEAD
 
 export const zGetAllTransactionsData = z.object({
     body: z.optional(z.never()),
@@ -323,5 +322,3 @@ export const zGetAllCategoriesData = z.object({
  * OK
  */
 export const zGetAllCategoriesResponse = z.array(zCategory);
-=======
->>>>>>> 76ced0e (feat: create budget card)
