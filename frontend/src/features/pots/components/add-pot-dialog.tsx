@@ -32,6 +32,7 @@ export function AddPotDialog() {
   const {
     register,
     setError,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<CreatePotRequest>();
@@ -67,6 +68,9 @@ export function AddPotDialog() {
           Logger.error(`Unknown error in ${AddPotDialog.name}`);
         }
       }
+    },
+    onSettled: () => {
+      reset();
     },
   });
 

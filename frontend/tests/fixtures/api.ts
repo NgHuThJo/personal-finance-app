@@ -1,7 +1,10 @@
 import { test as base } from "@playwright/test";
 import { zocker } from "zocker";
 import {
+  zGetAllBudgetsResponse,
+  zGetAllCategoriesResponse,
   zGetAllPotsResponse,
+  zGetAllTransactionsResponse,
   zGetBalanceByUserIdResponse,
   zLoginUserResponse,
   zSignUpUserResponse,
@@ -33,7 +36,8 @@ export const test = base.extend({
     await context.route(`**/v1/auth/refresh`, (r) =>
       r.fulfill({
         json: {
-          accessToken: "access-token-from-refresh-token",
+          accessToken:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.b8VqsrBMZJ8wCWpKyWD9DLgW1mR06HEkxWQAwaQN8Sw",
         },
         status: 200,
       }),
@@ -106,6 +110,55 @@ export const test = base.extend({
           })
           .generate(),
         status: 200,
+      }),
+    );
+
+    // Budget
+    await context.route(`**/v1/budgets`, (r) => {
+      let idCounter = 1;
+
+      return r.fulfill({
+        status: 200,
+        json: zocker(zGetAllBudgetsResponse)
+          .supply(zGetAllBudgetsResponse, {
+            id: ++idCounter,
+            category: "bills",
+            maximum: 200,
+          })
+          .generateMany(3),
+      });
+    });
+
+    // Transaction
+    await context.route(`**/v1/transactions`, (r) => {
+      let idCounter = 1;
+
+      return r.fulfill({
+        status: 200,
+        json: zocker(zGetAllTransactionsResponse)
+          .supply(zGetAllTransactionsResponse, {
+            id: ++idCounter,
+            category: "bills",
+            amount: 200,
+            isRecurring: false,
+            otherUser: {
+              email: "somerandom@email.com",
+              name: "somerandomname",
+            },
+            senderId: ++idCounter,
+            recipientId: ++idCounter,
+            transactionDate: Date(),
+          })
+          .generateMany(4),
+      });
+    });
+
+    // Category
+    await context.route("**/v1/categories", (r) =>
+      r.fulfill({
+        json: zocker(zGetAllCategoriesResponse)
+          .supply(zGetAllCategoriesResponse, ["bills"])
+          .generate(),
       }),
     );
 

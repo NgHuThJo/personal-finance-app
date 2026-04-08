@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { BudgetBoard } from "#frontend/features/budget/components/board";
 import { Loader } from "#frontend/shared/primitives/loader";
 
-export const Route = createFileRoute("/_pathless-dashboard-layout/budget")({
+export const Route = createFileRoute("/_pathless-dashboard-layout/budgets")({
   component: RouteComponent,
 });
 

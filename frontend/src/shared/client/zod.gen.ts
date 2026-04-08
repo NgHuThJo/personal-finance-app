@@ -39,6 +39,11 @@ export const zCreateTransactionRequest = z.object({
     recipientEmail: z.string()
 });
 
+export const zEditBudgetRequest = z.object({
+    category: zCategory,
+    maximum: z.number().gte(0)
+});
+
 export const zEditPotRequest = z.object({
     potName: z.string(),
     newTarget: z.number()
@@ -67,8 +72,10 @@ export const zGetAllTransactionsResponse = z.object({
     amount: z.number(),
     transactionDate: z.iso.datetime(),
     isRecurring: z.boolean(),
+    senderId: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+    recipientId: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
     category: zCategory,
-    user: zGetAllTransactionsUserDto
+    otherUser: zGetAllTransactionsUserDto
 });
 
 export const zGetBalanceByUserIdResponse = z.object({
@@ -289,6 +296,32 @@ export const zCreateBudgetData = z.object({
     path: z.optional(z.never()),
     query: z.optional(z.never())
 });
+
+export const zDeleteBudgetData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        budgetId: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })
+    }),
+    query: z.optional(z.never())
+});
+
+/**
+ * No Content
+ */
+export const zDeleteBudgetResponse = z.void();
+
+export const zEditBudgetData = z.object({
+    body: zEditBudgetRequest,
+    path: z.object({
+        budgetId: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })
+    }),
+    query: z.optional(z.never())
+});
+
+/**
+ * No Content
+ */
+export const zEditBudgetResponse = z.void();
 
 export const zGetAllTransactionsData = z.object({
     body: z.optional(z.never()),

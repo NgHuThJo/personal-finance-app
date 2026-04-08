@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import styles from "./delete-Budget.module.css";
+import styles from "./delete-budget-dialog.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
 import type { GetAllBudgetsResponse } from "#frontend/shared/client";
@@ -16,15 +16,16 @@ import {
   DialogTitle,
 } from "#frontend/shared/primitives/dialog";
 import { FieldError } from "#frontend/shared/primitives/field";
+import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 
 type DeleteBudgetProps = {
-  BudgetData: GetAllBudgetsResponse;
+  budgetData: GetAllBudgetsResponse;
   isDeleteDialogOpen: boolean;
   toggleDeleteDialog: (shouldOpen: boolean) => void;
 };
 
 export function DeleteBudgetDialog({
-  BudgetData: { id, maximum, category },
+  budgetData: { id, category },
   isDeleteDialogOpen,
   toggleDeleteDialog,
 }: DeleteBudgetProps) {
@@ -48,7 +49,7 @@ export function DeleteBudgetDialog({
     onError: (error) => {
       Logger.error("Budget could not be deleted", error);
 
-      setError(`root.server`, {
+      setError(`root.server-unauthorized`, {
         type: String(error.type),
         message: String(error.detail),
       });
@@ -58,7 +59,7 @@ export function DeleteBudgetDialog({
   const handleDelete = () => {
     mutate({
       path: {
-        BudgetId: id,
+        budgetId: id,
       },
     });
   };
@@ -70,20 +71,20 @@ export function DeleteBudgetDialog({
   return (
     <Dialog open={isDeleteDialogOpen} onOpenChange={toggleDeleteDialog}>
       <DialogContent showCloseButton={false} data-testid="delete-dialog">
-        <DialogTitle>Delete "{name}"</DialogTitle>
+        <DialogTitle>Delete "{capitalizeFirstLetter(category)}"</DialogTitle>
         <DialogDescription>
           Are you sure you want to delete this Budget? This action cannot be
           reversed, and all the data inside it will be removed forever.
         </DialogDescription>
-        {errors.root?.["server"] && (
-          <FieldError>{errors.root["server"].message}</FieldError>
+        {errors.root?.["server-unauthorized"] && (
+          <FieldError>{errors.root["server-unauthorized"].message}</FieldError>
         )}
         <div className={styles["cta-layout"]}>
           <Button variant="destructive" onClick={handleDelete}>
             Yes, confirm deletion
           </Button>
           <Button variant="abort" onClick={handleAbortDelete}>
-            Close
+            No, go back
           </Button>
         </div>
       </DialogContent>

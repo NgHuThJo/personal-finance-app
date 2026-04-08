@@ -40,6 +40,7 @@ export function AddMoneyToPotDialog({
   const {
     handleSubmit,
     control,
+    reset,
     setError,
     formState: { errors },
   } = useForm<AddMoneyToPotRequest>({
@@ -72,6 +73,9 @@ export function AddMoneyToPotDialog({
           Logger.error(`Unknown error in ${AddMoneyToPotDialog.name}`);
         }
       }
+    },
+    onSettled: () => {
+      reset();
     },
   });
   const amountToAdd = useWatch({

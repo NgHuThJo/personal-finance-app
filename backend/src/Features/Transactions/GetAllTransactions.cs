@@ -19,8 +19,10 @@ public record GetAllTransactionsResponse
     public required decimal Amount { get; init; }
     public required DateTimeOffset TransactionDate { get; init; }
     public required bool IsRecurring { get; init; }
+    public required int SenderId { get; init; }
+    public required int RecipientId { get; init; }
     public required Category Category { get; init; }
-    public required GetAllTransactionsUserDto User { get; init; }
+    public required GetAllTransactionsUserDto OtherUser { get; init; }
 }
 
 public static class GetAllTransactionsEndpoint
@@ -59,7 +61,9 @@ public class GetAllTransactionsHandler(AppDbContext context)
                 Category = t.Category,
                 IsRecurring = t.IsRecurring,
                 TransactionDate = t.TransactionDate,
-                User =
+                SenderId = t.SenderId,
+                RecipientId = t.RecipientId,
+                OtherUser =
                     t.SenderId == userId
                         ? new GetAllTransactionsUserDto
                         {

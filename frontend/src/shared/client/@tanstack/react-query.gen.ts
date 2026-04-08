@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { addMoneyToPot, createBudget, createPot, createRefreshToken, createTransaction, deletePot, editPot, getAllBudgets, getAllCategories, getAllPots, getAllTransactions, getBalanceByUserId, getUserById, loginGoogleUser, loginUser, logoutGoogleUser, logoutUser, type Options, signUpUser, withdrawMoneyFromPot } from '../sdk.gen';
-import type { AddMoneyToPotData, AddMoneyToPotError, AddMoneyToPotResponse, CreateBudgetData, CreateBudgetError, CreatePotData, CreatePotError, CreateRefreshTokenData, CreateRefreshTokenError, CreateRefreshTokenResponse2, CreateTransactionData, CreateTransactionError, CreateTransactionResponse, DeletePotData, DeletePotError, DeletePotResponse, EditPotData, EditPotError, EditPotResponse, GetAllBudgetsData, GetAllBudgetsError, GetAllBudgetsResponse2, GetAllCategoriesData, GetAllCategoriesError, GetAllCategoriesResponse, GetAllPotsData, GetAllPotsResponse2, GetAllTransactionsData, GetAllTransactionsError, GetAllTransactionsResponse2, GetBalanceByUserIdData, GetBalanceByUserIdError, GetBalanceByUserIdResponse2, GetUserByIdData, GetUserByIdError, GetUserByIdResponse2, LoginGoogleUserData, LoginUserData, LoginUserError, LoginUserResponse, LogoutGoogleUserData, LogoutUserData, LogoutUserError, LogoutUserResponse, SignUpUserData, SignUpUserError, SignUpUserResponse2, WithdrawMoneyFromPotData, WithdrawMoneyFromPotError, WithdrawMoneyFromPotResponse } from '../types.gen';
+import { addMoneyToPot, createBudget, createPot, createRefreshToken, createTransaction, deleteBudget, deletePot, editBudget, editPot, getAllBudgets, getAllCategories, getAllPots, getAllTransactions, getBalanceByUserId, getUserById, loginGoogleUser, loginUser, logoutGoogleUser, logoutUser, type Options, signUpUser, withdrawMoneyFromPot } from '../sdk.gen';
+import type { AddMoneyToPotData, AddMoneyToPotError, AddMoneyToPotResponse, CreateBudgetData, CreateBudgetError, CreatePotData, CreatePotError, CreateRefreshTokenData, CreateRefreshTokenError, CreateRefreshTokenResponse2, CreateTransactionData, CreateTransactionError, CreateTransactionResponse, DeleteBudgetData, DeleteBudgetError, DeleteBudgetResponse, DeletePotData, DeletePotError, DeletePotResponse, EditBudgetData, EditBudgetError, EditBudgetResponse, EditPotData, EditPotError, EditPotResponse, GetAllBudgetsData, GetAllBudgetsError, GetAllBudgetsResponse2, GetAllCategoriesData, GetAllCategoriesError, GetAllCategoriesResponse, GetAllPotsData, GetAllPotsResponse2, GetAllTransactionsData, GetAllTransactionsError, GetAllTransactionsResponse2, GetBalanceByUserIdData, GetBalanceByUserIdError, GetBalanceByUserIdResponse2, GetUserByIdData, GetUserByIdError, GetUserByIdResponse2, LoginGoogleUserData, LoginUserData, LoginUserError, LoginUserResponse, LogoutGoogleUserData, LogoutUserData, LogoutUserError, LogoutUserResponse, SignUpUserData, SignUpUserError, SignUpUserResponse2, WithdrawMoneyFromPotData, WithdrawMoneyFromPotError, WithdrawMoneyFromPotResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -262,6 +262,34 @@ export const createBudgetMutation = (options?: Partial<Options<CreateBudgetData>
     const mutationOptions: UseMutationOptions<unknown, CreateBudgetError, Options<CreateBudgetData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await createBudget({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const deleteBudgetMutation = (options?: Partial<Options<DeleteBudgetData>>): UseMutationOptions<DeleteBudgetResponse, DeleteBudgetError, Options<DeleteBudgetData>> => {
+    const mutationOptions: UseMutationOptions<DeleteBudgetResponse, DeleteBudgetError, Options<DeleteBudgetData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await deleteBudget({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const editBudgetMutation = (options?: Partial<Options<EditBudgetData>>): UseMutationOptions<EditBudgetResponse, EditBudgetError, Options<EditBudgetData>> => {
+    const mutationOptions: UseMutationOptions<EditBudgetResponse, EditBudgetError, Options<EditBudgetData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await editBudget({
                 ...options,
                 ...fnOptions,
                 throwOnError: true

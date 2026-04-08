@@ -382,7 +382,11 @@ Test/
  System.Xml.XPath.dll
  System.Xml.XPath.XDocument.dll
  WindowsBase.dll
+<<<<<<< HEAD
 ../Src/obj/Debug/net10.0/ref/backend.dll
+=======
+../src/obj/Debug/net10.0/ref/backend.dll
+>>>>>>> feat/frontend-budget-route
 <NUGET>/
  bogus/35.6.5/lib/net6.0/Bogus.dll
  fluentvalidation.dependencyinjectionextensions/12.1.1/lib/net8.0/FluentValidation.DependencyInjectionExtensions.dll

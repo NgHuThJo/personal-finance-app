@@ -1,0 +1,10 @@
+.cta-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  @media screen and (width >= 768px) {
+    flex-direction: row;
+    justify-content: end;
+  }
+}

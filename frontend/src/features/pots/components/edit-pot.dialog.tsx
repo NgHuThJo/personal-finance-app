@@ -39,6 +39,7 @@ export function EditPotDialog({
   const queryClient = useQueryClient();
   const {
     register,
+    reset,
     setError,
     handleSubmit,
     formState: { errors },
@@ -80,6 +81,9 @@ export function EditPotDialog({
           Logger.error(`Unknown error in ${EditPotDialog.name}`);
         }
       }
+    },
+    onSettled: () => {
+      reset();
     },
   });
 

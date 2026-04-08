@@ -32,6 +32,11 @@ export type CreateTransactionRequest = {
     recipientEmail: string;
 };
 
+export type EditBudgetRequest = {
+    category: Category;
+    maximum: number;
+};
+
 export type EditPotRequest = {
     potName: string;
     newTarget: number;
@@ -55,8 +60,10 @@ export type GetAllTransactionsResponse = {
     amount: number;
     transactionDate: string;
     isRecurring: boolean;
+    senderId: number;
+    recipientId: number;
     category: Category;
-    user: GetAllTransactionsUserDto;
+    otherUser: GetAllTransactionsUserDto;
 };
 
 export type GetAllTransactionsUserDto = {
@@ -488,6 +495,60 @@ export type CreateBudgetResponses = {
      */
     201: unknown;
 };
+
+export type DeleteBudgetData = {
+    body?: never;
+    path: {
+        budgetId: number;
+    };
+    query?: never;
+    url: '/v1/budgets/{budgetId}';
+};
+
+export type DeleteBudgetErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ProblemDetails;
+};
+
+export type DeleteBudgetError = DeleteBudgetErrors[keyof DeleteBudgetErrors];
+
+export type DeleteBudgetResponses = {
+    /**
+     * No Content
+     */
+    204: void;
+};
+
+export type DeleteBudgetResponse = DeleteBudgetResponses[keyof DeleteBudgetResponses];
+
+export type EditBudgetData = {
+    body: EditBudgetRequest;
+    path: {
+        budgetId: number;
+    };
+    query?: never;
+    url: '/v1/budgets/{budgetId}';
+};
+
+export type EditBudgetErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ProblemDetails;
+};
+
+export type EditBudgetError = EditBudgetErrors[keyof EditBudgetErrors];
+
+export type EditBudgetResponses = {
+    /**
+     * No Content
+     */
+    204: void;
+};
+
+export type EditBudgetResponse = EditBudgetResponses[keyof EditBudgetResponses];
 
 export type GetAllTransactionsData = {
     body?: never;
