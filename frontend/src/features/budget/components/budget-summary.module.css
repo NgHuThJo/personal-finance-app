@@ -1,0 +1,41 @@
+.layout {
+  display: grid;
+  gap: 1rem;
+  padding: var(--spacing-8);
+  border-radius: var(--border-radius-4);
+  background-color: var(--color-background-surface-secondary);
+}
+
+.summary {
+  display: grid;
+  gap: 1rem;
+}
+
+.category {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--color-text-secondary);
+}
+
+.category-label {
+  position: relative;
+  padding-left: 1rem;
+
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 0.25rem;
+    height: 1rem;
+    border-radius: var(--border-radius-4);
+    position: absolute;
+    left: 0;
+    background-color: var(--color-background-surface-tertiary);
+  }
+}
+
+.transaction-amount {
+  font-weight: var(--font-weight-heading);
+  line-height: 1.5;
+  color: var(--color-text-primary);
+}

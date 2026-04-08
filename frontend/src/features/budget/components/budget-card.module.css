@@ -15,6 +15,52 @@
   max-width: revert;
 }
 
+.transaction-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.transaction {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-block: 0.5rem;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--color-border-input-primary);
+  }
+}
+
+.transaction-name {
+  font-weight: var(--font-weight-heading);
+}
+
+.transaction-summary {
+  display: grid;
+  justify-items: end;
+  gap: 0.25rem;
+}
+
+.transaction-amount {
+  display: flex;
+  justify-content: space-between;
+  font-weight: var(--font-weight-heading);
+  font-size: var(--font-size-subheading);
+}
+
+.amount-plus {
+  color: var(--color-status-success);
+}
+
+.amount-minus {
+  color: var(--color-status-error);
+}
+
+.transaction-date {
+  display: flex;
+  justify-content: space-between;
+}
+
 .status-report {
   font-weight: var(--font-weight-heading);
   color: var(--color-text-secondary);

@@ -20,7 +20,7 @@ const iconList = linkOptions([
     icon: ArrowsDownUp,
   },
   {
-    to: "/budget",
+    to: "/budgets",
     icon: ChartDonut,
   },
   {

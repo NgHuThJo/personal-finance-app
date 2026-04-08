@@ -1,15 +1,16 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Controller, useForm } from "react-hook-form";
 import styles from "./add-budget-dialog.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
-import type {
-  EditBudgetRequest,
-  GetAllBudgetsResponse,
+import {
+  type EditBudgetRequest,
+  type GetAllBudgetsResponse,
 } from "#frontend/shared/client";
 import {
   editBudgetMutation,
   getAllBudgetsQueryKey,
+  getAllCategoriesOptions,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { Button } from "#frontend/shared/primitives/button";
 import {
@@ -24,29 +25,45 @@ import {
   FieldLabel,
 } from "#frontend/shared/primitives/field";
 import { Input } from "#frontend/shared/primitives/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "#frontend/shared/primitives/select";
+import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 
 type EditBudgetDialogProps = {
-  BudgetData: GetAllBudgetsResponse;
+  budgetData: GetAllBudgetsResponse;
   isEditDialogOpen: boolean;
   toggleEditDialog: (shouldOpen: boolean) => void;
 };
 
 export function EditBudgetDialog({
-  BudgetData: { id, maximum, category },
+  budgetData: { id, maximum, category },
   isEditDialogOpen,
   toggleEditDialog,
 }: EditBudgetDialogProps) {
   const queryClient = useQueryClient();
   const {
     register,
+    control,
     setError,
     handleSubmit,
     formState: { errors },
   } = useForm<EditBudgetRequest>({
     defaultValues: {
-      BudgetName: name,
-      newTarget: target,
+      category,
+      maximum,
     },
+  });
+  const { data: categoryData } = useQuery({
+    ...getAllCategoriesOptions({
+      client: clientWithAuth,
+      credentials: "include",
+    }),
   });
   const { mutate } = useMutation({
     ...editBudgetMutation({
@@ -71,8 +88,8 @@ export function EditBudgetDialog({
           });
           break;
         }
-        case 409: {
-          setError(`root.server-conflict`, {
+        case 401: {
+          setError(`root.server-unauthorized`, {
             type: String(error.type),
             message: String(error.detail),
           });
@@ -87,14 +104,14 @@ export function EditBudgetDialog({
 
   const handleAddBudgetSubmit = handleSubmit((data) => {
     const convertedData: EditBudgetRequest = {
-      BudgetName: data.BudgetName,
-      newTarget: data.newTarget,
+      category: data.category,
+      maximum: data.maximum,
     };
 
     mutate({
       body: convertedData,
       path: {
-        BudgetId: id,
+        budgetId: id,
       },
     });
   });
@@ -108,50 +125,63 @@ export function EditBudgetDialog({
         </DialogDescription>
         <form className={styles.dialog} onSubmit={handleAddBudgetSubmit}>
           <Field>
-            <FieldLabel htmlFor="name">Budget Name</FieldLabel>
-            <Input
-              type="text"
-              id="name"
-              placeholder="e.g. Rainy Days"
-              {...register("BudgetName", {
-                required: "Budget name required",
-              })}
-            />
-            {errors.BudgetName && (
-              <FieldError data-testid="edit-Budget-Budgetname-error">
-                {errors.BudgetName?.message}
-              </FieldError>
-            )}
-            {errors.root?.["server-conflict"] && (
-              <FieldError data-testid="server-conflict">
-                {errors.root["server-conflict"].message}
-              </FieldError>
-            )}
+            <FieldLabel htmlFor="category">Category</FieldLabel>
+            <Controller
+              name="category"
+              defaultValue="bills"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger id="category">
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {categoryData?.map((category) => (
+                          <SelectItem value={category} key={category}>
+                            {capitalizeFirstLetter(category)}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {errors.category && (
+                    <FieldError>{errors.category?.message}</FieldError>
+                  )}
+                </>
+              )}
+            ></Controller>
           </Field>
           <Field>
-            <FieldLabel htmlFor="target">Target Amount</FieldLabel>
+            <FieldLabel htmlFor="maximum">Maximum Spend</FieldLabel>
             <Input
               type="number"
               step="any"
-              id="target"
+              id="maximum"
               placeholder="$ e.g. 2000"
-              {...register("newTarget", {
+              {...register("maximum", {
                 valueAsNumber: true,
-                required: "Target amount required",
+                required: "Maximum spend required",
                 min: {
                   value: 0.01,
                   message: "Minimum of 0.01",
                 },
               })}
             />
-            {errors.newTarget && (
-              <FieldError data-testid="edit-Budget-target-error">
-                {errors.newTarget?.message}
+            {errors.maximum && (
+              <FieldError data-testid="maximum-error">
+                {errors.maximum?.message}
               </FieldError>
             )}
             {errors.root?.["server-bad-request"] && (
               <FieldError data-testid="server-bad-request">
                 {errors.root["server-bad-request"].message}
+              </FieldError>
+            )}
+            {errors.root?.["server-unauthorized"] && (
+              <FieldError data-testid="server-unauthorized">
+                {errors.root["server-unauthorized"].message}
               </FieldError>
             )}
           </Field>

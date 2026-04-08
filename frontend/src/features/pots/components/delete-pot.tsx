@@ -86,7 +86,7 @@ export function DeletePotDialog({
             Yes, confirm deletion
           </Button>
           <Button variant="abort" onClick={handleAbortDelete}>
-            Close
+            No, go back
           </Button>
         </div>
       </DialogContent>

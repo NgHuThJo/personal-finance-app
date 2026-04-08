@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AddMoneyToPotData, AddMoneyToPotErrors, AddMoneyToPotResponses, CreateBudgetData, CreateBudgetErrors, CreateBudgetResponses, CreatePotData, CreatePotErrors, CreatePotResponses, CreateRefreshTokenData, CreateRefreshTokenErrors, CreateRefreshTokenResponses, CreateTransactionData, CreateTransactionErrors, CreateTransactionResponses, DeletePotData, DeletePotErrors, DeletePotResponses, EditPotData, EditPotErrors, EditPotResponses, GetAllBudgetsData, GetAllBudgetsErrors, GetAllBudgetsResponses, GetAllCategoriesData, GetAllCategoriesErrors, GetAllCategoriesResponses, GetAllPotsData, GetAllPotsResponses, GetAllTransactionsData, GetAllTransactionsErrors, GetAllTransactionsResponses, GetBalanceByUserIdData, GetBalanceByUserIdErrors, GetBalanceByUserIdResponses, GetUserByIdData, GetUserByIdErrors, GetUserByIdResponses, LoginGoogleUserData, LoginGoogleUserResponses, LoginUserData, LoginUserErrors, LoginUserResponses, LogoutGoogleUserData, LogoutGoogleUserResponses, LogoutUserData, LogoutUserErrors, LogoutUserResponses, SignUpUserData, SignUpUserErrors, SignUpUserResponses, WithdrawMoneyFromPotData, WithdrawMoneyFromPotErrors, WithdrawMoneyFromPotResponses } from './types.gen';
+import type { AddMoneyToPotData, AddMoneyToPotErrors, AddMoneyToPotResponses, CreateBudgetData, CreateBudgetErrors, CreateBudgetResponses, CreatePotData, CreatePotErrors, CreatePotResponses, CreateRefreshTokenData, CreateRefreshTokenErrors, CreateRefreshTokenResponses, CreateTransactionData, CreateTransactionErrors, CreateTransactionResponses, DeleteBudgetData, DeleteBudgetErrors, DeleteBudgetResponses, DeletePotData, DeletePotErrors, DeletePotResponses, EditBudgetData, EditBudgetErrors, EditBudgetResponses, EditPotData, EditPotErrors, EditPotResponses, GetAllBudgetsData, GetAllBudgetsErrors, GetAllBudgetsResponses, GetAllCategoriesData, GetAllCategoriesErrors, GetAllCategoriesResponses, GetAllPotsData, GetAllPotsResponses, GetAllTransactionsData, GetAllTransactionsErrors, GetAllTransactionsResponses, GetBalanceByUserIdData, GetBalanceByUserIdErrors, GetBalanceByUserIdResponses, GetUserByIdData, GetUserByIdErrors, GetUserByIdResponses, LoginGoogleUserData, LoginGoogleUserResponses, LoginUserData, LoginUserErrors, LoginUserResponses, LogoutGoogleUserData, LogoutGoogleUserResponses, LogoutUserData, LogoutUserErrors, LogoutUserResponses, SignUpUserData, SignUpUserErrors, SignUpUserResponses, WithdrawMoneyFromPotData, WithdrawMoneyFromPotErrors, WithdrawMoneyFromPotResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -95,6 +95,17 @@ export const getAllBudgets = <ThrowOnError extends boolean = false>(options?: Op
 
 export const createBudget = <ThrowOnError extends boolean = false>(options: Options<CreateBudgetData, ThrowOnError>) => (options.client ?? client).post<CreateBudgetResponses, CreateBudgetErrors, ThrowOnError>({
     url: '/v1/budgets',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const deleteBudget = <ThrowOnError extends boolean = false>(options: Options<DeleteBudgetData, ThrowOnError>) => (options.client ?? client).delete<DeleteBudgetResponses, DeleteBudgetErrors, ThrowOnError>({ url: '/v1/budgets/{budgetId}', ...options });
+
+export const editBudget = <ThrowOnError extends boolean = false>(options: Options<EditBudgetData, ThrowOnError>) => (options.client ?? client).put<EditBudgetResponses, EditBudgetErrors, ThrowOnError>({
+    url: '/v1/budgets/{budgetId}',
     ...options,
     headers: {
         'Content-Type': 'application/json',

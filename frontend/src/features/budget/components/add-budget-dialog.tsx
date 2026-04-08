@@ -60,6 +60,7 @@ export function AddBudgetDialog() {
       await queryClient.invalidateQueries({
         queryKey: getAllBudgetsQueryKey(),
       });
+      reset();
       setOpen(false);
     },
     onError: (error) => {
@@ -67,7 +68,14 @@ export function AddBudgetDialog() {
 
       switch (error.status) {
         case 400: {
-          setError(`root.server-bad-request`, {
+          setError(`root.add-budget-server-bad-request`, {
+            type: String(error.type),
+            message: String(error.detail),
+          });
+          break;
+        }
+        case 401: {
+          setError(`root.add-budget-server-unauthorized`, {
             type: String(error.type),
             message: String(error.detail),
           });
@@ -77,9 +85,6 @@ export function AddBudgetDialog() {
           Logger.error(`Unknown error in ${AddBudgetDialog.name}`);
         }
       }
-    },
-    onSettled: () => {
-      reset();
     },
   });
 
@@ -146,7 +151,7 @@ export function AddBudgetDialog() {
               type="number"
               step="any"
               id="maximum"
-              data-testid="maximum-error"
+              data-testid="maximum"
               placeholder="$ e.g. 2000"
               {...register("maximum", {
                 valueAsNumber: true,
@@ -158,11 +163,18 @@ export function AddBudgetDialog() {
               })}
             />
             {errors.maximum && (
-              <FieldError>{errors.maximum?.message}</FieldError>
+              <FieldError data-testid="maximum-error">
+                {errors.maximum?.message}
+              </FieldError>
             )}
-            {errors.root?.["server-bad-request"] && (
-              <FieldError data-testid="add-Budget-server-bad-request">
-                {errors.root["server-bad-request"].message}
+            {errors.root?.["add-budget-server-bad-request"] && (
+              <FieldError data-testid="add-budget-server-bad-request">
+                {errors.root["add-budget-server-bad-request"].message}
+              </FieldError>
+            )}
+            {errors.root?.["add-budget-server-unauthorized"] && (
+              <FieldError data-testid="add-budget-server-unauthorized">
+                {errors.root["add-budget-server-unauthorized"].message}
               </FieldError>
             )}
           </Field>

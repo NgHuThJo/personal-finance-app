@@ -1,7 +1,11 @@
 .layout {
   display: grid;
-  grid-template-rows: auto 1fr;
+  /* grid-template-rows: auto 1fr; */
   gap: 2rem;
+  /* 
+  @media screen and (width >= 768px) {
+    grid-template-columns: auto 1fr;
+  } */
 }
 
 .header {
@@ -12,6 +16,11 @@
 
 .heading {
   font-size: var(--font-size-heading);
+}
+
+.content {
+  display: grid;
+  gap: var(--spacing-6);
 }
 
 .body {
