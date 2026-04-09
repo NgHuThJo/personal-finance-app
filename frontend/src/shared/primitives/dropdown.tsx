@@ -1,6 +1,5 @@
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import * as React from "react";
-
 import styles from "./dropdown.module.css";
 import { icon_checkmark, icon_dropdown } from "#frontend/assets/images";
 import { Image } from "#frontend/shared/primitives/image";

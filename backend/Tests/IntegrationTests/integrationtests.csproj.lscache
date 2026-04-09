@@ -359,11 +359,7 @@ Tests/
  WindowsBase.dll
 ../../
  shared/obj/Debug/net10.0/ref/shared.dll
-<<<<<<< HEAD
- Src/obj/Debug/net10.0/ref/backend.dll
-=======
  src/obj/Debug/net10.0/ref/backend.dll
->>>>>>> feat/frontend-budget-route
 <NUGET>/
  bogus/35.6.5/lib/net6.0/Bogus.dll
  bouncycastle.cryptography/2.6.2/lib/net6.0/BouncyCastle.Cryptography.dll

@@ -81,47 +81,54 @@ export function BudgetCard({ budgetData }: BudgetCardProps) {
         <BudgetProgressBar maximum={maximum} spent={transactionAmount} />
       </CardContent>
       <CardFooter>
-        <div className={styles["footer-header"]}>
-          <h2 className={styles["footer-heading"]}>Latest Spending</h2>
-          <Link to="/transactions">See All</Link>
+        <div className={styles["footer-background"]}>
+          <div className={styles["footer-header"]}>
+            <h2 className={styles["footer-heading"]}>Latest Spending</h2>
+            <Link to="/transactions">See All</Link>
+          </div>
+          {filteredTransactions.length === 0 ? (
+            <p className={styles["footer-text"]}>
+              You haven't made any spendings yet.
+            </p>
+          ) : (
+            <ul className={styles["transaction-list"]}>
+              {filteredTransactions.map(
+                ({
+                  otherUser: { name },
+                  amount,
+                  transactionDate,
+                  senderId,
+                }) => (
+                  <li className={styles["transaction"]}>
+                    <span className={styles["transaction-name"]}>{name}</span>
+                    <div className={styles["transaction-summary"]}>
+                      <span
+                        className={`
+                          ${styles["transaction-amount"]}
+                        ${
+                          styles[
+                            senderId === userId ? "amount-minus" : "amount-plus"
+                          ]
+                        }`}
+                      >
+                        {senderId == userId ? "-" : "+"}
+                        {numberFormatter.formatNumber({
+                          number: amount,
+                          options: numberFormatter.getDollarOptions(),
+                        })}
+                      </span>
+                      <span className={styles["transaction-date"]}>
+                        {dateTimeFormatter.formatDate({
+                          date: new Date(transactionDate),
+                        })}
+                      </span>
+                    </div>
+                  </li>
+                ),
+              )}
+            </ul>
+          )}
         </div>
-        {filteredTransactions.length === 0 ? (
-          <p className={styles["footer-text"]}>
-            You haven't made any spendings yet.
-          </p>
-        ) : (
-          <ul className={styles["transaction-list"]}>
-            {filteredTransactions.map(
-              ({ otherUser: { name }, amount, transactionDate, senderId }) => (
-                <li className={styles["transaction"]}>
-                  <span className={styles["transaction-name"]}>{name}</span>
-                  <div className={styles["transaction-summary"]}>
-                    <span
-                      className={`
-                        ${styles["transaction-amount"]}
-                      ${
-                        styles[
-                          senderId === userId ? "amount-minus" : "amount-plus"
-                        ]
-                      }`}
-                    >
-                      {senderId == userId ? "-" : "+"}
-                      {numberFormatter.formatNumber({
-                        number: amount,
-                        options: numberFormatter.getDollarOptions(),
-                      })}
-                    </span>
-                    <span className={styles["transaction-date"]}>
-                      {dateTimeFormatter.formatDate({
-                        date: new Date(transactionDate),
-                      })}
-                    </span>
-                  </div>
-                </li>
-              ),
-            )}
-          </ul>
-        )}
       </CardFooter>
       {isEditDialogOpen && (
         <EditBudgetDialog

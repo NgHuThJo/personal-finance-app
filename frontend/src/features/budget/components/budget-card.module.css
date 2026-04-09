@@ -4,6 +4,14 @@
   align-items: center;
 }
 
+.footer-background {
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  border-radius: var(--border-radius-4);
+  background-color: var(--color-background-canvas-primary);
+}
+
 .footer-heading {
   font-weight: var(--font-weight-heading);
   font-size: var(--font-size-content-primary);
