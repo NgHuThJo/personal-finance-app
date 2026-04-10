@@ -1,3 +1,4 @@
+using System.Data;
 using backend.Src.Models;
 using backend.Src.Shared;
 using FluentValidation;
@@ -6,6 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Src.Features;
+
+public record GetAllTransactionsSearchParams
+{
+    public required int Page { get; init; } = 1;
+    public required int PageSize { get; init; } = 10;
+}
 
 public record GetAllTransactionsUserDto
 {
@@ -25,17 +32,28 @@ public record GetAllTransactionsResponse
     public required GetAllTransactionsUserDto OtherUser { get; init; }
 }
 
+public class GetAllTransactionsSearchParamsValidator
+    : AbstractValidator<GetAllTransactionsSearchParams>
+{
+    public GetAllTransactionsSearchParamsValidator()
+    {
+        RuleFor(q => q.Page).GreaterThan(0);
+        RuleFor(q => q.PageSize).GreaterThan(0);
+    }
+}
+
 public static class GetAllTransactionsEndpoint
 {
     public static async Task<
         Ok<List<GetAllTransactionsResponse>>
     > GetAllTransactions(
+        [FromQuery] GetAllTransactionsSearchParams searchParams,
         [FromServices] CurrentUser user,
         [FromServices] GetAllTransactionsHandler handler,
         CancellationToken ct
     )
     {
-        var transactions = await handler.Handle(user.UserId, ct);
+        var transactions = await handler.Handle(user.UserId, searchParams, ct);
 
         return TypedResults.Ok(transactions);
     }
@@ -47,13 +65,22 @@ public class GetAllTransactionsHandler(AppDbContext context)
 
     public async Task<List<GetAllTransactionsResponse>> Handle(
         int userId,
+        GetAllTransactionsSearchParams searchParams,
         CancellationToken ct
     )
     {
-        var transactions = await _context
-            .Transactions.Where(t =>
-                t.SenderId == userId || t.RecipientId == userId
-            )
+        var senders = _context.Transactions.Where(t => t.SenderId == userId);
+        var recipients = _context.Transactions.Where(t =>
+            t.RecipientId == userId
+        );
+
+        var query = senders.Union(recipients);
+
+        var transactions = await query
+            .OrderByDescending(t => t.TransactionDate)
+            .ThenByDescending(t => t.Id)
+            .Skip((searchParams.Page - 1) * searchParams.PageSize)
+            .Take(searchParams.PageSize)
             .Select(t => new GetAllTransactionsResponse
             {
                 Id = t.Id,
@@ -76,6 +103,7 @@ public class GetAllTransactionsHandler(AppDbContext context)
                             Name = t.Sender.Name,
                         },
             })
+            .AsNoTracking()
             .ToListAsync(ct);
 
         return transactions;

@@ -4,6 +4,7 @@ obj/
 
 # Cache
 *.cache/
+*.csproj.lscache
 
 # Logs
 *.log

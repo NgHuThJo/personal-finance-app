@@ -129,6 +129,7 @@ public static class RouteGrouper
         group
             .MapGet("", GetAllTransactionsEndpoint.GetAllTransactions)
             .WithName(nameof(GetAllTransactionsEndpoint.GetAllTransactions))
+            .AddValidationFilter<GetAllTransactionsSearchParams>()
             .ProducesProblem((int)HttpStatusCode.Unauthorized);
         group
             .MapPost("", CreateTransactionEndpoint.CreateTransaction)
