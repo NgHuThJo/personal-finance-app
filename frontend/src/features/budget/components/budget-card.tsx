@@ -29,7 +29,9 @@ type BudgetCardProps = {
 };
 
 export function BudgetCard({ budgetData }: BudgetCardProps) {
-  const { data: transactionData } = useSuspenseQuery({
+  const {
+    data: { data: transactionData },
+  } = useSuspenseQuery({
     ...getAllTransactionsOptions({
       client: clientWithAuth,
     }),
@@ -84,7 +86,16 @@ export function BudgetCard({ budgetData }: BudgetCardProps) {
         <div className={styles["footer-background"]}>
           <div className={styles["footer-header"]}>
             <h2 className={styles["footer-heading"]}>Latest Spending</h2>
-            <Link to="/transactions">See All</Link>
+            <Link
+              to="/transactions"
+              search={(prev) => ({
+                ...prev,
+                page: 1,
+                category: "all transactions",
+              })}
+            >
+              See All
+            </Link>
           </div>
           {filteredTransactions.length === 0 ? (
             <p className={styles["footer-text"]}>

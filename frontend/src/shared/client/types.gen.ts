@@ -56,6 +56,11 @@ export type GetAllPotsResponse = {
 };
 
 export type GetAllTransactionsResponse = {
+    data: Array<GetAllTransactionsTransactionDto>;
+    pageCount: number;
+};
+
+export type GetAllTransactionsTransactionDto = {
     id: number;
     amount: number;
     transactionDate: string;
@@ -553,7 +558,10 @@ export type EditBudgetResponse = EditBudgetResponses[keyof EditBudgetResponses];
 export type GetAllTransactionsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        page?: number;
+        pageSize?: number;
+    };
     url: '/v1/transactions';
 };
 
@@ -570,7 +578,7 @@ export type GetAllTransactionsResponses = {
     /**
      * OK
      */
-    200: Array<GetAllTransactionsResponse>;
+    200: GetAllTransactionsResponse;
 };
 
 export type GetAllTransactionsResponse2 = GetAllTransactionsResponses[keyof GetAllTransactionsResponses];

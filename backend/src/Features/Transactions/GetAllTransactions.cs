@@ -10,8 +10,11 @@ namespace backend.Src.Features;
 
 public record GetAllTransactionsSearchParams
 {
-    public required int Page { get; init; } = 1;
-    public required int PageSize { get; init; } = 10;
+    [FromQuery(Name = "page")]
+    public int? Page { get; init; } = 1;
+
+    [FromQuery(Name = "pageSize")]
+    public int? PageSize { get; init; } = 10;
 }
 
 public record GetAllTransactionsUserDto
@@ -20,7 +23,7 @@ public record GetAllTransactionsUserDto
     public required string Email { get; init; }
 }
 
-public record GetAllTransactionsResponse
+public record GetAllTransactionsTransactionDto
 {
     public required int Id { get; init; }
     public required decimal Amount { get; init; }
@@ -30,6 +33,12 @@ public record GetAllTransactionsResponse
     public required int RecipientId { get; init; }
     public required Category Category { get; init; }
     public required GetAllTransactionsUserDto OtherUser { get; init; }
+}
+
+public record GetAllTransactionsResponse
+{
+    public required IReadOnlyList<GetAllTransactionsTransactionDto> Data { get; init; }
+    public required int PageCount { get; init; }
 }
 
 public class GetAllTransactionsSearchParamsValidator
@@ -44,16 +53,22 @@ public class GetAllTransactionsSearchParamsValidator
 
 public static class GetAllTransactionsEndpoint
 {
-    public static async Task<
-        Ok<List<GetAllTransactionsResponse>>
-    > GetAllTransactions(
-        [FromQuery] GetAllTransactionsSearchParams searchParams,
+    public static async Task<Ok<GetAllTransactionsResponse>> GetAllTransactions(
+        [AsParameters] GetAllTransactionsSearchParams searchParams,
         [FromServices] CurrentUser user,
         [FromServices] GetAllTransactionsHandler handler,
         CancellationToken ct
     )
     {
-        var transactions = await handler.Handle(user.UserId, searchParams, ct);
+        var currentPage = searchParams.Page ?? 1;
+        var currentPageSize = searchParams.PageSize ?? 10;
+
+        var transactions = await handler.Handle(
+            user.UserId,
+            currentPage,
+            currentPageSize,
+            ct
+        );
 
         return TypedResults.Ok(transactions);
     }
@@ -63,9 +78,10 @@ public class GetAllTransactionsHandler(AppDbContext context)
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<List<GetAllTransactionsResponse>> Handle(
+    public async Task<GetAllTransactionsResponse> Handle(
         int userId,
-        GetAllTransactionsSearchParams searchParams,
+        int page,
+        int pageSize,
         CancellationToken ct
     )
     {
@@ -74,14 +90,15 @@ public class GetAllTransactionsHandler(AppDbContext context)
             t.RecipientId == userId
         );
 
-        var query = senders.Union(recipients);
+        var query = senders.Concat(recipients);
+        var count = await query.CountAsync(ct);
 
         var transactions = await query
             .OrderByDescending(t => t.TransactionDate)
             .ThenByDescending(t => t.Id)
-            .Skip((searchParams.Page - 1) * searchParams.PageSize)
-            .Take(searchParams.PageSize)
-            .Select(t => new GetAllTransactionsResponse
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(t => new GetAllTransactionsTransactionDto
             {
                 Id = t.Id,
                 Amount = t.Amount,
@@ -106,6 +123,10 @@ public class GetAllTransactionsHandler(AppDbContext context)
             .AsNoTracking()
             .ToListAsync(ct);
 
-        return transactions;
+        return new GetAllTransactionsResponse
+        {
+            Data = transactions,
+            PageCount = count,
+        };
     }
 }

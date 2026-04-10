@@ -18,6 +18,10 @@ const iconList = linkOptions([
   {
     to: "/transactions",
     icon: ArrowsDownUp,
+    search: {
+      page: 1,
+      category: "all transactions",
+    },
   },
   {
     to: "/budgets",

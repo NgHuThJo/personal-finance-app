@@ -5,6 +5,7 @@ import {
   zGetAllCategoriesResponse,
   zGetAllPotsResponse,
   zGetAllTransactionsResponse,
+  zGetAllTransactionsTransactionDto,
   zGetBalanceByUserIdResponse,
   zLoginUserResponse,
   zSignUpUserResponse,
@@ -137,19 +138,24 @@ export const test = base.extend({
         status: 200,
         json: zocker(zGetAllTransactionsResponse)
           .supply(zGetAllTransactionsResponse, {
-            id: ++idCounter,
-            category: "bills",
-            amount: 200,
-            isRecurring: false,
-            otherUser: {
-              email: "somerandom@email.com",
-              name: "somerandomname",
-            },
-            senderId: ++idCounter,
-            recipientId: ++idCounter,
-            transactionDate: Date(),
+            data: zocker(zGetAllTransactionsTransactionDto)
+              .supply(zGetAllTransactionsTransactionDto, {
+                id: ++idCounter,
+                category: "bills",
+                amount: 200,
+                isRecurring: false,
+                otherUser: {
+                  email: "somerandom@email.com",
+                  name: "somerandomname",
+                },
+                senderId: ++idCounter,
+                recipientId: ++idCounter,
+                transactionDate: Date(),
+              })
+              .generateMany(4),
+            pageCount: 1,
           })
-          .generateMany(4),
+          .generateMany(1),
       });
     });
 

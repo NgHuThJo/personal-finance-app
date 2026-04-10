@@ -27,10 +27,16 @@ export function TransactionTable() {
   const [category, setCategory] = useState<Category | "all transactions">(
     initialCategory,
   );
-  const { data } = useSuspenseQuery({
+  const {
+    data: { data: transactionData },
+  } = useSuspenseQuery({
     ...getAllTransactionsOptions({
       client: clientWithAuth,
       credentials: "include",
+      query: {
+        page,
+        pageSize: 10,
+      },
     }),
   });
   const { data: categoryData } = useSuspenseQuery({
@@ -47,8 +53,8 @@ export function TransactionTable() {
   const userId = Number(decodeJwt(accessToken?.accessToken as string).sub);
   const filteredTransactions =
     category === "all transactions"
-      ? data
-      : data.filter((t) => t.category === category);
+      ? transactionData
+      : transactionData.filter((t) => t.category === category);
   const enhancedCategories = ["All Transactions", ...categoryData];
 
   const handleCategoryChoice = (e: Event) => {
@@ -138,7 +144,9 @@ export function TransactionTable() {
         </tbody>
       </table>
       <div className={styles["navigation-button-layout"]}>
-        <Button variant="ghost">Back</Button>
+        <Button variant="ghost" disabled={page === 1}>
+          Back
+        </Button>
         <Button variant="ghost">Next</Button>
       </div>
     </div>

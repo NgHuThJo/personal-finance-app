@@ -67,7 +67,7 @@ export const zGetAllTransactionsUserDto = z.object({
     email: z.string()
 });
 
-export const zGetAllTransactionsResponse = z.object({
+export const zGetAllTransactionsTransactionDto = z.object({
     id: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
     amount: z.number(),
     transactionDate: z.iso.datetime(),
@@ -76,6 +76,11 @@ export const zGetAllTransactionsResponse = z.object({
     recipientId: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
     category: zCategory,
     otherUser: zGetAllTransactionsUserDto
+});
+
+export const zGetAllTransactionsResponse = z.object({
+    data: z.array(zGetAllTransactionsTransactionDto),
+    pageCount: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })
 });
 
 export const zGetBalanceByUserIdResponse = z.object({
@@ -326,13 +331,16 @@ export const zEditBudgetResponse = z.void();
 export const zGetAllTransactionsData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never())
+    query: z.optional(z.object({
+        page: z.optional(z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })),
+        pageSize: z.optional(z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }))
+    }))
 });
 
 /**
  * OK
  */
-export const zGetAllTransactionsResponse2 = z.array(zGetAllTransactionsResponse);
+export const zGetAllTransactionsResponse2 = zGetAllTransactionsResponse;
 
 export const zCreateTransactionData = z.object({
     body: zCreateTransactionRequest,

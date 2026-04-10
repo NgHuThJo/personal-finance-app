@@ -23,7 +23,9 @@ export function BudgetSummary() {
       credentials: "include",
     }),
   });
-  const { data: transactionData } = useSuspenseQuery({
+  const {
+    data: { data: transactionData },
+  } = useSuspenseQuery({
     ...getAllTransactionsOptions({
       client: clientWithAuth,
       credentials: "include",

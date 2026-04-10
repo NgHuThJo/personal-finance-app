@@ -11,10 +11,14 @@ const options = linkOptions([
   {
     name: "Transactions",
     to: "/transactions",
+    search: {
+      page: 1,
+      category: "all transactions",
+    },
   },
   {
     name: "Budget",
-    to: "/budget",
+    to: "/budgets",
   },
   {
     name: "Recurring Bills",
