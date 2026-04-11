@@ -38,7 +38,7 @@ public record GetAllTransactionsTransactionDto
 public record GetAllTransactionsResponse
 {
     public required IReadOnlyList<GetAllTransactionsTransactionDto> Data { get; init; }
-    public required int PageCount { get; init; }
+    public required int TransactionCount { get; init; }
 }
 
 public class GetAllTransactionsSearchParamsValidator
@@ -126,7 +126,7 @@ public class GetAllTransactionsHandler(AppDbContext context)
         return new GetAllTransactionsResponse
         {
             Data = transactions,
-            PageCount = count,
+            TransactionCount = count,
         };
     }
 }

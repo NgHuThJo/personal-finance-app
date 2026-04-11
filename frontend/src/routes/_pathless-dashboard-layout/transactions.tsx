@@ -8,6 +8,7 @@ export const Route = createFileRoute(
   validateSearch: (search) => {
     return {
       page: Number(search.page ?? 1),
+      pageSize: Number(search.pageSize ?? 10),
       category:
         (search.category as Category | "all transactions") ??
         "all transactions",

@@ -57,7 +57,7 @@ export type GetAllPotsResponse = {
 
 export type GetAllTransactionsResponse = {
     data: Array<GetAllTransactionsTransactionDto>;
-    pageCount: number;
+    transactionCount: number;
 };
 
 export type GetAllTransactionsTransactionDto = {

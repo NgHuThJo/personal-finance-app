@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import styles from "./board.module.css";
 import { AddTransactionDialog } from "#frontend/features/transaction/components/add-transaction-dialog";
 import { TransactionTable } from "#frontend/features/transaction/components/table";
+import { Loader } from "#frontend/shared/primitives/loader";
 
 export function TransactionBoard() {
   return (
@@ -9,9 +11,9 @@ export function TransactionBoard() {
         <h1 className={styles.heading}>Budgets</h1>
         <AddTransactionDialog />
       </header>
-      <div className={styles["content"]}>
+      <Suspense fallback={<Loader />}>
         <TransactionTable />
-      </div>
+      </Suspense>
     </div>
   );
 }
