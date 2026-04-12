@@ -8,7 +8,7 @@ export const appLinkOptions = {
         page: 1,
         category: undefined,
         pageSize: 10,
-        sortKey: "dateAsc",
+        sortKey: "DateAsc",
       },
     }),
 };

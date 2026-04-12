@@ -42,6 +42,9 @@ function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
 
 const fieldVariants = cva(styles.field, {
   variants: {
+    variant: {
+      search: styles.search,
+    },
     orientation: {
       vertical: styles.vertical,
       horizontal: styles.horizontal,
@@ -56,6 +59,7 @@ const fieldVariants = cva(styles.field, {
 function Field({
   className,
   orientation,
+  variant,
   ...props
 }: React.ComponentProps<"div"> & VariantProps<typeof fieldVariants>) {
   return (
@@ -63,7 +67,7 @@ function Field({
       role="group"
       data-slot="field"
       data-orientation={orientation}
-      className={cn(fieldVariants({ orientation }), className)}
+      className={cn(fieldVariants({ orientation, variant }), className)}
       {...props}
     />
   );

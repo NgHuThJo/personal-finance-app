@@ -71,6 +71,12 @@
   }
 }
 
+/* FIELD VARIANTS */
+.search {
+  display: inline-flex;
+  width: auto;
+}
+
 /* FIELD CONTENT */
 
 .fieldContent {

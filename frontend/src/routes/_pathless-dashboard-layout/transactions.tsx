@@ -11,6 +11,7 @@ export const Route = createFileRoute(
       pageSize: Number(search.pageSize ?? 10),
       sortKey: (search.sortKey as TransactionSortKey) ?? "DateDesc",
       category: search.category as Category | undefined,
+      search: (search.search as string) ?? "",
     };
   },
   component: RouteComponent,

@@ -1,5 +1,5 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { getRouteApi, Link } from "@tanstack/react-router";
+import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import styles from "./table.module.css";
 import { CaretLeft, CaretRight } from "#frontend/assets/icons/icons";
@@ -10,6 +10,7 @@ import {
   getAllCategoriesOptions,
   getAllTransactionsOptions,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
+import { useDebouncedFunction } from "#frontend/shared/hooks/use-debounced-function";
 import { Button } from "#frontend/shared/primitives/button";
 import {
   DropdownMenu,
@@ -17,6 +18,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "#frontend/shared/primitives/dropdown";
+import { Field } from "#frontend/shared/primitives/field";
+import { Input } from "#frontend/shared/primitives/input";
 import { dateTimeFormatter } from "#frontend/shared/utils/intl/datetime-format";
 import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
 import { decodeJwt } from "#frontend/shared/utils/object";
@@ -69,7 +72,8 @@ const sortKeyArray: SortOptions[] = [
 
 export function TransactionTable() {
   const route = getRouteApi("/_pathless-dashboard-layout/transactions");
-  const { page, category, pageSize, sortKey } = route.useSearch();
+  const navigate = useNavigate();
+  const { page, category, pageSize, sortKey, search } = route.useSearch();
   const [currentCategory, setCurrentCategory] = useState<Category | undefined>(
     category,
   );
@@ -86,6 +90,7 @@ export function TransactionTable() {
         pageSize,
         category: currentCategory,
         sortKey: currentSortKey,
+        search,
       },
     }),
   });
@@ -107,6 +112,17 @@ export function TransactionTable() {
     ...categoryData,
   ];
 
+  const debounceSearch = useDebouncedFunction((search: string) => {
+    navigate({
+      from: "/transactions",
+      to: ".",
+      search: (prev) => ({
+        ...prev,
+        search,
+      }),
+    });
+  }, 1000);
+
   const handleCategoryChoice = (category: CategoryFilter) => {
     if (category === "all transactions") {
       setCurrentCategory(undefined);
@@ -122,7 +138,14 @@ export function TransactionTable() {
 
   return (
     <div className={styles["layout"]}>
-      <header>
+      <header className={styles["sort-header"]}>
+        <Field variant="search">
+          <Input
+            type="text"
+            placeholder="Search transactions..."
+            onChange={(e) => debounceSearch(e.currentTarget.value)}
+          />
+        </Field>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button>Filter by category</Button>
@@ -153,7 +176,6 @@ export function TransactionTable() {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-        <div></div>
       </header>
       <table className={styles["table"]}>
         <colgroup className={styles["colgroup"]}>

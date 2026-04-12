@@ -7,6 +7,7 @@ const inputVariants = cva(styles.input, {
   variants: {
     variant: {
       default: styles["default-input"],
+      search: styles["search"],
     },
     size: {},
   },
