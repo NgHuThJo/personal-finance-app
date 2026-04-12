@@ -4,7 +4,7 @@ import { useState } from "react";
 import styles from "./table.module.css";
 import { CaretLeft, CaretRight } from "#frontend/assets/icons/icons";
 import { clientWithAuth } from "#frontend/shared/api/client";
-import type { Category } from "#frontend/shared/client";
+import type { Category, TransactionSortKey } from "#frontend/shared/client";
 import {
   createRefreshTokenOptions,
   getAllCategoriesOptions,
@@ -20,45 +20,61 @@ import {
 import { dateTimeFormatter } from "#frontend/shared/utils/intl/datetime-format";
 import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
 import { decodeJwt } from "#frontend/shared/utils/object";
-import { sortHelper } from "#frontend/shared/utils/sort";
 import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 
-type DateSort = "oldest" | "newest";
-type StringSort = "A to Z" | "Z to A";
-type NumberSort = "lowest" | "highest";
-type SortKey = keyof typeof sortMap;
+type KeyLabelOptions<T> = {
+  [K in keyof T]: {
+    key: K;
+    label: T[K];
+  };
+}[keyof T];
+type SortOptions = KeyLabelOptions<typeof _sortKeyMap>;
+type CategoryFilter = Category | "all transactions";
 
-const sortKeys: SortKey[] = [
-  "oldest",
-  "newest",
-  "A to Z",
-  "Z to A",
-  "lowest",
-  "highest",
+const _sortKeyMap = {
+  AmountAsc: "lowest",
+  AmountDesc: "highest",
+  DateAsc: "oldest",
+  DateDesc: "newest",
+  NameAsc: "A to Z",
+  NameDesc: "Z to A",
+} as const;
+
+const sortKeyArray: SortOptions[] = [
+  {
+    key: "AmountAsc",
+    label: "lowest",
+  },
+  {
+    key: "AmountDesc",
+    label: "highest",
+  },
+  {
+    key: "DateAsc",
+    label: "oldest",
+  },
+  {
+    key: "DateDesc",
+    label: "newest",
+  },
+  {
+    key: "NameAsc",
+    label: "A to Z",
+  },
+  {
+    key: "NameDesc",
+    label: "Z to A",
+  },
 ];
-
-const sortMap: {
-  [K in DateSort]: (a: Date, b: Date) => number;
-} & {
-  [K in StringSort]: (a: string, b: string) => number;
-} & {
-  [K in NumberSort]: (a: number, b: number) => number;
-} = {
-  oldest: sortHelper.compareOldest,
-  newest: sortHelper.compareNewest,
-  ["A to Z"]: sortHelper.compareAToZ,
-  ["Z to A"]: sortHelper.compareZToA,
-  highest: sortHelper.compareHighest,
-  lowest: sortHelper.compareLowest,
-};
 
 export function TransactionTable() {
   const route = getRouteApi("/_pathless-dashboard-layout/transactions");
-  const { page, category: initialCategory, pageSize } = route.useSearch();
-  const [category, setCategory] = useState<Category | "all transactions">(
-    initialCategory,
+  const { page, category, pageSize, sortKey } = route.useSearch();
+  const [currentCategory, setCurrentCategory] = useState<Category | undefined>(
+    category,
   );
-  const [sortKey, setSortKey] = useState<SortKey>("newest");
+  const [currentSortKey, setCurrentSortKey] =
+    useState<TransactionSortKey>(sortKey);
   const {
     data: { data: transactionData, transactionCount },
   } = useSuspenseQuery({
@@ -68,6 +84,8 @@ export function TransactionTable() {
       query: {
         page,
         pageSize,
+        category: currentCategory,
+        sortKey: currentSortKey,
       },
     }),
   });
@@ -84,48 +102,22 @@ export function TransactionTable() {
 
   const pageCount = Math.ceil(transactionCount / pageSize);
   const userId = Number(decodeJwt(accessToken?.accessToken as string).sub);
-  const filteredTransactions = (
-    category === "all transactions"
-      ? transactionData
-      : transactionData.filter((t) => t.category === category)
-  ).sort((t1, t2) => {
-    switch (sortKey) {
-      case "newest":
-      case "oldest": {
-        return sortMap[sortKey](
-          new Date(t1.transactionDate),
-          new Date(t2.transactionDate),
-        );
-      }
-      case "A to Z":
-      case "Z to A": {
-        return sortMap[sortKey](t1.otherUser.name, t2.otherUser.name);
-      }
-      case "lowest":
-      case "highest": {
-        return sortMap[sortKey](t1.amount, t2.amount);
-      }
-      default: {
-        throw new Error(
-          `An unknown error occurred in ${TransactionTable.name}`,
-        );
-      }
-    }
-  });
-  const enhancedCategories = ["All Transactions", ...categoryData];
+  const extendedCategories: CategoryFilter[] = [
+    "all transactions",
+    ...categoryData,
+  ];
 
-  const handleCategoryChoice = (e: Event) => {
-    const eventTarget = e.target as HTMLDivElement;
-    const value = eventTarget.textContent.toLowerCase() as
-      | Category
-      | "all transactions";
-    setCategory(value);
+  const handleCategoryChoice = (category: CategoryFilter) => {
+    if (category === "all transactions") {
+      setCurrentCategory(undefined);
+      return;
+    }
+
+    setCurrentCategory(category);
   };
 
-  const handleSortChoice = (e: Event) => {
-    const eventTarget = e.target as HTMLDivElement;
-    const value = eventTarget.textContent.toLowerCase() as SortKey;
-    setSortKey(value);
+  const handleSortChoice = (key: TransactionSortKey) => {
+    setCurrentSortKey(key);
   };
 
   return (
@@ -136,8 +128,11 @@ export function TransactionTable() {
             <Button>Filter by category</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            {enhancedCategories.map((category) => (
-              <DropdownMenuItem onSelect={handleCategoryChoice} key={category}>
+            {extendedCategories.map((category) => (
+              <DropdownMenuItem
+                onSelect={() => handleCategoryChoice(category)}
+                key={category}
+              >
                 {capitalizeFirstLetter(category)}
               </DropdownMenuItem>
             ))}
@@ -148,9 +143,12 @@ export function TransactionTable() {
             <Button>Sort</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            {sortKeys.map((key) => (
-              <DropdownMenuItem onSelect={handleSortChoice} key={key}>
-                {capitalizeFirstLetter(key)}
+            {sortKeyArray.map(({ key, label }) => (
+              <DropdownMenuItem
+                onSelect={() => handleSortChoice(key)}
+                key={key}
+              >
+                {capitalizeFirstLetter(label)}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
@@ -181,8 +179,8 @@ export function TransactionTable() {
           </tr>
         </thead>
         <tbody>
-          {filteredTransactions.length ? (
-            filteredTransactions.map(
+          {transactionData.length ? (
+            transactionData.map(
               ({
                 id,
                 amount,

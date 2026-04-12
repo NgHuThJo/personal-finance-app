@@ -112,6 +112,8 @@ export type SignUpUserResponse = {
     name: string;
 };
 
+export type TransactionSortKey = 'DateAsc' | 'DateDesc' | 'NameAsc' | 'NameDesc' | 'AmountAsc' | 'AmountDesc';
+
 export type WithdrawMoneyFromPotRequest = {
     withdrawAmount: number;
 };
@@ -561,6 +563,8 @@ export type GetAllTransactionsData = {
     query?: {
         page?: number;
         pageSize?: number;
+        category?: Category;
+        sortKey?: TransactionSortKey;
     };
     url: '/v1/transactions';
 };

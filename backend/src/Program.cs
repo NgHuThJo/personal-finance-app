@@ -63,12 +63,13 @@ builder.Services.AddValidatorsFromAssembly(assembly);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddOpenApi();
+
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict;
-    options.SerializerOptions.Converters.Add(
-        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-    );
+    // options.SerializerOptions.Converters.Add(
+    //     new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+    // );
 });
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(

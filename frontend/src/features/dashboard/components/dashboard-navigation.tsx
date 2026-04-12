@@ -8,6 +8,7 @@ import {
   Receipt,
   ShortLogo,
 } from "#frontend/assets/icons/icons";
+import { appLinkOptions } from "#frontend/shared/router/options/linkOptions";
 
 // Note: "to" is used as React key, might consider a different key if "to" is not unique
 const iconList = linkOptions([
@@ -16,12 +17,8 @@ const iconList = linkOptions([
     icon: House,
   },
   {
-    to: "/transactions",
+    ...appLinkOptions.getTransactionLinkOptions(),
     icon: ArrowsDownUp,
-    search: {
-      page: 1,
-      category: "all transactions",
-    },
   },
   {
     to: "/budgets",

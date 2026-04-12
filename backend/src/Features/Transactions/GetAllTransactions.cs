@@ -1,4 +1,5 @@
 using System.Data;
+using System.Text.Json.Serialization;
 using backend.Src.Models;
 using backend.Src.Shared;
 using FluentValidation;
@@ -8,6 +9,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Src.Features;
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum TransactionSortKey
+{
+    DateAsc,
+    DateDesc,
+    NameAsc,
+    NameDesc,
+    AmountAsc,
+    AmountDesc,
+}
+
 public record GetAllTransactionsSearchParams
 {
     [FromQuery(Name = "page")]
@@ -15,6 +27,13 @@ public record GetAllTransactionsSearchParams
 
     [FromQuery(Name = "pageSize")]
     public int? PageSize { get; init; } = 10;
+
+    [FromQuery(Name = "category")]
+    public Category? Category { get; init; } = null;
+
+    [FromQuery(Name = "sortKey")]
+    public TransactionSortKey? SortKey { get; init; } =
+        TransactionSortKey.DateDesc;
 }
 
 public record GetAllTransactionsUserDto
@@ -62,11 +81,15 @@ public static class GetAllTransactionsEndpoint
     {
         var currentPage = searchParams.Page ?? 1;
         var currentPageSize = searchParams.PageSize ?? 10;
+        var sortKey = searchParams.SortKey ?? TransactionSortKey.DateAsc;
+        var category = searchParams.Category;
 
         var transactions = await handler.Handle(
             user.UserId,
             currentPage,
             currentPageSize,
+            category,
+            sortKey,
             ct
         );
 
@@ -82,20 +105,51 @@ public class GetAllTransactionsHandler(AppDbContext context)
         int userId,
         int page,
         int pageSize,
+        Category? category,
+        TransactionSortKey sortKey,
         CancellationToken ct
     )
     {
-        var senders = _context.Transactions.Where(t => t.SenderId == userId);
-        var recipients = _context.Transactions.Where(t =>
-            t.RecipientId == userId
+        // Query, filter, sort, paginate
+        // Query and filter
+        var query = _context.Transactions.Where(t =>
+            t.SenderId == userId || t.RecipientId == userId
         );
-
-        var query = senders.Concat(recipients);
+        query = category is null
+            ? query
+            : query.Where(t => t.Category == category);
+        // Once done filtering, you can count
         var count = await query.CountAsync(ct);
+        // Sort
+        query = sortKey switch
+        {
+            TransactionSortKey.AmountAsc => query
+                .OrderBy(t => t.Amount)
+                .ThenBy(t => t.Id),
+            TransactionSortKey.AmountDesc => query
+                .OrderByDescending(t => t.Amount)
+                .ThenByDescending(t => t.Id),
+            TransactionSortKey.DateAsc => query
+                .OrderBy(t => t.TransactionDate)
+                .ThenBy(t => t.Id),
+            TransactionSortKey.DateDesc => query
+                .OrderByDescending(t => t.TransactionDate)
+                .ThenByDescending(t => t.Id),
+            TransactionSortKey.NameAsc => query
+                .OrderBy(t =>
+                    t.SenderId == userId ? t.Recipient.Name : t.Sender.Name
+                )
+                .ThenBy(t => t.Id),
+            TransactionSortKey.NameDesc => query
+                .OrderByDescending(t =>
+                    t.SenderId == userId ? t.Recipient.Name : t.Sender.Name
+                )
+                .ThenByDescending(t => t.Id),
+            _ => throw new ArgumentOutOfRangeException(nameof(sortKey)),
+        };
 
+        // Paginate and project
         var transactions = await query
-            .OrderByDescending(t => t.TransactionDate)
-            .ThenByDescending(t => t.Id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(t => new GetAllTransactionsTransactionDto

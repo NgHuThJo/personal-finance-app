@@ -134,6 +134,15 @@ export const zSignUpUserResponse = z.object({
     name: z.string().min(1)
 });
 
+export const zTransactionSortKey = z.enum([
+    'DateAsc',
+    'DateDesc',
+    'NameAsc',
+    'NameDesc',
+    'AmountAsc',
+    'AmountDesc'
+]);
+
 export const zWithdrawMoneyFromPotRequest = z.object({
     withdrawAmount: z.number().gte(0)
 });
@@ -333,7 +342,9 @@ export const zGetAllTransactionsData = z.object({
     path: z.optional(z.never()),
     query: z.optional(z.object({
         page: z.optional(z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })),
-        pageSize: z.optional(z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }))
+        pageSize: z.optional(z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })),
+        category: z.optional(zCategory),
+        sortKey: z.optional(zTransactionSortKey)
     }))
 });
 
