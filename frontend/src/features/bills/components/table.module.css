@@ -1,0 +1,57 @@
+.table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: 100%;
+  color: var(--color-text-secondary);
+
+  tr {
+    border-bottom: var(--color-border-input-primary) solid 1px;
+  }
+
+  th,
+  td {
+    padding: 1rem;
+  }
+
+  td:first-of-type {
+    font-weight: var(--font-weight-heading);
+    color: var(--color-text-primary);
+  }
+}
+
+.colgroup {
+  col:not(:last-of-type) {
+    border-right: var(--color-border-input-primary) solid 1px;
+  }
+}
+
+.table-header {
+  font-weight: var(--font-weight-heading);
+  color: var(--color-text-primary);
+  background-color: var(--color-background-canvas-primary);
+
+  &:first-of-type {
+    border-top-left-radius: var(--border-radius-6);
+  }
+  &:last-of-type {
+    border-top-right-radius: var(--border-radius-6);
+  }
+}
+
+.table-cell-amount {
+  font-weight: var(--font-weight-heading);
+  text-align: right;
+}
+
+.no-transaction-found {
+  height: 10rem;
+  text-align: center;
+}
+
+.plus {
+  color: var(--color-status-success);
+}
+
+.minus {
+  color: var(--color-status-error);
+}

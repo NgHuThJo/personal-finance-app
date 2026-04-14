@@ -3,8 +3,8 @@
 import { type DefaultError, type InfiniteData, infiniteQueryOptions, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { addMoneyToPot, createBudget, createPot, createRefreshToken, createTransaction, deleteBudget, deletePot, editBudget, editPot, getAllBudgets, getAllCategories, getAllPots, getAllTransactions, getBalanceByUserId, getUserById, loginGoogleUser, loginUser, logoutGoogleUser, logoutUser, type Options, signUpUser, withdrawMoneyFromPot } from '../sdk.gen';
-import type { AddMoneyToPotData, AddMoneyToPotError, AddMoneyToPotResponse, CreateBudgetData, CreateBudgetError, CreatePotData, CreatePotError, CreateRefreshTokenData, CreateRefreshTokenError, CreateRefreshTokenResponse2, CreateTransactionData, CreateTransactionError, CreateTransactionResponse, DeleteBudgetData, DeleteBudgetError, DeleteBudgetResponse, DeletePotData, DeletePotError, DeletePotResponse, EditBudgetData, EditBudgetError, EditBudgetResponse, EditPotData, EditPotError, EditPotResponse, GetAllBudgetsData, GetAllBudgetsError, GetAllBudgetsResponse2, GetAllCategoriesData, GetAllCategoriesError, GetAllCategoriesResponse, GetAllPotsData, GetAllPotsResponse2, GetAllTransactionsData, GetAllTransactionsError, GetAllTransactionsResponse2, GetBalanceByUserIdData, GetBalanceByUserIdError, GetBalanceByUserIdResponse2, GetUserByIdData, GetUserByIdError, GetUserByIdResponse2, LoginGoogleUserData, LoginUserData, LoginUserError, LoginUserResponse, LogoutGoogleUserData, LogoutUserData, LogoutUserError, LogoutUserResponse, SignUpUserData, SignUpUserError, SignUpUserResponse2, WithdrawMoneyFromPotData, WithdrawMoneyFromPotError, WithdrawMoneyFromPotResponse } from '../types.gen';
+import { addMoneyToPot, createBudget, createPot, createRefreshToken, createTransaction, deleteBudget, deletePot, editBudget, editPot, getAllBudgets, getAllCategories, getAllPots, getAllRecurringBills, getAllTransactions, getBalanceByUserId, getUserById, loginGoogleUser, loginUser, logoutGoogleUser, logoutUser, type Options, signUpUser, withdrawMoneyFromPot } from '../sdk.gen';
+import type { AddMoneyToPotData, AddMoneyToPotError, AddMoneyToPotResponse, CreateBudgetData, CreateBudgetError, CreatePotData, CreatePotError, CreateRefreshTokenData, CreateRefreshTokenError, CreateRefreshTokenResponse2, CreateTransactionData, CreateTransactionError, CreateTransactionResponse, DeleteBudgetData, DeleteBudgetError, DeleteBudgetResponse, DeletePotData, DeletePotError, DeletePotResponse, EditBudgetData, EditBudgetError, EditBudgetResponse, EditPotData, EditPotError, EditPotResponse, GetAllBudgetsData, GetAllBudgetsError, GetAllBudgetsResponse2, GetAllCategoriesData, GetAllCategoriesError, GetAllCategoriesResponse, GetAllPotsData, GetAllPotsResponse2, GetAllRecurringBillsData, GetAllRecurringBillsError, GetAllRecurringBillsResponse2, GetAllTransactionsData, GetAllTransactionsError, GetAllTransactionsResponse2, GetBalanceByUserIdData, GetBalanceByUserIdError, GetBalanceByUserIdResponse2, GetUserByIdData, GetUserByIdError, GetUserByIdResponse2, LoginGoogleUserData, LoginUserData, LoginUserError, LoginUserResponse, LogoutGoogleUserData, LogoutUserData, LogoutUserError, LogoutUserResponse, SignUpUserData, SignUpUserError, SignUpUserResponse2, WithdrawMoneyFromPotData, WithdrawMoneyFromPotError, WithdrawMoneyFromPotResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -381,6 +381,45 @@ export const createTransactionMutation = (options?: Partial<Options<CreateTransa
     };
     return mutationOptions;
 };
+
+export const getAllRecurringBillsQueryKey = (options?: Options<GetAllRecurringBillsData>) => createQueryKey('getAllRecurringBills', options);
+
+export const getAllRecurringBillsOptions = (options?: Options<GetAllRecurringBillsData>) => queryOptions<GetAllRecurringBillsResponse2, GetAllRecurringBillsError, GetAllRecurringBillsResponse2, ReturnType<typeof getAllRecurringBillsQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getAllRecurringBills({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getAllRecurringBillsQueryKey(options)
+});
+
+export const getAllRecurringBillsInfiniteQueryKey = (options?: Options<GetAllRecurringBillsData>): QueryKey<Options<GetAllRecurringBillsData>> => createQueryKey('getAllRecurringBills', options, true);
+
+export const getAllRecurringBillsInfiniteOptions = (options?: Options<GetAllRecurringBillsData>) => infiniteQueryOptions<GetAllRecurringBillsResponse2, GetAllRecurringBillsError, InfiniteData<GetAllRecurringBillsResponse2>, QueryKey<Options<GetAllRecurringBillsData>>, number | Pick<QueryKey<Options<GetAllRecurringBillsData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+// @ts-ignore
+{
+    queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<QueryKey<Options<GetAllRecurringBillsData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === 'object' ? pageParam : {
+            query: {
+                page: pageParam
+            }
+        };
+        const params = createInfiniteParams(queryKey, page);
+        const { data } = await getAllRecurringBills({
+            ...options,
+            ...params,
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getAllRecurringBillsInfiniteQueryKey(options)
+});
 
 export const getAllCategoriesQueryKey = (options?: Options<GetAllCategoriesData>) => createQueryKey('getAllCategories', options);
 

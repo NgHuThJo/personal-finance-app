@@ -12,4 +12,14 @@ export const appLinkOptions = {
         searchQuery: "",
       },
     }),
+  getBillsOptions: () =>
+    linkOptions({
+      to: "/bills",
+      search: {
+        page: 1,
+        pageSize: 10,
+        sortKey: "DateAsc",
+        searchQuery: "",
+      },
+    }),
 };

@@ -62,6 +62,27 @@ export const zGetAllPotsResponse = z.object({
     name: z.string().min(1)
 });
 
+export const zGetAllRecurringBillsUserDto = z.object({
+    name: z.string(),
+    email: z.string()
+});
+
+export const zGetAllRecurringBillsTransactionDto = z.object({
+    id: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+    amount: z.number(),
+    transactionDate: z.iso.datetime(),
+    isRecurring: z.boolean(),
+    senderId: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+    recipientId: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' }),
+    category: zCategory,
+    otherUser: zGetAllRecurringBillsUserDto
+});
+
+export const zGetAllRecurringBillsResponse = z.object({
+    data: z.array(zGetAllRecurringBillsTransactionDto),
+    transactionCount: z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })
+});
+
 export const zGetAllTransactionsUserDto = z.object({
     name: z.string(),
     email: z.string()
@@ -388,6 +409,22 @@ export const zCreateTransactionData = z.object({
  * No Content
  */
 export const zCreateTransactionResponse = z.void();
+
+export const zGetAllRecurringBillsData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.object({
+        page: z.optional(z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })),
+        pageSize: z.optional(z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })),
+        sortKey: z.optional(zTransactionSortKey),
+        searchQuery: z.optional(z.string())
+    }))
+});
+
+/**
+ * OK
+ */
+export const zGetAllRecurringBillsResponse2 = zGetAllRecurringBillsResponse;
 
 export const zGetAllCategoriesData = z.object({
     body: z.optional(z.never()),

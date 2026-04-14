@@ -55,6 +55,27 @@ export type GetAllPotsResponse = {
     name: string;
 };
 
+export type GetAllRecurringBillsResponse = {
+    data: Array<GetAllRecurringBillsTransactionDto>;
+    transactionCount: number;
+};
+
+export type GetAllRecurringBillsTransactionDto = {
+    id: number;
+    amount: number;
+    transactionDate: string;
+    isRecurring: boolean;
+    senderId: number;
+    recipientId: number;
+    category: Category;
+    otherUser: GetAllRecurringBillsUserDto;
+};
+
+export type GetAllRecurringBillsUserDto = {
+    name: string;
+    email: string;
+};
+
 export type GetAllTransactionsResponse = {
     data: Array<GetAllTransactionsTransactionDto>;
     transactionCount: number;
@@ -627,6 +648,36 @@ export type CreateTransactionResponses = {
 };
 
 export type CreateTransactionResponse = CreateTransactionResponses[keyof CreateTransactionResponses];
+
+export type GetAllRecurringBillsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        page?: number;
+        pageSize?: number;
+        sortKey?: TransactionSortKey;
+        searchQuery?: string;
+    };
+    url: '/v1/transactions/bills';
+};
+
+export type GetAllRecurringBillsErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ProblemDetails;
+};
+
+export type GetAllRecurringBillsError = GetAllRecurringBillsErrors[keyof GetAllRecurringBillsErrors];
+
+export type GetAllRecurringBillsResponses = {
+    /**
+     * OK
+     */
+    200: GetAllRecurringBillsResponse;
+};
+
+export type GetAllRecurringBillsResponse2 = GetAllRecurringBillsResponses[keyof GetAllRecurringBillsResponses];
 
 export type GetAllCategoriesData = {
     body?: never;

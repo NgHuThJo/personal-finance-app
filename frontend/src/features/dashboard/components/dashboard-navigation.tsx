@@ -29,7 +29,7 @@ const iconList = linkOptions([
     icon: Jar,
   },
   {
-    to: "/bills",
+    ...appLinkOptions.getBillsOptions(),
     icon: Receipt,
   },
 ]);
@@ -48,9 +48,6 @@ export function DashboardNavigation() {
             className={styles["nav-link"]}
             activeProps={{
               className: styles["nav-link-active"],
-            }}
-            activeOptions={{
-              exact: true,
             }}
           >
             {({ isActive }) => (

@@ -47,12 +47,12 @@ const sortKeyArray: SortOptions[] = [
   },
 ];
 
-export function TransactionSortDropdown() {
+export function BillsSortDropdown() {
   const navigate = useNavigate();
 
   const handleSortChoice = (key: TransactionSortKey) => {
     return navigate({
-      from: "/transactions",
+      from: "/bills",
       to: ".",
       search: (prev) => ({
         ...prev,

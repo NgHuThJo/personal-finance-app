@@ -16,7 +16,7 @@ public static class TransactionFaker
                 t => t.TransactionDate,
                 f => DateTimeOffset.UtcNow.AddDays(1)
             )
-            .RuleFor(t => t.IsRecurring, false)
+            .RuleFor(t => t.IsRecurring, new Random().NextSingle() <= 0.5)
             .RuleFor(t => t.Category, f => FakerExtensions.GetRandomCategory())
             .UseSeed(seed);
 
