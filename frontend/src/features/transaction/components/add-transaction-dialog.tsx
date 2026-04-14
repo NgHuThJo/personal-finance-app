@@ -1,20 +1,20 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import styles from "./add-transaction-dialog.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
-import type { CreatePotRequest } from "#frontend/shared/client";
+import type { CreateTransactionRequest } from "#frontend/shared/client";
 import {
-  createPotMutation,
-  getAllPotsQueryKey,
+  createTransactionMutation,
+  getAllCategoriesOptions,
+  getAllTransactionsQueryKey,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
-import { zCreatePotRequest } from "#frontend/shared/client/zod.gen";
 import { Button } from "#frontend/shared/primitives/button";
+import { Checkbox } from "#frontend/shared/primitives/checkbox";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "#frontend/shared/primitives/dialog";
@@ -24,7 +24,14 @@ import {
   FieldLabel,
 } from "#frontend/shared/primitives/field";
 import { Input } from "#frontend/shared/primitives/input";
-import { makeZodErrorsUserFriendly } from "#frontend/shared/utils/zod";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "#frontend/shared/primitives/select";
 
 export function AddTransactionDialog() {
   const [open, setOpen] = useState(false);
@@ -33,32 +40,42 @@ export function AddTransactionDialog() {
     register,
     setError,
     reset,
+    control,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreatePotRequest>();
+  } = useForm<CreateTransactionRequest>();
+  const { data: categoryData } = useQuery({
+    ...getAllCategoriesOptions({
+      client: clientWithAuth,
+      credentials: "include",
+    }),
+  });
   const { mutate } = useMutation({
-    ...createPotMutation({
+    ...createTransactionMutation({
       client: clientWithAuth,
       credentials: "include",
     }),
     onSuccess: async () => {
-      Logger.info("Money successfully withdrawn from pot");
-      await queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
+      Logger.info("Transaction successfully created");
+      await queryClient.invalidateQueries({
+        queryKey: getAllTransactionsQueryKey(),
+      });
+      reset();
       setOpen(false);
     },
     onError: (error) => {
-      Logger.error("Pot could not be created", error);
+      Logger.error("Transaction could not be created", error);
 
       switch (error.status) {
         case 400: {
           setError(`root.server-bad-request`, {
             type: String(error.type),
-            message: String(error.detail),
+            message: String(error.detail ?? "Invalid value"),
           });
           break;
         }
-        case 409: {
-          setError(`root.server-conflict`, {
+        case 422: {
+          setError(`root.server-unprocessable-content`, {
             type: String(error.type),
             message: String(error.detail),
           });
@@ -69,43 +86,16 @@ export function AddTransactionDialog() {
         }
       }
     },
-    onSettled: () => {
-      reset();
-    },
   });
 
   const handleAddPotSubmit = handleSubmit((data) => {
-    const convertedData: CreatePotRequest = {
-      name: data.name,
-      target: data.target,
+    const convertedData: CreateTransactionRequest = {
+      amount: data.amount,
+      category: data.category,
+      isRecurring: data.isRecurring,
+      recipientEmail: data.recipientEmail,
+      transactionDate: data.transactionDate,
     };
-
-    const validationResult = zCreatePotRequest.safeParse(convertedData, {
-      error: (iss) => {
-        if (iss.code === "invalid_type") {
-          return `Invalid type, expected ${iss.expected}`;
-        }
-        if (iss.code === "too_small") {
-          return `Minimum is ${iss.minimum}`;
-        }
-      },
-    });
-
-    if (!validationResult.success) {
-      const userFriendlyErrors = makeZodErrorsUserFriendly(
-        validationResult.error,
-      );
-
-      for (const error in userFriendlyErrors) {
-        const convertedError = error as keyof typeof userFriendlyErrors;
-
-        userFriendlyErrors[convertedError].forEach((errorMessage) => {
-          setError(convertedError, {
-            message: errorMessage,
-          });
-        });
-      }
-    }
 
     mutate({
       body: convertedData,
@@ -116,57 +106,126 @@ export function AddTransactionDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button type="button" variant="cta-primary">
-          +Add New Pot
+          +Add New Transaction
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogTitle>Add New Pot</DialogTitle>
-        <DialogDescription>
-          Choose a category to set a spending budget. These categories can help
-          you monitor spending.
-        </DialogDescription>
+        <DialogTitle>Add New Transaction</DialogTitle>
         <form className={styles.dialog} onSubmit={handleAddPotSubmit}>
           <Field>
-            <FieldLabel htmlFor="name">Pot Name</FieldLabel>
+            <FieldLabel htmlFor="recipient-email">Transaction Email</FieldLabel>
             <Input
               type="text"
-              id="name"
-              data-testid="name-error"
-              placeholder="e.g. Rainy Days"
-              {...register("name", {
-                required: "Pot name required",
+              id="recipient-email"
+              data-testid="recipient-email-error"
+              placeholder="e.g. Urban Services Hub"
+              {...register("recipientEmail", {
+                required: "Recipient email address required",
               })}
             />
-            {errors.name && <FieldError>{errors.name?.message}</FieldError>}
-            {errors.root?.["server-conflict"] && (
-              <FieldError data-testid="add-pot-server-conflict">
-                {errors.root["server-conflict"].message}
+            {errors.recipientEmail && (
+              <FieldError>{errors.recipientEmail?.message}</FieldError>
+            )}
+            {errors.root?.["server-unprocessable-content"] && (
+              <FieldError data-testid="add-transaction-server-unprocessable-content">
+                {errors.root["server-unprocessable-content"].message}
               </FieldError>
             )}
           </Field>
           <Field>
-            <FieldLabel htmlFor="target">Target Amount</FieldLabel>
+            <FieldLabel htmlFor="transaction-date">Transaction Date</FieldLabel>
+            <Input
+              type="date"
+              step="any"
+              id="transaction-date"
+              data-testid="transaction-date-error"
+              placeholder="$ e.g. 2000"
+              {...register("transactionDate", {
+                valueAsDate: true,
+                required: "Transaction date required",
+              })}
+            />
+            {errors.transactionDate && (
+              <FieldError>{errors?.transactionDate.message}</FieldError>
+            )}
+            {errors.root?.["server-bad-request"] && (
+              <FieldError data-testid="-server-bad-request">
+                {errors.root["server-bad-request"].message}
+              </FieldError>
+            )}
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="category">Category</FieldLabel>
+            <Controller
+              name="category"
+              defaultValue="Bills"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger id="category">
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {categoryData?.map((category) => (
+                          <SelectItem value={category} key={category}>
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {errors.category && (
+                    <FieldError>{errors.category?.message}</FieldError>
+                  )}
+                </>
+              )}
+            ></Controller>
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="transaction-amount">Amount</FieldLabel>
             <Input
               type="number"
               step="any"
-              id="target"
-              data-testid="target-error"
-              placeholder="$ e.g. 2000"
-              {...register("target", {
+              id="transaction-amount"
+              data-testid="transaction-amount"
+              placeholder="$ e.g. 1000"
+              {...register("amount", {
                 valueAsNumber: true,
-                required: "Target amount required",
+                required: "Transaction amount required",
                 min: {
                   value: 0.01,
                   message: "Minimum of 0.01",
                 },
               })}
             />
-            {errors.target && <FieldError>{errors.target?.message}</FieldError>}
-            {errors.root?.["server-bad-request"] && (
-              <FieldError data-testid="add-pot-server-bad-request">
-                {errors.root["server-bad-request"].message}
+            {errors.amount && (
+              <FieldError data-testid="transaction-amount-error">
+                {errors.amount?.message}
               </FieldError>
             )}
+          </Field>
+          <Field orientation="horizontal">
+            <FieldLabel htmlFor="recurring">Recurring</FieldLabel>
+            <Controller
+              name="isRecurring"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <Checkbox
+                    id="recurring"
+                    checked={field.value}
+                    onCheckedChange={(value) => field.onChange(value === true)}
+                  />
+                  {errors.isRecurring && (
+                    <FieldError data-testid="recurring-error">
+                      {errors.isRecurring?.message}
+                    </FieldError>
+                  )}
+                </>
+              )}
+            ></Controller>
           </Field>
           <Button type="submit" variant="cta-primary">
             +Add New Pot

@@ -3,13 +3,14 @@ using System.Text.Json.Serialization;
 
 namespace backend.Src.Models;
 
-public class CamelCaseEnumConverter : JsonStringEnumConverter
-{
-    public CamelCaseEnumConverter()
-        : base(JsonNamingPolicy.CamelCase) { }
-}
+// public class CamelCaseEnumConverter : JsonStringEnumConverter
 
-[JsonConverter(typeof(CamelCaseEnumConverter))]
+// {
+//     public CamelCaseEnumConverter()
+//         : base(JsonNamingPolicy.CamelCase) { }
+// }
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum Category
 {
     Entertainment,

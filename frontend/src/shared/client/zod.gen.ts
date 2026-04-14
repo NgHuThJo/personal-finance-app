@@ -7,14 +7,14 @@ export const zAddMoneyToPotRequest = z.object({
 });
 
 export const zCategory = z.enum([
-    'entertainment',
-    'bills',
-    'groceries',
-    'transportation',
-    'education',
-    'lifestyle',
-    'shopping',
-    'general'
+    'Entertainment',
+    'Bills',
+    'Groceries',
+    'Transportation',
+    'Education',
+    'Lifestyle',
+    'Shopping',
+    'General'
 ]);
 
 export const zCreateBudgetRequest = z.object({
@@ -92,6 +92,30 @@ export const zGetBalanceByUserIdResponse = z.object({
 export const zGetUserByIdResponse = z.object({
     email: z.string(),
     name: z.string().min(1)
+});
+
+export const zHttpValidationProblemDetails = z.object({
+    type: z.optional(z.union([
+        z.null(),
+        z.string()
+    ])),
+    title: z.optional(z.union([
+        z.null(),
+        z.string()
+    ])),
+    status: z.optional(z.union([
+        z.null(),
+        z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })
+    ])),
+    detail: z.optional(z.union([
+        z.null(),
+        z.string()
+    ])),
+    instance: z.optional(z.union([
+        z.null(),
+        z.string()
+    ])),
+    errors: z.optional(z.record(z.string(), z.array(z.string())))
 });
 
 export const zLoginUserRequest = z.object({
@@ -344,7 +368,8 @@ export const zGetAllTransactionsData = z.object({
         page: z.optional(z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })),
         pageSize: z.optional(z.int().min(-2147483648, { error: 'Invalid value: Expected int32 to be >= -2147483648' }).max(2147483647, { error: 'Invalid value: Expected int32 to be <= 2147483647' })),
         category: z.optional(zCategory),
-        sortKey: z.optional(zTransactionSortKey)
+        sortKey: z.optional(zTransactionSortKey),
+        searchQuery: z.optional(z.string())
     }))
 });
 

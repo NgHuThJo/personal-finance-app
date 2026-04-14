@@ -131,9 +131,15 @@ public static class RouteGrouper
             .WithName(nameof(GetAllTransactionsEndpoint.GetAllTransactions))
             .ProducesProblem((int)HttpStatusCode.Unauthorized);
         group
+            .MapGet("/bills", GetAllRecurringBillsEndpoint.GetAllRecurringBills)
+            .WithName(nameof(GetAllRecurringBillsEndpoint.GetAllRecurringBills))
+            .ProducesProblem((int)HttpStatusCode.Unauthorized);
+        group
             .MapPost("", CreateTransactionEndpoint.CreateTransaction)
             .WithName(nameof(CreateTransactionEndpoint.CreateTransaction))
             .AddValidationFilter<CreateTransactionRequest>()
+            .ProducesProblem((int)HttpStatusCode.BadRequest)
+            .ProducesValidationProblem((int)HttpStatusCode.BadRequest)
             .ProducesProblem((int)HttpStatusCode.UnprocessableContent);
 
         return app;

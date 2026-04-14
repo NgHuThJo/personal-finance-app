@@ -6,6 +6,13 @@ export type KeyValueTuple<T extends object> = {
   [K in keyof T]: [K, T[K]];
 }[keyof T];
 
+export type KeyLabelOptions<T> = {
+  [K in keyof T]: {
+    key: K;
+    label: T[K];
+  };
+}[keyof T];
+
 export type Primitive =
   | number
   | string

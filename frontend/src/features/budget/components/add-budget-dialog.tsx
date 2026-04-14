@@ -115,7 +115,7 @@ export function AddBudgetDialog() {
             <FieldLabel htmlFor="category">Category</FieldLabel>
             <Controller
               name="category"
-              defaultValue="bills"
+              defaultValue="Bills"
               control={control}
               render={({ field }) => (
                 <>

@@ -1,5 +1,4 @@
 using System.Data;
-using System.Text.Json.Serialization;
 using backend.Src.Models;
 using backend.Src.Shared;
 using FluentValidation;
@@ -9,28 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Src.Features;
 
-// Does not affect parsing itself, only here for OpenAPI spec
-[JsonConverter(typeof(JsonStringEnumConverter))]
-public enum TransactionSortKey
-{
-    DateAsc,
-    DateDesc,
-    NameAsc,
-    NameDesc,
-    AmountAsc,
-    AmountDesc,
-}
-
-public record GetAllTransactionsSearchParams
+public record GetAllRecurringBillsSearchParams
 {
     [FromQuery(Name = "page")]
     public int? Page { get; init; } = 1;
 
     [FromQuery(Name = "pageSize")]
     public int? PageSize { get; init; } = 10;
-
-    [FromQuery(Name = "category")]
-    public Category? Category { get; init; } = null;
 
     [FromQuery(Name = "sortKey")]
     public TransactionSortKey? SortKey { get; init; } =
@@ -40,13 +24,13 @@ public record GetAllTransactionsSearchParams
     public string? SearchQuery { get; init; } = "";
 }
 
-public record GetAllTransactionsUserDto
+public record GetAllRecurringBillsUserDto
 {
     public required string Name { get; init; }
     public required string Email { get; init; }
 }
 
-public record GetAllTransactionsTransactionDto
+public record GetAllRecurringBillsTransactionDto
 {
     public required int Id { get; init; }
     public required decimal Amount { get; init; }
@@ -55,33 +39,34 @@ public record GetAllTransactionsTransactionDto
     public required int SenderId { get; init; }
     public required int RecipientId { get; init; }
     public required Category Category { get; init; }
-    public required GetAllTransactionsUserDto OtherUser { get; init; }
+    public required GetAllRecurringBillsUserDto OtherUser { get; init; }
 }
 
-public record GetAllTransactionsResponse
+public record GetAllRecurringBillsResponse
 {
-    public required IReadOnlyList<GetAllTransactionsTransactionDto> Data { get; init; }
+    public required IReadOnlyList<GetAllRecurringBillsTransactionDto> Data { get; init; }
     public required int TransactionCount { get; init; }
 }
 
-public class GetAllTransactionsSearchParamsValidator
-    : AbstractValidator<GetAllTransactionsSearchParams>
+public class GetAllRecurringBillsSearchParamsValidator
+    : AbstractValidator<GetAllRecurringBillsSearchParams>
 {
-    public GetAllTransactionsSearchParamsValidator()
+    public GetAllRecurringBillsSearchParamsValidator()
     {
         RuleFor(q => q.Page).GreaterThan(0);
         RuleFor(q => q.PageSize).GreaterThan(0);
-        RuleFor(q => q.Category).IsInEnum();
         RuleFor(q => q.SortKey).IsInEnum();
     }
 }
 
-public static class GetAllTransactionsEndpoint
+public static class GetAllRecurringBillsEndpoint
 {
-    public static async Task<Ok<GetAllTransactionsResponse>> GetAllTransactions(
-        [AsParameters] GetAllTransactionsSearchParams searchParams,
+    public static async Task<
+        Ok<GetAllRecurringBillsResponse>
+    > GetAllRecurringBills(
+        [AsParameters] GetAllRecurringBillsSearchParams searchParams,
         [FromServices] CurrentUser user,
-        [FromServices] GetAllTransactionsHandler handler,
+        [FromServices] GetAllRecurringBillsHandler handler,
         CancellationToken ct
     )
     {
@@ -89,14 +74,12 @@ public static class GetAllTransactionsEndpoint
         var currentPageSize = searchParams.PageSize ?? 10;
         var searchQuery = searchParams.SearchQuery ?? "";
         var sortKey = searchParams.SortKey ?? TransactionSortKey.DateAsc;
-        var category = searchParams.Category;
 
         var transactions = await handler.Handle(
             user.UserId,
             currentPage,
             currentPageSize,
             searchQuery,
-            category,
             sortKey,
             ct
         );
@@ -105,16 +88,15 @@ public static class GetAllTransactionsEndpoint
     }
 }
 
-public class GetAllTransactionsHandler(AppDbContext context)
+public class GetAllRecurringBillsHandler(AppDbContext context)
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<GetAllTransactionsResponse> Handle(
+    public async Task<GetAllRecurringBillsResponse> Handle(
         int userId,
         int page,
         int pageSize,
         string searchQuery,
-        Category? category,
         TransactionSortKey sortKey,
         CancellationToken ct
     )
@@ -123,17 +105,23 @@ public class GetAllTransactionsHandler(AppDbContext context)
         var query = _context
             .Transactions
             // Query and filter
+            .ForUser(userId)
+            .Where(t =>
+                t.IsRecurring == true
+                && t.TransactionDate.Year == DateTimeOffset.UtcNow.Year
+                && t.TransactionDate.Month == DateTimeOffset.UtcNow.Month
+            )
             .SearchCounterParty(userId, searchQuery)
-            .FilterCategory(category)
             // Sort
             .Sort(userId, sortKey);
         // Once done filtering, you can count
         var count = await query.CountAsync(ct);
+
         // Paginate and project
         var transactions = await query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(t => new GetAllTransactionsTransactionDto
+            .Select(t => new GetAllRecurringBillsTransactionDto
             {
                 Id = t.Id,
                 Amount = t.Amount,
@@ -144,12 +132,12 @@ public class GetAllTransactionsHandler(AppDbContext context)
                 RecipientId = t.RecipientId,
                 OtherUser =
                     t.SenderId == userId
-                        ? new GetAllTransactionsUserDto
+                        ? new GetAllRecurringBillsUserDto
                         {
                             Email = t.Recipient.Email,
                             Name = t.Recipient.Name,
                         }
-                        : new GetAllTransactionsUserDto
+                        : new GetAllRecurringBillsUserDto
                         {
                             Email = t.Sender.Email,
                             Name = t.Sender.Name,
@@ -158,7 +146,7 @@ public class GetAllTransactionsHandler(AppDbContext context)
             .AsNoTracking()
             .ToListAsync(ct);
 
-        return new GetAllTransactionsResponse
+        return new GetAllRecurringBillsResponse
         {
             Data = transactions,
             TransactionCount = count,

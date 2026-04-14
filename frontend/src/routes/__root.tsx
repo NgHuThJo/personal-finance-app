@@ -4,6 +4,7 @@ import {
   type QueryClient,
 } from "@tanstack/react-query";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { useEffect, useEffectEvent } from "react";
 import { Logger } from "#frontend/shared/app/logging";
 import {
@@ -11,6 +12,7 @@ import {
   createRefreshTokenQueryKey,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { Loader } from "#frontend/shared/primitives/loader";
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
     component: Root,
@@ -57,7 +59,7 @@ function Root() {
   return (
     <>
       <Outlet />
-      {/* <TanStackRouterDevtools /> */}
+      <TanStackRouterDevtools />
     </>
   );
 }

@@ -8,7 +8,7 @@ export type AddMoneyToPotRequest = {
     addAmount: number;
 };
 
-export type Category = 'entertainment' | 'bills' | 'groceries' | 'transportation' | 'education' | 'lifestyle' | 'shopping' | 'general';
+export type Category = 'Entertainment' | 'Bills' | 'Groceries' | 'Transportation' | 'Education' | 'Lifestyle' | 'Shopping' | 'General';
 
 export type CreateBudgetRequest = {
     maximum: number;
@@ -85,6 +85,17 @@ export type GetBalanceByUserIdResponse = {
 export type GetUserByIdResponse = {
     email: string;
     name: string;
+};
+
+export type HttpValidationProblemDetails = {
+    type?: null | string;
+    title?: null | string;
+    status?: null | number;
+    detail?: null | string;
+    instance?: null | string;
+    errors?: {
+        [key: string]: Array<string>;
+    };
 };
 
 export type LoginUserRequest = {
@@ -565,6 +576,7 @@ export type GetAllTransactionsData = {
         pageSize?: number;
         category?: Category;
         sortKey?: TransactionSortKey;
+        searchQuery?: string;
     };
     url: '/v1/transactions';
 };
@@ -598,7 +610,7 @@ export type CreateTransactionErrors = {
     /**
      * Bad Request
      */
-    400: unknown;
+    400: HttpValidationProblemDetails;
     /**
      * Unprocessable Entity
      */
