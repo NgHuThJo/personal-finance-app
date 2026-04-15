@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import styles from "./summary.module.css";
 import { Receipt2 } from "#frontend/assets/icons/icons";
+import { billRules } from "#frontend/features/bills/rules/bill-rules";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { getAllRecurringBillsOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
 import type { KeyValueTuple } from "#frontend/shared/types/miscellaneous";
@@ -23,12 +24,10 @@ export function BillsSummary() {
     }),
   });
 
-  const totalBill = transactionData.reduce((acc, curr) => {
-    return acc + curr.amount;
-  }, 0);
+  const totalBill = billRules.calculatePaidBillsTotalSum(transactionData);
   const billSummaryMap = transactionData.reduce(
     (acc, curr) => {
-      const isBillPaid = new Date(curr.transactionDate).getTime() < Date.now();
+      const isBillPaid = billRules.isBillPaid(curr.transactionDate);
 
       if (isBillPaid) {
         acc["Paid Bills"].amount += curr.amount;

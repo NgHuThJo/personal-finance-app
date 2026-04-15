@@ -1,0 +1,9 @@
+.list-item {
+  padding: var(--spacing-6);
+  border-radius: var(--border-radius-4);
+  background-color: var(--color-background-surface-secondary);
+
+  @media screen and (width >= 768px) {
+    padding: var(--spacing-8);
+  }
+}
