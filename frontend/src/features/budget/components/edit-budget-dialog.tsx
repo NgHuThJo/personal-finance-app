@@ -9,6 +9,7 @@ import {
 } from "#frontend/shared/client";
 import {
   editBudgetMutation,
+  getAllBudgetsOptions,
   getAllBudgetsQueryKey,
   getAllCategoriesOptions,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
@@ -33,6 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "#frontend/shared/primitives/select";
+import { colorHexList } from "#frontend/shared/utils/color";
 import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 
 type EditBudgetDialogProps = {
@@ -42,7 +44,7 @@ type EditBudgetDialogProps = {
 };
 
 export function EditBudgetDialog({
-  budgetData: { id, maximum, category },
+  budgetData: { id, maximum, category, themeColor },
   isEditDialogOpen,
   toggleEditDialog,
 }: EditBudgetDialogProps) {
@@ -58,6 +60,13 @@ export function EditBudgetDialog({
       category,
       maximum,
     },
+  });
+  const { data: budgetData } = useQuery({
+    ...getAllBudgetsOptions({
+      client: clientWithAuth,
+      credentials: "include",
+    }),
+    enabled: false,
   });
   const { data: categoryData } = useQuery({
     ...getAllCategoriesOptions({
@@ -102,10 +111,20 @@ export function EditBudgetDialog({
     },
   });
 
+  const themeColorSet = new Set(budgetData?.map((budget) => budget.themeColor));
+  const convertedColorHexList = colorHexList.map((hexColor) => ({
+    ...hexColor,
+    available:
+      themeColorSet.has(hexColor.key) && hexColor.key !== themeColor
+        ? false
+        : true,
+  }));
+
   const handleAddBudgetSubmit = handleSubmit((data) => {
     const convertedData: EditBudgetRequest = {
       category: data.category,
       maximum: data.maximum,
+      themeColor: data.themeColor,
     };
 
     mutate({
@@ -128,7 +147,7 @@ export function EditBudgetDialog({
             <FieldLabel htmlFor="category">Category</FieldLabel>
             <Controller
               name="category"
-              defaultValue="bills"
+              defaultValue={category}
               control={control}
               render={({ field }) => (
                 <>
@@ -184,6 +203,57 @@ export function EditBudgetDialog({
                 {errors.root["server-unauthorized"].message}
               </FieldError>
             )}
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="theme-color">Theme</FieldLabel>
+            <Controller
+              name="themeColor"
+              defaultValue={themeColor}
+              control={control}
+              render={({ field }) => (
+                <>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger id="theme-color">
+                      <SelectValue placeholder="Select a theme color" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {convertedColorHexList?.map(
+                          ({ key, value, available }) => (
+                            <SelectItem
+                              value={key}
+                              key={key}
+                              disabled={!available}
+                            >
+                              <div className={styles["theme"]}>
+                                <span
+                                  className={styles["theme-circle"]}
+                                  style={{
+                                    "--color-theme-circle": `${value}`,
+                                  }}
+                                />
+                                <span>
+                                  {key}&nbsp;
+                                  {`${!available ? "(Already in use)" : ""}`}
+                                </span>
+                              </div>
+                            </SelectItem>
+                          ),
+                        )}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {errors.themeColor && (
+                    <FieldError>{errors.themeColor?.message}</FieldError>
+                  )}
+                  {errors.root?.["server-bad-request"] && (
+                    <FieldError data-testid="add-pot-server-bad-request">
+                      {errors.root["server-bad-request"].message}
+                    </FieldError>
+                  )}
+                </>
+              )}
+            ></Controller>
           </Field>
           <Button type="submit" variant="cta-primary">
             Submit

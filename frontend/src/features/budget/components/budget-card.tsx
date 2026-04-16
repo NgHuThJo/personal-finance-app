@@ -19,10 +19,11 @@ import {
   CardHeader,
   CardTitle,
 } from "#frontend/shared/primitives/card";
+import { appLinkOptions } from "#frontend/shared/router/options/linkOptions";
+import { getColorHexCode } from "#frontend/shared/utils/color";
 import { dateTimeFormatter } from "#frontend/shared/utils/intl/datetime-format";
 import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
 import { decodeJwt } from "#frontend/shared/utils/object";
-import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 
 type BudgetCardProps = {
   budgetData: GetAllBudgetsResponse;
@@ -42,7 +43,7 @@ export function BudgetCard({ budgetData }: BudgetCardProps) {
   });
   const [isEditDialogOpen, setEditDialog] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialog] = useState(false);
-  const { category, maximum } = budgetData;
+  const { category, maximum, themeColor } = budgetData;
 
   const filteredTransactions = transactionData.filter(
     (t) => t.category === budgetData.category,
@@ -71,7 +72,17 @@ export function BudgetCard({ budgetData }: BudgetCardProps) {
   return (
     <Card data-testid="budget-card">
       <CardHeader>
-        <CardTitle>{capitalizeFirstLetter(category)}</CardTitle>
+        <CardTitle>
+          <div className={styles["theme-heading"]}>
+            <span
+              className={styles["theme-icon"]}
+              style={{
+                "--color-theme-icon": `${getColorHexCode(themeColor)}`,
+              }}
+            ></span>
+            <span>{category}</span>
+          </div>
+        </CardTitle>{" "}
         <BudgetCardPopover
           dialogHandlers={{
             openEditDialog: openEditDialogInPopup,
@@ -87,12 +98,8 @@ export function BudgetCard({ budgetData }: BudgetCardProps) {
           <div className={styles["footer-header"]}>
             <h2 className={styles["footer-heading"]}>Latest Spending</h2>
             <Link
+              {...appLinkOptions.getTransactionLinkOptions()}
               to="/transactions"
-              search={(prev) => ({
-                ...prev,
-                page: 1,
-                category: "all transactions",
-              })}
             >
               See All
             </Link>

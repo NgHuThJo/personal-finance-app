@@ -7,6 +7,7 @@ import { Logger } from "#frontend/shared/app/logging";
 import type { CreateBudgetRequest } from "#frontend/shared/client";
 import {
   createBudgetMutation,
+  getAllBudgetsOptions,
   getAllBudgetsQueryKey,
   getAllCategoriesOptions,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
@@ -32,11 +33,19 @@ import {
   SelectValue,
   SelectItem,
 } from "#frontend/shared/primitives/select";
+import { colorHexList } from "#frontend/shared/utils/color";
 import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 
 export function AddBudgetDialog() {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
+  const { data: budgetData } = useQuery({
+    ...getAllBudgetsOptions({
+      client: clientWithAuth,
+      credentials: "include",
+    }),
+    enabled: false,
+  });
   const {
     register,
     setError,
@@ -88,10 +97,20 @@ export function AddBudgetDialog() {
     },
   });
 
+  const themeColorSet = new Set(budgetData?.map((budget) => budget.themeColor));
+  const convertedColorHexList = colorHexList.map((hexColor) => ({
+    ...hexColor,
+    available: themeColorSet.has(hexColor.key) ? false : true,
+  }));
+  const defaultValue = convertedColorHexList.find(
+    (value) => value.available,
+  )?.key;
+
   const handleAddBudgetSubmit = handleSubmit((data) => {
     const convertedData: CreateBudgetRequest = {
       category: data.category,
       maximum: data.maximum,
+      themeColor: data.themeColor,
     };
 
     mutate({
@@ -177,6 +196,57 @@ export function AddBudgetDialog() {
                 {errors.root["add-budget-server-unauthorized"].message}
               </FieldError>
             )}
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="theme-color">Theme</FieldLabel>
+            <Controller
+              name="themeColor"
+              defaultValue={defaultValue}
+              control={control}
+              render={({ field }) => (
+                <>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger id="theme-color">
+                      <SelectValue placeholder="Select a theme color" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {convertedColorHexList?.map(
+                          ({ key, value, available }) => (
+                            <SelectItem
+                              value={key}
+                              key={key}
+                              disabled={!available}
+                            >
+                              <div className={styles["theme"]}>
+                                <span
+                                  className={styles["theme-circle"]}
+                                  style={{
+                                    "--color-theme-circle": `${value}`,
+                                  }}
+                                />
+                                <span>
+                                  {key}&nbsp;
+                                  {`${!available ? "(Already in use)" : ""}`}
+                                </span>
+                              </div>
+                            </SelectItem>
+                          ),
+                        )}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {errors.themeColor && (
+                    <FieldError>{errors.themeColor?.message}</FieldError>
+                  )}
+                  {errors.root?.["server-bad-request"] && (
+                    <FieldError data-testid="add-pot-server-bad-request">
+                      {errors.root["server-bad-request"].message}
+                    </FieldError>
+                  )}
+                </>
+              )}
+            ></Controller>
           </Field>
           <Button type="submit" variant="cta-primary">
             +Add New Budget
