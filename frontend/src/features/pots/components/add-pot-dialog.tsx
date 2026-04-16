@@ -93,6 +93,9 @@ export function AddPotDialog() {
     ...hexColor,
     available: themeColorSet.has(hexColor.key) ? false : true,
   }));
+  const defaultValue = convertedColorHexList.find(
+    (value) => value.available,
+  )?.key;
 
   const handleAddPotSubmit = handleSubmit((data) => {
     const convertedData: CreatePotRequest = {
@@ -166,7 +169,7 @@ export function AddPotDialog() {
             <FieldLabel htmlFor="theme-color">Theme</FieldLabel>
             <Controller
               name="themeColor"
-              defaultValue="Army"
+              defaultValue={defaultValue}
               control={control}
               render={({ field }) => (
                 <>

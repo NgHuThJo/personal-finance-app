@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Controller, useForm } from "react-hook-form";
 import styles from "./add-pot-dialog.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
@@ -9,6 +9,7 @@ import type {
 } from "#frontend/shared/client";
 import {
   editPotMutation,
+  getAllPotsOptions,
   getAllPotsQueryKey,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { Button } from "#frontend/shared/primitives/button";
@@ -24,6 +25,15 @@ import {
   FieldLabel,
 } from "#frontend/shared/primitives/field";
 import { Input } from "#frontend/shared/primitives/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+} from "#frontend/shared/primitives/select";
+import { colorHexList } from "#frontend/shared/utils/color";
 
 type EditPotDialogProps = {
   potData: GetAllPotsResponse;
@@ -32,7 +42,7 @@ type EditPotDialogProps = {
 };
 
 export function EditPotDialog({
-  potData: { id, name, target },
+  potData: { id, name, target, themeColor },
   isEditDialogOpen,
   toggleEditDialog,
 }: EditPotDialogProps) {
@@ -41,6 +51,7 @@ export function EditPotDialog({
     register,
     reset,
     setError,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<EditPotRequest>({
@@ -49,6 +60,14 @@ export function EditPotDialog({
       newTarget: target,
     },
   });
+  const { data: potData } = useQuery({
+    ...getAllPotsOptions({
+      client: clientWithAuth,
+      credentials: "include",
+    }),
+    enabled: false,
+  });
+
   const { mutate } = useMutation({
     ...editPotMutation({
       client: clientWithAuth,
@@ -58,6 +77,7 @@ export function EditPotDialog({
       Logger.info("Pot successfully edited");
       await queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
       toggleEditDialog(false);
+      reset();
     },
     onError: (error) => {
       Logger.error("Pot could not be edited", error);
@@ -82,15 +102,13 @@ export function EditPotDialog({
         }
       }
     },
-    onSettled: () => {
-      reset();
-    },
   });
 
   const handleAddPotSubmit = handleSubmit((data) => {
     const convertedData: EditPotRequest = {
       potName: data.potName,
       newTarget: data.newTarget,
+      themeColor: data.themeColor,
     };
 
     mutate({
@@ -100,6 +118,15 @@ export function EditPotDialog({
       },
     });
   });
+
+  const themeColorSet = new Set(potData?.map((pot) => pot.themeColor));
+  const convertedColorHexList = colorHexList.map((hexColor) => ({
+    ...hexColor,
+    available:
+      themeColorSet.has(hexColor.key) && hexColor.key !== themeColor
+        ? false
+        : true,
+  }));
 
   return (
     <Dialog open={isEditDialogOpen} onOpenChange={toggleEditDialog}>
@@ -156,6 +183,57 @@ export function EditPotDialog({
                 {errors.root["server-bad-request"].message}
               </FieldError>
             )}
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="theme-color">Theme</FieldLabel>
+            <Controller
+              name="themeColor"
+              defaultValue={themeColor}
+              control={control}
+              render={({ field }) => (
+                <>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger id="theme-color">
+                      <SelectValue placeholder="Select a theme color" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {convertedColorHexList?.map(
+                          ({ key, value, available }) => (
+                            <SelectItem
+                              value={key}
+                              key={key}
+                              disabled={!available}
+                            >
+                              <div className={styles["theme"]}>
+                                <span
+                                  className={styles["theme-circle"]}
+                                  style={{
+                                    "--color-theme-circle": `${value}`,
+                                  }}
+                                />
+                                <span>
+                                  {key}&nbsp;
+                                  {`${!available ? "(Already in use)" : ""}`}
+                                </span>
+                              </div>
+                            </SelectItem>
+                          ),
+                        )}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {errors.themeColor && (
+                    <FieldError>{errors.themeColor?.message}</FieldError>
+                  )}
+                  {errors.root?.["server-bad-request"] && (
+                    <FieldError data-testid="add-pot-server-bad-request">
+                      {errors.root["server-bad-request"].message}
+                    </FieldError>
+                  )}
+                </>
+              )}
+            ></Controller>
           </Field>
           <Button type="submit" variant="cta-primary">
             Submit
