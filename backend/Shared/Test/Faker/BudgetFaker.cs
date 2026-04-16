@@ -12,12 +12,20 @@ public static class BudgetFaker
         new Faker<Budget>()
             .RuleFor(b => b.Maximum, f => f.Random.Int(1, 1000) / 100m)
             .RuleFor(b => b.Category, f => FakerExtensions.GetRandomCategory())
+            .RuleFor(
+                b => b.ThemeColor,
+                f => FakerExtensions.GetRandomThemeColor()
+            )
             .UseSeed(seed);
 
     public static Faker<Budget> BudgetFakerForTesting() =>
         new Faker<Budget>()
             .RuleFor(b => b.Maximum, f => f.Random.Int(1, 1000) / 100m)
-            .RuleFor(b => b.Category, f => FakerExtensions.GetRandomCategory());
+            .RuleFor(b => b.Category, f => FakerExtensions.GetRandomCategory())
+            .RuleFor(
+                b => b.ThemeColor,
+                f => FakerExtensions.GetRandomThemeColor()
+            );
 
     public static CreateBudgetRequest CreateBudgetRequest() =>
         new Faker<CreateBudgetRequest>()
@@ -25,6 +33,10 @@ public static class BudgetFaker
             .RuleFor(
                 b => b.Category,
                 (Faker f) => FakerExtensions.GetRandomCategory()
+            )
+            .RuleFor(
+                b => b.ThemeColor,
+                f => FakerExtensions.GetRandomThemeColor()
             )
             .Generate();
 
@@ -34,6 +46,10 @@ public static class BudgetFaker
             .RuleFor(
                 b => b.Category,
                 (Faker f) => FakerExtensions.GetRandomCategory()
+            )
+            .RuleFor(
+                b => b.ThemeColor,
+                f => FakerExtensions.GetRandomThemeColor()
             )
             .Generate();
 }

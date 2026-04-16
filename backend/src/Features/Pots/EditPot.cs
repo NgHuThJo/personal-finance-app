@@ -1,3 +1,4 @@
+using System.Data;
 using backend.Src.Models;
 using backend.Src.Shared;
 using FluentValidation;
@@ -40,18 +41,20 @@ public static partial class EditPotLogger
 
 public record EditPotRequest
 {
-    public required string PotName { get; set; }
-    public required decimal NewTarget { get; set; }
+    public required string PotName { get; init; }
+    public required decimal NewTarget { get; init; }
+    public required ThemeColor ThemeColor { get; init; }
 }
 
 public class EditPotValidator : AbstractValidator<EditPotRequest>
 {
     public EditPotValidator()
     {
-        RuleFor(a => a.PotName).MinimumLength(1);
-        RuleFor(a => a.NewTarget)
+        RuleFor(p => p.PotName).MinimumLength(1);
+        RuleFor(p => p.NewTarget)
             .GreaterThanOrEqualTo(0)
             .PrecisionScale(14, 2, true);
+        RuleFor(p => p.ThemeColor).IsInEnum();
     }
 }
 

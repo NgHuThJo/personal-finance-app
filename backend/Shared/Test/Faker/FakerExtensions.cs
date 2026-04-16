@@ -9,4 +9,12 @@ public static class FakerExtensions
 
         return categoryValue[random.Next(categoryValue.Length)];
     }
+
+    public static ThemeColor GetRandomThemeColor()
+    {
+        var themeColorValue = Enum.GetValues<ThemeColor>();
+        var random = new Random();
+
+        return themeColorValue[random.Next(themeColorValue.Length)];
+    }
 }

@@ -19,6 +19,14 @@ export const appLinkOptions = {
         searchQuery: search?.searchQuery ?? "",
       },
     }),
+  getPotsOptions: () =>
+    linkOptions({
+      to: "/pots",
+    }),
+  getBudgetOptions: () =>
+    linkOptions({
+      to: "/budgets",
+    }),
   getBillsOptions: (search?: {
     page?: number;
     pageSize?: number;

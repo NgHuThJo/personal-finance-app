@@ -23,6 +23,7 @@ public record EditBudgetRequest
 
     [Range(0, double.MaxValue)]
     public required decimal Maximum { get; init; }
+    public required ThemeColor ThemeColor { get; init; }
 }
 
 public class EditBudgetValidator : AbstractValidator<EditBudgetRequest>
@@ -31,6 +32,7 @@ public class EditBudgetValidator : AbstractValidator<EditBudgetRequest>
     {
         RuleFor(b => b.Maximum).GreaterThan(0).PrecisionScale(14, 2, true);
         RuleFor(b => b.Category).IsInEnum();
+        RuleFor(b => b.ThemeColor).IsInEnum();
     }
 }
 
@@ -92,6 +94,7 @@ public class EditBudgetHandler(
 
         budget.Maximum = command.Maximum;
         budget.Category = command.Category;
+        budget.ThemeColor = command.ThemeColor;
 
         await _context.SaveChangesAsync(ct);
 

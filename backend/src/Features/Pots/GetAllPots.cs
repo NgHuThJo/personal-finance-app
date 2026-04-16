@@ -21,6 +21,7 @@ public record GetAllPotsResponse
 
     [MinLength(1)]
     public required string Name { get; init; }
+    public required ThemeColor ThemeColor { get; init; }
 }
 
 public sealed class GetAllPotsEndpoint
@@ -54,6 +55,7 @@ public class GetAllPotsHandler(AppDbContext context)
                 Total = p.Total,
                 Target = p.Target,
                 Name = p.Name,
+                ThemeColor = p.ThemeColor,
             })
             .AsNoTracking()
             .ToListAsync(ct);

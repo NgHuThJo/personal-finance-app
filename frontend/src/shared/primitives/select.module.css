@@ -169,10 +169,11 @@
   &:focus,
   &:hover {
     background-color: var(--color-background-cta-secondary);
+    cursor: pointer;
   }
 
   /* Disabled items */
-  &[data-disabled="true"] {
+  &[data-disabled] {
     pointer-events: none;
     opacity: 0.5;
   }

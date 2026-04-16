@@ -17,6 +17,7 @@ public record GetAllBudgetsResponse
     public required decimal Maximum { get; init; }
 
     public required Category Category { get; init; }
+    public required ThemeColor ThemeColor { get; init; }
 }
 
 public static class GetAllBudgetsEndpoint
@@ -49,6 +50,7 @@ public class GetAllBudgetsHandler(AppDbContext context)
                 Category = b.Category,
                 Id = b.Id,
                 Maximum = b.Maximum,
+                ThemeColor = b.ThemeColor,
             })
             .AsNoTracking()
             .ToListAsync(ct);

@@ -1,15 +1,15 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import styles from "./add-pot-dialog.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
 import type { CreatePotRequest } from "#frontend/shared/client";
 import {
   createPotMutation,
+  getAllPotsOptions,
   getAllPotsQueryKey,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
-import { zCreatePotRequest } from "#frontend/shared/client/zod.gen";
 import { Button } from "#frontend/shared/primitives/button";
 import {
   Dialog,
@@ -24,7 +24,15 @@ import {
   FieldLabel,
 } from "#frontend/shared/primitives/field";
 import { Input } from "#frontend/shared/primitives/input";
-import { makeZodErrorsUserFriendly } from "#frontend/shared/utils/zod";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "#frontend/shared/primitives/select";
+import { colorHexList } from "#frontend/shared/utils/color";
 
 export function AddPotDialog() {
   const [open, setOpen] = useState(false);
@@ -33,9 +41,17 @@ export function AddPotDialog() {
     register,
     setError,
     reset,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<CreatePotRequest>();
+  const { data: potData } = useQuery({
+    ...getAllPotsOptions({
+      client: clientWithAuth,
+      credentials: "include",
+    }),
+    enabled: false,
+  });
   const { mutate } = useMutation({
     ...createPotMutation({
       client: clientWithAuth,
@@ -45,6 +61,7 @@ export function AddPotDialog() {
       Logger.info("Money successfully withdrawn from pot");
       await queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
       setOpen(false);
+      reset();
     },
     onError: (error) => {
       Logger.error("Pot could not be created", error);
@@ -69,43 +86,20 @@ export function AddPotDialog() {
         }
       }
     },
-    onSettled: () => {
-      reset();
-    },
   });
+
+  const themeColorSet = new Set(potData?.map((pot) => pot.themeColor));
+  const convertedColorHexList = colorHexList.map((hexColor) => ({
+    ...hexColor,
+    available: themeColorSet.has(hexColor.key) ? false : true,
+  }));
 
   const handleAddPotSubmit = handleSubmit((data) => {
     const convertedData: CreatePotRequest = {
       name: data.name,
       target: data.target,
+      themeColor: data.themeColor,
     };
-
-    const validationResult = zCreatePotRequest.safeParse(convertedData, {
-      error: (iss) => {
-        if (iss.code === "invalid_type") {
-          return `Invalid type, expected ${iss.expected}`;
-        }
-        if (iss.code === "too_small") {
-          return `Minimum is ${iss.minimum}`;
-        }
-      },
-    });
-
-    if (!validationResult.success) {
-      const userFriendlyErrors = makeZodErrorsUserFriendly(
-        validationResult.error,
-      );
-
-      for (const error in userFriendlyErrors) {
-        const convertedError = error as keyof typeof userFriendlyErrors;
-
-        userFriendlyErrors[convertedError].forEach((errorMessage) => {
-          setError(convertedError, {
-            message: errorMessage,
-          });
-        });
-      }
-    }
 
     mutate({
       body: convertedData,
@@ -167,6 +161,57 @@ export function AddPotDialog() {
                 {errors.root["server-bad-request"].message}
               </FieldError>
             )}
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="theme-color">Theme</FieldLabel>
+            <Controller
+              name="themeColor"
+              defaultValue="Army"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger id="theme-color">
+                      <SelectValue placeholder="Select a theme color" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {convertedColorHexList?.map(
+                          ({ key, value, available }) => (
+                            <SelectItem
+                              value={key}
+                              key={key}
+                              disabled={!available}
+                            >
+                              <div className={styles["theme"]}>
+                                <span
+                                  className={styles["theme-circle"]}
+                                  style={{
+                                    "--color-theme-circle": `${value}`,
+                                  }}
+                                />
+                                <span>
+                                  {key}&nbsp;
+                                  {`${!available ? "(Already in use)" : ""}`}
+                                </span>
+                              </div>
+                            </SelectItem>
+                          ),
+                        )}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {errors.themeColor && (
+                    <FieldError>{errors.themeColor?.message}</FieldError>
+                  )}
+                  {errors.root?.["server-bad-request"] && (
+                    <FieldError data-testid="add-pot-server-bad-request">
+                      {errors.root["server-bad-request"].message}
+                    </FieldError>
+                  )}
+                </>
+              )}
+            ></Controller>
           </Field>
           <Button type="submit" variant="cta-primary">
             +Add New Pot

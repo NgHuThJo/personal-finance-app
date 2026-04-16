@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styles from "./pot-card.module.css";
 import { AddMoneyToPotDialog } from "#frontend/features/pots/components/add-money-to-pot";
 import { DeletePotDialog } from "#frontend/features/pots/components/delete-pot";
 import { EditPotDialog } from "#frontend/features/pots/components/edit-pot.dialog";
@@ -13,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "#frontend/shared/primitives/card";
+import { getColorHexCode } from "#frontend/shared/utils/color";
 
 type PotCardProps = {
   potData: GetAllPotsResponse;
@@ -21,7 +23,7 @@ type PotCardProps = {
 export function PotCard({ potData }: PotCardProps) {
   const [isEditDialogOpen, setEditDialog] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialog] = useState(false);
-  const { id, name, target, total } = potData;
+  const { name, target, total, themeColor } = potData;
 
   const openEditDialogInPopup = () => {
     setEditDialog(true);
@@ -39,7 +41,17 @@ export function PotCard({ potData }: PotCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{name}</CardTitle>
+        <CardTitle>
+          <div className={styles["theme-heading"]}>
+            <span
+              className={styles["theme-icon"]}
+              style={{
+                "--color-theme-icon": `${getColorHexCode(themeColor)}`,
+              }}
+            ></span>
+            <span>{name}</span>
+          </div>
+        </CardTitle>
         <PotCardPopover
           dialogHandlers={{
             openDeleteDialog: openDeleteDialogInPopup,

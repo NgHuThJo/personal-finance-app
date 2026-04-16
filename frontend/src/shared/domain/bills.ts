@@ -1,1 +1,1 @@
-class Bill
+class BillRules {}

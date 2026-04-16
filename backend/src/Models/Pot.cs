@@ -6,6 +6,7 @@ public class Pot
     public decimal Total { get; set; } = 0m;
     public required decimal Target { get; set; }
     public required string Name { get; set; }
+    public required ThemeColor ThemeColor { get; set; }
     public int UserId { get; set; }
     public User User { get; set; } = null!;
 }

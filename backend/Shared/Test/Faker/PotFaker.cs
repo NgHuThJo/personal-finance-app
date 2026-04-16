@@ -13,19 +13,31 @@ public static class PotFaker
             .RuleFor(p => p.Name, f => $"Pot {f.UniqueIndex}")
             .RuleFor(p => p.Total, f => f.Random.Int(1, 1000) / 100m)
             .RuleFor(p => p.Target, f => f.Random.Int(1000, 2000) / 100m)
+            .RuleFor(
+                p => p.ThemeColor,
+                f => FakerExtensions.GetRandomThemeColor()
+            )
             .UseSeed(seed);
 
     public static Faker<Pot> PotFakerForTesting() =>
         new Faker<Pot>()
             .RuleFor(p => p.Name, f => $"Pot {f.UniqueIndex}")
             .RuleFor(p => p.Total, f => f.Random.Int(1, 1000) / 100m)
-            .RuleFor(p => p.Target, f => f.Random.Int(1000, 2000) / 100m);
+            .RuleFor(p => p.Target, f => f.Random.Int(1000, 2000) / 100m)
+            .RuleFor(
+                p => p.ThemeColor,
+                f => FakerExtensions.GetRandomThemeColor()
+            );
 
     public static CreatePotRequest CreatePotRequest()
     {
         var pot = new Faker<CreatePotRequest>()
             .RuleFor(p => p.Name, f => $"Pot {f.UniqueIndex}")
             .RuleFor(p => p.Target, f => f.Random.Int(1000, 2000) / 100m)
+            .RuleFor(
+                p => p.ThemeColor,
+                f => FakerExtensions.GetRandomThemeColor()
+            )
             .Generate();
 
         return pot;
@@ -54,6 +66,10 @@ public static class PotFaker
         var pot = new Faker<EditPotRequest>()
             .RuleFor(p => p.PotName, f => $"Pot {f.UniqueIndex}")
             .RuleFor(p => p.NewTarget, f => f.Random.Int(50, 150) / 100m)
+            .RuleFor(
+                p => p.ThemeColor,
+                f => FakerExtensions.GetRandomThemeColor()
+            )
             .Generate();
 
         return pot;

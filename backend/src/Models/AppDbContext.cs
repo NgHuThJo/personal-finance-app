@@ -43,7 +43,7 @@ public class AppDbContext(
             p.Property(p => p.Total).HasPrecision(14, 2);
             p.Property(p => p.Target).HasPrecision(14, 2);
 
-            p.HasIndex(p => p.Name).IsUnique();
+            p.HasIndex(p => new { p.UserId, p.Name }).IsUnique();
         });
 
         /* Budget */

@@ -1,4 +1,6 @@
-.list-item {
+.layout {
+  display: grid;
+  gap: 1rem;
   padding: var(--spacing-6);
   border-radius: var(--border-radius-4);
   background-color: var(--color-background-surface-secondary);
@@ -6,4 +8,75 @@
   @media screen and (width >= 768px) {
     padding: var(--spacing-8);
   }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h2 {
+    font-size: var(--font-size-subheading);
+  }
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  color: var(--color-text-link-primary);
+}
+
+.summary {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: auto 1fr;
+}
+
+.sum-layout {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border-radius: var(--border-radius-6);
+  background-color: var(--color-background-canvas-primary);
+}
+
+.total-sum-layout {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.list-item {
+  border-radius: var(--border-radius-4);
+  background-color: var(--color-background-surface-secondary);
+}
+
+.list-value {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.label {
+  font-weight: var(--font-weight-label);
+  color: var(--color-text-secondary);
+}
+
+.total {
+  font-weight: var(--font-weight-heading);
+  font-size: var(--font-size-heading);
+}
+
+.name {
+  font-weight: var(--font-weight-label);
+  color: var(--color-text-secondary);
+}
+
+.target {
+  font-weight: var(--font-weight-heading);
 }

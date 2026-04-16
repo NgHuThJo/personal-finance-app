@@ -13,11 +13,13 @@ export type Category = 'Entertainment' | 'Bills' | 'Groceries' | 'Transportation
 export type CreateBudgetRequest = {
     maximum: number;
     category: Category;
+    themeColor: ThemeColor;
 };
 
 export type CreatePotRequest = {
     target: number;
     name: string;
+    themeColor: ThemeColor;
 };
 
 export type CreateRefreshTokenResponse = {
@@ -35,17 +37,20 @@ export type CreateTransactionRequest = {
 export type EditBudgetRequest = {
     category: Category;
     maximum: number;
+    themeColor: ThemeColor;
 };
 
 export type EditPotRequest = {
     potName: string;
     newTarget: number;
+    themeColor: ThemeColor;
 };
 
 export type GetAllBudgetsResponse = {
     id: number;
     maximum: number;
     category: Category;
+    themeColor: ThemeColor;
 };
 
 export type GetAllPotsResponse = {
@@ -53,6 +58,7 @@ export type GetAllPotsResponse = {
     total: number;
     target: number;
     name: string;
+    themeColor: ThemeColor;
 };
 
 export type GetAllRecurringBillsResponse = {
@@ -143,6 +149,8 @@ export type SignUpUserResponse = {
     email: string;
     name: string;
 };
+
+export type ThemeColor = 'Green' | 'Yellow' | 'Cyan' | 'Navy' | 'Red' | 'Purple' | 'Turquoise' | 'Brown' | 'Magenta' | 'Blue' | 'Grey' | 'Army' | 'Pink' | 'YellowGreen' | 'Orange';
 
 export type TransactionSortKey = 'DateAsc' | 'DateDesc' | 'NameAsc' | 'NameDesc' | 'AmountAsc' | 'AmountDesc';
 

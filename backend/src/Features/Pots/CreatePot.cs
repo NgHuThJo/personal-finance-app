@@ -33,6 +33,7 @@ public record CreatePotRequest
 
     [MinLength(1)]
     public required string Name { get; init; }
+    public required ThemeColor ThemeColor { get; init; }
 }
 
 public class CreatePotValidator : AbstractValidator<CreatePotRequest>
@@ -43,6 +44,7 @@ public class CreatePotValidator : AbstractValidator<CreatePotRequest>
             .GreaterThanOrEqualTo(0)
             .PrecisionScale(14, 2, true);
         RuleFor(p => p.Name).MinimumLength(1);
+        RuleFor(p => p.ThemeColor).IsInEnum();
     }
 }
 
@@ -100,6 +102,7 @@ public class CreatePotHandler(
         {
             Target = command.Target,
             Name = command.Name,
+            ThemeColor = command.ThemeColor,
             UserId = userId,
         };
 

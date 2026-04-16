@@ -17,16 +17,6 @@ export const zCategory = z.enum([
     'General'
 ]);
 
-export const zCreateBudgetRequest = z.object({
-    maximum: z.number().gte(0),
-    category: zCategory
-});
-
-export const zCreatePotRequest = z.object({
-    target: z.number().gte(0),
-    name: z.string().min(1)
-});
-
 export const zCreateRefreshTokenResponse = z.object({
     accessToken: z.string()
 });
@@ -37,29 +27,6 @@ export const zCreateTransactionRequest = z.object({
     isRecurring: z.boolean(),
     category: zCategory,
     recipientEmail: z.string()
-});
-
-export const zEditBudgetRequest = z.object({
-    category: zCategory,
-    maximum: z.number().gte(0)
-});
-
-export const zEditPotRequest = z.object({
-    potName: z.string(),
-    newTarget: z.number()
-});
-
-export const zGetAllBudgetsResponse = z.object({
-    id: z.int().gte(1).lte(2147483647),
-    maximum: z.number().gte(0),
-    category: zCategory
-});
-
-export const zGetAllPotsResponse = z.object({
-    id: z.int().gte(0).lte(2147483647),
-    total: z.number().gte(0),
-    target: z.number().gte(0),
-    name: z.string().min(1)
 });
 
 export const zGetAllRecurringBillsUserDto = z.object({
@@ -177,6 +144,63 @@ export const zSignUpUserResponse = z.object({
     id: z.int().gte(0).lte(2147483647),
     email: z.string(),
     name: z.string().min(1)
+});
+
+export const zThemeColor = z.enum([
+    'Green',
+    'Yellow',
+    'Cyan',
+    'Navy',
+    'Red',
+    'Purple',
+    'Turquoise',
+    'Brown',
+    'Magenta',
+    'Blue',
+    'Grey',
+    'Army',
+    'Pink',
+    'YellowGreen',
+    'Orange'
+]);
+
+export const zCreateBudgetRequest = z.object({
+    maximum: z.number().gte(0),
+    category: zCategory,
+    themeColor: zThemeColor
+});
+
+export const zCreatePotRequest = z.object({
+    target: z.number().gte(0),
+    name: z.string().min(1),
+    themeColor: zThemeColor
+});
+
+export const zEditBudgetRequest = z.object({
+    category: zCategory,
+    maximum: z.number().gte(0),
+    themeColor: zThemeColor
+});
+
+export const zEditPotRequest = z.object({
+    potName: z.string(),
+    newTarget: z.number(),
+    themeColor: zThemeColor
+});
+
+export const zGetAllBudgetsResponse = z.object({
+    id: z.int().gte(1).lte(2147483647),
+    maximum: z.number().gte(0),
+    category: zCategory,
+    themeColor: zThemeColor
+});
+
+export const zGetAllPotsResponse = z.object({
+    id: z.int().gte(0).lte(2147483647),
+    total: z.number().gte(0),
+    target: z.number().gte(0),
+    name: z.string().min(1),
+    themeColor: zThemeColor
 });
 
 export const zTransactionSortKey = z.enum([

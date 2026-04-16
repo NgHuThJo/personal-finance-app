@@ -12,6 +12,7 @@ public record CreateBudgetRequest
     [Range(0, double.MaxValue)]
     public required decimal Maximum { get; init; }
     public required Category Category { get; init; }
+    public required ThemeColor ThemeColor { get; init; }
 }
 
 public class CreateBudgetValidator : AbstractValidator<CreateBudgetRequest>
@@ -22,6 +23,7 @@ public class CreateBudgetValidator : AbstractValidator<CreateBudgetRequest>
             .GreaterThanOrEqualTo(0)
             .PrecisionScale(14, 2, true);
         RuleFor(b => b.Category).IsInEnum();
+        RuleFor(b => b.ThemeColor).IsInEnum();
     }
 }
 
@@ -54,6 +56,7 @@ public class CreateBudgetHandler(AppDbContext context)
         {
             Category = command.Category,
             Maximum = command.Maximum,
+            ThemeColor = command.ThemeColor,
             UserId = userId,
         };
         _context.Budgets.Add(newBudget);

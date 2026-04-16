@@ -1,0 +1,15 @@
+.theme-icon {
+  --color-theme-icon: currentColor;
+
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background-color: var(--color-theme-icon);
+}
+
+.theme-heading {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
