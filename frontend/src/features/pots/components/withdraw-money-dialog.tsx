@@ -54,6 +54,7 @@ export function WithdrawMoneyDialog({
     onSuccess: async () => {
       Logger.info("Money successfully withdrawn from pot");
       await queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
+      reset();
     },
     onError: (error) => {
       Logger.info("Money could not be withdrawn", error);
@@ -70,9 +71,6 @@ export function WithdrawMoneyDialog({
           Logger.error(`Unknown error in ${WithdrawMoneyDialog.name}`);
         }
       }
-    },
-    onSettled: () => {
-      reset();
     },
   });
   const draftAmount = useWatch({

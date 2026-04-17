@@ -204,47 +204,37 @@ export function AddBudgetDialog() {
               defaultValue={defaultValue}
               control={control}
               render={({ field }) => (
-                <>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger id="theme-color">
-                      <SelectValue placeholder="Select a theme color" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {convertedColorHexList?.map(
-                          ({ key, value, available }) => (
-                            <SelectItem
-                              value={key}
-                              key={key}
-                              disabled={!available}
-                            >
-                              <div className={styles["theme"]}>
-                                <span
-                                  className={styles["theme-circle"]}
-                                  style={{
-                                    "--color-theme-circle": `${value}`,
-                                  }}
-                                />
-                                <span>
-                                  {key}&nbsp;
-                                  {`${!available ? "(Already in use)" : ""}`}
-                                </span>
-                              </div>
-                            </SelectItem>
-                          ),
-                        )}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                  {errors.themeColor && (
-                    <FieldError>{errors.themeColor?.message}</FieldError>
-                  )}
-                  {errors.root?.["server-bad-request"] && (
-                    <FieldError data-testid="add-pot-server-bad-request">
-                      {errors.root["server-bad-request"].message}
-                    </FieldError>
-                  )}
-                </>
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger id="theme-color">
+                    <SelectValue placeholder="Select a theme color" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {convertedColorHexList?.map(
+                        ({ key, value, available }) => (
+                          <SelectItem
+                            value={key}
+                            key={key}
+                            disabled={!available}
+                          >
+                            <div className={styles["theme"]}>
+                              <span
+                                className={styles["theme-circle"]}
+                                style={{
+                                  "--color-theme-circle": `${value}`,
+                                }}
+                              />
+                              <span>
+                                {key}&nbsp;
+                                {`${!available ? "(Already in use)" : ""}`}
+                              </span>
+                            </div>
+                          </SelectItem>
+                        ),
+                      )}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               )}
             ></Controller>
           </Field>

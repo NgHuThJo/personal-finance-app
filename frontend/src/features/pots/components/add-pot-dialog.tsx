@@ -207,11 +207,6 @@ export function AddPotDialog() {
                   {errors.themeColor && (
                     <FieldError>{errors.themeColor?.message}</FieldError>
                   )}
-                  {errors.root?.["server-bad-request"] && (
-                    <FieldError data-testid="add-pot-server-bad-request">
-                      {errors.root["server-bad-request"].message}
-                    </FieldError>
-                  )}
                 </>
               )}
             ></Controller>

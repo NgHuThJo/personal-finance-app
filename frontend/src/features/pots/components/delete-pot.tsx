@@ -43,6 +43,7 @@ export function DeletePotDialog({
       Logger.info("Pot successfully deleted");
       await queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
       toggleDeleteDialog(false);
+      reset();
     },
     onError: (error) => {
       Logger.error("Pot could not be deleted", error);
@@ -51,10 +52,6 @@ export function DeletePotDialog({
         type: String(error.type),
         message: String(error.detail),
       });
-    },
-
-    onSettled: () => {
-      reset();
     },
   });
 

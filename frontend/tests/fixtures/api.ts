@@ -59,6 +59,7 @@ export const test = base.extend({
         json: zocker(zGetAllPotsResponse)
           .supply(zGetAllPotsResponse, {
             id: ++idCounter,
+            themeColor: "Army",
             name: "some-random-name",
             target: 1000,
             total: 500,
@@ -123,7 +124,8 @@ export const test = base.extend({
         json: zocker(zGetAllBudgetsResponse)
           .supply(zGetAllBudgetsResponse, {
             id: ++idCounter,
-            category: "bills",
+            category: "Bills",
+            themeColor: "Army",
             maximum: 200,
           })
           .generateMany(3),
@@ -141,7 +143,7 @@ export const test = base.extend({
             data: zocker(zGetAllTransactionsTransactionDto)
               .supply(zGetAllTransactionsTransactionDto, {
                 id: ++idCounter,
-                category: "bills",
+                category: "Bills",
                 amount: 200,
                 isRecurring: false,
                 otherUser: {
@@ -153,9 +155,9 @@ export const test = base.extend({
                 transactionDate: Date(),
               })
               .generateMany(4),
-            pageCount: 1,
+            transactionCount: 4,
           })
-          .generateMany(1),
+          .generate(),
       });
     });
 
@@ -163,7 +165,7 @@ export const test = base.extend({
     await context.route("**/v1/categories", (r) =>
       r.fulfill({
         json: zocker(zGetAllCategoriesResponse)
-          .supply(zGetAllCategoriesResponse, ["bills"])
+          .supply(zGetAllCategoriesResponse, ["Bills"])
           .generate(),
       }),
     );
@@ -174,14 +176,13 @@ export const test = base.extend({
     await context.close();
   },
   // page: async ({ page }, use) => {
-  //   page.on("requestfailed", (req) => {
-  //     console.log(req.url(), req.failure()?.errorText);
-  //   });
-
-  //   page.on("console", (msg) => {
-  //     console.log("app log:", msg.location(), msg.text());
-  //   });
+  //   // page.on("requestfailed", (req) => {
+  //   //   console.log(req.url(), req.failure()?.errorText);
+  //   // });
+  //   // page.on("console", (msg) => {
+  //   //   console.log("app log:", msg.location(), msg.text());
+  //   // });
   //   // page.on("request", (r) => console.log("REQ:", r.url()));
-  //   await use(page);
+  //   // await use(page);
   // },
 });

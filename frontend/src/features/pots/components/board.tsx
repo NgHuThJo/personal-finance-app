@@ -21,7 +21,9 @@ export function PotsBoard() {
       {data.length ? (
         <ul className={styles.body}>
           {data.map((pot) => (
-            <PotCard potData={pot} />
+            <li>
+              <PotCard potData={pot} />
+            </li>
           ))}
         </ul>
       ) : (

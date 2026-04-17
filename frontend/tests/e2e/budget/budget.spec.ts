@@ -21,7 +21,8 @@ test.describe("budget", () => {
           json: zocker(zGetAllBudgetsResponse)
             .supply(zGetAllBudgetsResponse, {
               id: ++idCounter,
-              category: "bills",
+              themeColor: "Army",
+              category: "Bills",
               maximum: 200,
             })
             .generateMany(4),
@@ -124,7 +125,7 @@ test.describe("budget", () => {
         waitUntil: "networkidle",
       });
 
-      await page.route("**/v1/budgets", (r) =>
+      await page.route("**/v1/budgets/**", (r) =>
         r.fulfill({
           status: 400,
           json: createProblemDetails({

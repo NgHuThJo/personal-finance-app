@@ -57,6 +57,7 @@ export function AddMoneyToPotDialog({
       await queryClient.invalidateQueries({
         queryKey: getAllPotsQueryKey(),
       });
+      reset();
     },
     onError: (error) => {
       Logger.info("Deposit to pot failed", error);
@@ -73,9 +74,6 @@ export function AddMoneyToPotDialog({
           Logger.error(`Unknown error in ${AddMoneyToPotDialog.name}`);
         }
       }
-    },
-    onSettled: () => {
-      reset();
     },
   });
   const amountToAdd = useWatch({

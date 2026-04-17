@@ -335,6 +335,7 @@ test.describe("pot", () => {
               name: "some-random-name",
               target: 1000,
               total: 500,
+              themeColor: "Army",
             })
             .generateMany(2),
           status: 200,
@@ -361,7 +362,7 @@ test.describe("pot", () => {
       await popover.click();
       await page.getByRole("button", { name: /delete pot/i }).click();
       const deleteDialog = page.getByTestId("delete-dialog");
-      await deleteDialog.getByRole("button", { name: /close/i }).click();
+      await deleteDialog.getByRole("button", { name: /go back/i }).click();
 
       await expect(deleteDialog).not.toBeVisible();
     });

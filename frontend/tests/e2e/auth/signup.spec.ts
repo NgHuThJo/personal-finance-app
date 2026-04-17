@@ -1,6 +1,21 @@
 import { expect } from "@playwright/test";
 import { test } from "../../fixtures/api";
 
+test.use({
+  storageState: {
+    cookies: [],
+    origins: [],
+  },
+});
+
+test.beforeEach(async ({ context }) => {
+  await context.route("**/v1/auth/refresh", (route) =>
+    route.fulfill({
+      status: 401,
+    }),
+  );
+});
+
 test.describe("signup", () => {
   test("sign up and redirect to login route", async ({ page }) => {
     await page.goto("/signup");
