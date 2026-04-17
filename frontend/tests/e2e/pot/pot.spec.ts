@@ -8,7 +8,6 @@ test.describe("pot", () => {
     test("should open add new pot dialog and show no error messages after form is submitted", async ({
       page,
     }) => {
-      await page.pause();
       await page.goto("/pots");
       await page.getByRole("button", { name: /add new pot/i }).click();
 

@@ -117,14 +117,15 @@ export function AddTransactionDialog() {
             <Input
               type="text"
               id="recipient-email"
-              data-testid="recipient-email-error"
               placeholder="e.g. Urban Services Hub"
               {...register("recipientEmail", {
                 required: "Recipient email address required",
               })}
             />
             {errors.recipientEmail && (
-              <FieldError>{errors.recipientEmail?.message}</FieldError>
+              <FieldError data-testid="recipient-email-error">
+                {errors.recipientEmail?.message}
+              </FieldError>
             )}
             {errors.root?.["server-unprocessable-content"] && (
               <FieldError data-testid="add-transaction-server-unprocessable-content">
@@ -138,7 +139,6 @@ export function AddTransactionDialog() {
               type="date"
               step="any"
               id="transaction-date"
-              data-testid="transaction-date-error"
               placeholder="$ e.g. 2000"
               {...register("transactionDate", {
                 valueAsDate: true,
@@ -146,10 +146,12 @@ export function AddTransactionDialog() {
               })}
             />
             {errors.transactionDate && (
-              <FieldError>{errors?.transactionDate.message}</FieldError>
+              <FieldError data-testid="transaction-date-error">
+                {errors?.transactionDate.message}
+              </FieldError>
             )}
             {errors.root?.["server-bad-request"] && (
-              <FieldError data-testid="-server-bad-request">
+              <FieldError data-testid="server-bad-request">
                 {errors.root["server-bad-request"].message}
               </FieldError>
             )}
@@ -189,7 +191,6 @@ export function AddTransactionDialog() {
               type="number"
               step="any"
               id="transaction-amount"
-              data-testid="transaction-amount"
               placeholder="$ e.g. 1000"
               {...register("amount", {
                 valueAsNumber: true,
@@ -228,7 +229,7 @@ export function AddTransactionDialog() {
             ></Controller>
           </Field>
           <Button type="submit" variant="cta-primary">
-            +Add New Pot
+            +Add New Transaction
           </Button>
         </form>
       </DialogContent>

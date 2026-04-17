@@ -2,8 +2,10 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Runtime.Serialization;
 using backend.Shared.Test;
+using backend.Src.Features;
 using backend.Src.Models;
 using FluentAssertions;
+using Microsoft.AspNetCore.WebUtilities;
 using Xunit;
 
 namespace backend.Tests.IntegrationTests;
@@ -153,5 +155,57 @@ public class TransactionTest(DatabaseFixture fixture)
         );
         // Assert
         postResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task GetAllTransactions_IfQueryParametersInvalid_Return400()
+    {
+        // Arrange
+        var completedUri = QueryHelpers.AddQueryString(
+            _uriPath,
+            new Dictionary<string, string?> { ["page"] = "-1" }
+        );
+        // Act
+        var postResponse = await Client.GetAsync(
+            completedUri,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        postResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task GetAllRecurringBills_IfSuccessful_Return200()
+    {
+        // Arrange
+        var path = $"{_uriPath}/bills";
+        // Act
+        var getResponse = await Client.GetAsync(
+            _uriPath,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task GetAllRecurringBills_IfQueryParametersInvalid_Return400()
+    {
+        // Arrange
+        var query = new GetAllRecurringBillsSearchParams { Page = -1 };
+        var queryDict = query
+            .GetType()
+            .GetProperties()
+            .ToDictionary(p => p.Name, p => p.GetValue(query)?.ToString());
+        var baseUri = $"{_uriPath}/bills";
+        var completedUri = QueryHelpers.AddQueryString(baseUri, queryDict);
+
+        // Act
+        var getResponse = await Client.GetAsync(
+            completedUri,
+            TestContext.Current.CancellationToken
+        );
+        // Assert
+        getResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }

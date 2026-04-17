@@ -21,7 +21,12 @@ type ProblemDetails = {
 
 export const createProblemDetails = (problems: ProblemDetails) => problems;
 
-export const test = base.extend({
+export const test = base.extend<{
+  gotoWithQueryParams: (
+    page: string,
+    queryParams: Record<string, string | number | boolean | undefined>,
+  ) => Promise<void>;
+}>({
   context: async ({ browser }, use) => {
     const context = await browser.newContext();
 
@@ -133,6 +138,34 @@ export const test = base.extend({
     });
 
     // Transaction
+    await context.route(`**/v1/transactions?**`, (r) => {
+      let idCounter = 1;
+
+      return r.fulfill({
+        status: 200,
+        json: zocker(zGetAllTransactionsResponse)
+          .supply(zGetAllTransactionsResponse, {
+            data: zocker(zGetAllTransactionsTransactionDto)
+              .supply(zGetAllTransactionsTransactionDto, {
+                id: ++idCounter,
+                category: "Bills",
+                amount: 200,
+                isRecurring: false,
+                otherUser: {
+                  email: "somerandom@email.com",
+                  name: "somerandomname",
+                },
+                senderId: ++idCounter,
+                recipientId: ++idCounter,
+                transactionDate: Date(),
+              })
+              .generateMany(4),
+            transactionCount: 4,
+          })
+          .generate(),
+      });
+    });
+
     await context.route(`**/v1/transactions`, (r) => {
       let idCounter = 1;
 
@@ -161,6 +194,18 @@ export const test = base.extend({
       });
     });
 
+    await context.route("**/v1/transactions", (r) => {
+      if (r.request().method() === "PUT") {
+        return r.fulfill({
+          status: 204,
+        });
+      }
+
+      return r.fallback({
+        method: "GET",
+      });
+    });
+
     // Category
     await context.route("**/v1/categories", (r) =>
       r.fulfill({
@@ -174,6 +219,25 @@ export const test = base.extend({
     await use(context);
 
     await context.close();
+  },
+  gotoWithQueryParams: async ({ page }, use) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    await use(
+      async (
+        path: string,
+        queryParams: Record<string, string | number | boolean | undefined>,
+      ) => {
+        const url = new URL(path, "https://localhost:5173");
+
+        Object.entries(queryParams).forEach(([key, value]) => {
+          if (value !== undefined) {
+            url.searchParams.set(key, value.toString());
+          }
+        });
+
+        await page.goto(url.toString());
+      },
+    );
   },
   // page: async ({ page }, use) => {
   //   // page.on("requestfailed", (req) => {
