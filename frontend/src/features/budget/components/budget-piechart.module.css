@@ -1,0 +1,34 @@
+.piechart {
+  --width-piechart: 15rem;
+  --height-piechart: 15rem;
+
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  width: var(--width-piechart);
+  height: var(--height-piechart);
+  border-radius: 50%;
+  /* background-image: conic-gradient(red, green); */
+}
+
+.text-container {
+  --multiplier: 0.75;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--width-piechart) * var(--multiplier));
+  height: calc(var(--height-piechart) * var(--multiplier));
+  border-radius: 50%;
+  position: relative;
+  text-align: center;
+  background-color: var(--color-background-surface-secondary);
+}
+
+.text {
+  position: absolute;
+  left: 50%;
+  font-weight: var(--font-weight-heading);
+  font-size: var(--font-size-subheading);
+  transform: translate(-50%);
+}

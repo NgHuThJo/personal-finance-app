@@ -1,5 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import styles from "./budget-summary.module.css";
+import { BudgetPieChart } from "#frontend/features/budget/components/budget-piechart";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import type { Category } from "#frontend/shared/client";
 import {
@@ -7,6 +8,7 @@ import {
   getAllCategoriesOptions,
   getAllTransactionsOptions,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
+import { getColorHexCode } from "#frontend/shared/utils/color";
 import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
 import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 
@@ -37,6 +39,7 @@ export function BudgetSummary() {
       category,
       {
         category,
+        themeColor: "",
         sumTransactionAmount: 0,
         sumBudgetMaximum: 0,
       },
@@ -45,6 +48,7 @@ export function BudgetSummary() {
     Category,
     {
       category: Category;
+      themeColor: string;
       sumTransactionAmount: number;
       sumBudgetMaximum: number;
     }
@@ -52,6 +56,7 @@ export function BudgetSummary() {
 
   for (const b of budgetData) {
     result[b.category].sumBudgetMaximum += b.maximum;
+    result[b.category].themeColor = getColorHexCode(b.themeColor);
   }
 
   for (const t of transactionData) {
@@ -64,34 +69,45 @@ export function BudgetSummary() {
 
   return (
     <div className={styles.layout}>
-      <h1>Spending Summary</h1>
-      <ul className={styles["summary"]}>
-        {aggregatedData?.map(
-          ({ category, sumBudgetMaximum, sumTransactionAmount }) => (
-            <li className={styles.category}>
-              <p className={styles["category-label"]}>
-                {capitalizeFirstLetter(category)}
-              </p>
-              <p>
-                <span className={styles["transaction-amount"]}>
-                  {numberFormatter.formatNumber({
-                    number: sumTransactionAmount,
-                    options: numberFormatter.getDollarOptions(),
-                  })}
-                </span>
-                &nbsp;of
-                <span>
-                  &nbsp;
-                  {numberFormatter.formatNumber({
-                    number: sumBudgetMaximum,
-                    options: numberFormatter.getDollarOptions(),
-                  })}
-                </span>
-              </p>
-            </li>
-          ),
-        )}
-      </ul>
+      <BudgetPieChart />
+      <div className={styles["summary"]}>
+        <h1>Spending Summary</h1>
+        <ul className={styles["list"]}>
+          {aggregatedData?.map(
+            (
+              { category, sumBudgetMaximum, sumTransactionAmount, themeColor },
+              index,
+            ) => (
+              <li className={styles.category} key={index}>
+                <p
+                  className={styles["category-label"]}
+                  style={{
+                    "--color-background-theme": themeColor,
+                  }}
+                >
+                  {capitalizeFirstLetter(category)}
+                </p>
+                <p>
+                  <span className={styles["transaction-amount"]}>
+                    {numberFormatter.formatNumber({
+                      number: sumTransactionAmount,
+                      options: numberFormatter.getDollarOptions(),
+                    })}
+                  </span>
+                  &nbsp;of
+                  <span className={styles["budget-maximum"]}>
+                    &nbsp;
+                    {numberFormatter.formatNumber({
+                      number: sumBudgetMaximum,
+                      options: numberFormatter.getDollarOptions(),
+                    })}
+                  </span>
+                </p>
+              </li>
+            ),
+          )}
+        </ul>
+      </div>
     </div>
   );
 }

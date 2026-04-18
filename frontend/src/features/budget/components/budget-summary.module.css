@@ -1,6 +1,8 @@
 .layout {
   display: grid;
-  gap: 1rem;
+  gap: 2rem;
+  grid-template-columns: auto 1fr;
+  align-items: center;
   padding: var(--spacing-8);
   border-radius: var(--border-radius-4);
   background-color: var(--color-background-surface-secondary);
@@ -8,17 +10,29 @@
 
 .summary {
   display: grid;
-  gap: 1rem;
+  gap: 1.5rem;
+}
+
+.list {
+  display: grid;
 }
 
 .category {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-block: 1rem;
   color: var(--color-text-secondary);
+  font-size: 1rem;
+
+  &:not(:last-of-type) {
+    border-bottom: 1px solid var(--color-border-input-primary);
+  }
 }
 
 .category-label {
+  --color-background-theme: currentColor;
+
   position: relative;
   padding-left: 1rem;
 
@@ -30,7 +44,7 @@
     border-radius: var(--border-radius-4);
     position: absolute;
     left: 0;
-    background-color: var(--color-background-surface-tertiary);
+    background-color: var(--color-background-theme);
   }
 }
 
@@ -38,4 +52,8 @@
   font-weight: var(--font-weight-heading);
   line-height: 1.5;
   color: var(--color-text-primary);
+}
+
+.budget-maximum {
+  font-weight: var(--font-weight-heading);
 }
