@@ -5,6 +5,7 @@ import { CaretRight, JarLight } from "#frontend/assets/icons/icons";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { getAllPotsOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { appLinkOptions } from "#frontend/shared/router/options/linkOptions";
+import { getColorHexCode } from "#frontend/shared/utils/color";
 import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
 
 export function DashboardPotsSummary() {
@@ -47,6 +48,12 @@ export function DashboardPotsSummary() {
         <ul className={styles["list"]}>
           {highestPotTargets.map((pot) => (
             <li className={styles["list-item"]}>
+              <span
+                className={styles["theme-icon"]}
+                style={{
+                  "--color-theme-icon": getColorHexCode(pot.themeColor),
+                }}
+              ></span>
               <div className={styles["list-value"]}>
                 <span className={styles["name"]}>{pot.name}</span>
                 <span className={styles["target"]}>

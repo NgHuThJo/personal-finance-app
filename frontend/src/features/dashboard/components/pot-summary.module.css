@@ -49,17 +49,20 @@
 
 .list {
   display: grid;
+  gap: 1rem;
   grid-template-columns: repeat(2, 1fr);
 }
 
 .list-item {
   border-radius: var(--border-radius-4);
+  position: relative;
   background-color: var(--color-background-surface-secondary);
 }
 
 .list-value {
   display: grid;
   gap: 0.5rem;
+  padding-left: 1rem;
 }
 
 .label {
@@ -79,4 +82,15 @@
 
 .target {
   font-weight: var(--font-weight-heading);
+}
+
+.theme-icon {
+  --color-theme-icon: currentColor;
+
+  width: 0.5rem;
+  height: 100%;
+  border-radius: var(--border-radius-6);
+  position: absolute;
+  left: 0;
+  background-color: var(--color-theme-icon);
 }

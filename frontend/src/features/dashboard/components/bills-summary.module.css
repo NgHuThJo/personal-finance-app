@@ -31,7 +31,9 @@
   justify-content: space-between;
   padding: 1.25rem;
   border-radius: var(--border-radius-6);
+  position: relative;
   background-color: var(--color-background-canvas-primary);
+  overflow: hidden;
 }
 
 .link {
@@ -42,10 +44,27 @@
 }
 
 .key {
+  margin-right: auto;
   font-weight: var(--font-weight-action);
   color: var(--color-text-secondary);
 }
 
 .amount {
   font-weight: var(--font-weight-heading);
+}
+
+.paid-bills {
+  width: 0.5rem;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  background-color: var(--color-background-surface-tertiary);
+}
+
+.upcoming {
+  width: 0.5rem;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  background-color: var(--color-status-error);
 }
