@@ -155,6 +155,11 @@ public class TransactionTest(DatabaseFixture fixture)
         );
         // Assert
         postResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var payload =
+            await postResponse.Content.ReadFromJsonAsync<GetAllTransactionsResponse>(
+                TestContext.Current.CancellationToken
+            );
+        payload.Should().NotBeNull();
     }
 
     [Fact]
@@ -181,7 +186,7 @@ public class TransactionTest(DatabaseFixture fixture)
         var path = $"{_uriPath}/bills";
         // Act
         var getResponse = await Client.GetAsync(
-            _uriPath,
+            path,
             TestContext.Current.CancellationToken
         );
         // Assert
