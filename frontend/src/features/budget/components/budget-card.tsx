@@ -68,6 +68,7 @@ export function BudgetCard({ budgetData }: BudgetCardProps) {
   };
 
   const userId = Number(decodeJwt(accessToken?.accessToken as string).sub);
+  const colorHexCode = getColorHexCode(themeColor);
 
   return (
     <Card data-testid="budget-card">
@@ -77,7 +78,7 @@ export function BudgetCard({ budgetData }: BudgetCardProps) {
             <span
               className={styles["theme-icon"]}
               style={{
-                "--color-theme-icon": `${getColorHexCode(themeColor)}`,
+                "--color-theme-icon": `${colorHexCode}`,
               }}
             ></span>
             <span>{category}</span>
@@ -91,7 +92,11 @@ export function BudgetCard({ budgetData }: BudgetCardProps) {
         />
       </CardHeader>
       <CardContent>
-        <BudgetProgressBar maximum={maximum} spent={transactionAmount} />
+        <BudgetProgressBar
+          maximum={maximum}
+          spent={transactionAmount}
+          themeColor={colorHexCode}
+        />
       </CardContent>
       <CardFooter>
         <div className={styles["footer-background"]}>

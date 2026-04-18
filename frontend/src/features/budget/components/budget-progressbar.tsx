@@ -4,9 +4,14 @@ import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
 type BudgetProgressBarProps = {
   spent: number;
   maximum: number;
+  themeColor: string;
 };
 
-export function BudgetProgressBar({ maximum, spent }: BudgetProgressBarProps) {
+export function BudgetProgressBar({
+  maximum,
+  spent,
+  themeColor,
+}: BudgetProgressBarProps) {
   return (
     <div className={styles["card-content"]}>
       <div className={styles["card-content-header"]}>
@@ -28,7 +33,12 @@ export function BudgetProgressBar({ maximum, spent }: BudgetProgressBarProps) {
       </div>
       <div className={styles["card-content-footer"]}>
         <div className={styles["footer-cell"]}>
-          <div className={styles["footer-left"]}></div>
+          <div
+            className={styles["footer-left"]}
+            style={{
+              "--color-theme-icon": `${themeColor}`,
+            }}
+          ></div>
           <div className={styles["footer-right"]}>
             <div className={styles["footer-label"]}>Spent</div>
             <div className={styles["footer-number"]}>

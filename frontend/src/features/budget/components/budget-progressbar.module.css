@@ -48,9 +48,11 @@
 }
 
 .footer-left {
+  --color-theme-icon: var(--color-background-canvas-primary);
+
   width: 0.25rem;
   border-radius: var(--border-radius-2);
-  background-color: var(--color-background-surface-tertiary);
+  background-color: var(--color-theme-icon);
 }
 
 .footer-right {
