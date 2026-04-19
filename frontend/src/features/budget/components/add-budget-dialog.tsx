@@ -121,7 +121,9 @@ export function AddBudgetDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="cta-primary">+Add New Budget</Button>
+        <Button variant="cta-primary" size="sm">
+          +Add New Budget
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>Add New Budget</DialogTitle>

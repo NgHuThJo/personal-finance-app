@@ -1,10 +1,12 @@
 import styles from "./budget-progressbar.module.css";
+import type { ThemeColor } from "#frontend/shared/client";
+import { getColorHexCode } from "#frontend/shared/utils/color";
 import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
 
 type BudgetProgressBarProps = {
   spent: number;
   maximum: number;
-  themeColor: string;
+  themeColor: ThemeColor;
 };
 
 export function BudgetProgressBar({
@@ -12,6 +14,8 @@ export function BudgetProgressBar({
   spent,
   themeColor,
 }: BudgetProgressBarProps) {
+  const hexColor = getColorHexCode(themeColor);
+
   return (
     <div className={styles["card-content"]}>
       <div className={styles["card-content-header"]}>
@@ -28,6 +32,7 @@ export function BudgetProgressBar({
           className={styles["card-content-progress-bar"]}
           style={{
             "--width-progress-bar": `${Math.min(Math.round((spent / maximum) * 100), 100)}%`,
+            "--color-background-progressbar": `${hexColor}`,
           }}
         ></div>
       </div>
@@ -36,7 +41,7 @@ export function BudgetProgressBar({
           <div
             className={styles["footer-left"]}
             style={{
-              "--color-theme-icon": `${themeColor}`,
+              "--color-theme-icon": `${hexColor}`,
             }}
           ></div>
           <div className={styles["footer-right"]}>

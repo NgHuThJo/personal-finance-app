@@ -69,7 +69,9 @@ export function BudgetSummary() {
 
   return (
     <div className={styles.layout}>
-      <BudgetPieChart />
+      <div className={styles["piechart-layout"]}>
+        <BudgetPieChart />
+      </div>
       <div className={styles["summary"]}>
         <h1>Spending Summary</h1>
         <ul className={styles["list"]}>

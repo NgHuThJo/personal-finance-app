@@ -38,7 +38,7 @@
 .link {
   display: flex;
   align-items: center;
-  gap: var(--spacing-3);
+  gap: var(--spacing-2);
   color: var(--color-text-link-primary);
 }
 

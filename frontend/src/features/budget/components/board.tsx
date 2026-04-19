@@ -21,7 +21,9 @@ export function BudgetBoard() {
       </header>
       {budgetData.length ? (
         <div className={styles["content"]}>
-          <BudgetSummary />
+          <div>
+            <BudgetSummary />
+          </div>
           <ul className={styles.body}>
             {budgetData.map((budget) => (
               <BudgetCard key={budget.id} budgetData={budget} />

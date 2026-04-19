@@ -27,16 +27,18 @@
 
 .card-content-progress-bar {
   --width-progress-bar: 100%;
+  --color-background-progressbar: currentColor;
 
   width: var(--width-progress-bar);
   height: 100%;
   border-radius: var(--border-radius-2);
-  background-color: var(--color-background-surface-tertiary);
+  background-color: var(--color-background-progressbar);
   transition: width 0.5s;
 }
 
 .maximum-label {
-  font-weight: var(--font-weight-heading);
+  font-weight: var(--font-weight-label);
+  font-size: 1rem;
   line-height: 1.5;
   color: var(--color-text-secondary);
 }

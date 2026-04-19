@@ -2,6 +2,7 @@ import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import styles from "./budget-card.module.css";
+import { CaretRight } from "#frontend/assets/icons/icons";
 import { BudgetCardPopover } from "#frontend/features/budget/components/budget-popover";
 import { BudgetProgressBar } from "#frontend/features/budget/components/budget-progressbar";
 import { DeleteBudgetDialog } from "#frontend/features/budget/components/delete-budget-dialog";
@@ -43,6 +44,7 @@ export function BudgetCard({ budgetData }: BudgetCardProps) {
   });
   const [isEditDialogOpen, setEditDialog] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialog] = useState(false);
+
   const { category, maximum, themeColor } = budgetData;
 
   const filteredTransactions = transactionData.filter(
@@ -95,7 +97,7 @@ export function BudgetCard({ budgetData }: BudgetCardProps) {
         <BudgetProgressBar
           maximum={maximum}
           spent={transactionAmount}
-          themeColor={colorHexCode}
+          themeColor={themeColor}
         />
       </CardContent>
       <CardFooter>
@@ -105,8 +107,10 @@ export function BudgetCard({ budgetData }: BudgetCardProps) {
             <Link
               {...appLinkOptions.getTransactionLinkOptions()}
               to="/transactions"
+              className={styles["link"]}
             >
               See All
+              <CaretRight />
             </Link>
           </div>
           {filteredTransactions.length === 0 ? (

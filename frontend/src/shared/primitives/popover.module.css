@@ -1,7 +1,7 @@
 .popover-content {
   display: grid;
   width: 100%;
-  padding: 1rem;
+  padding: 0.5rem;
   border: 1px solid currentColor;
   border-radius: var(--border-radius-6);
   outline: none;
