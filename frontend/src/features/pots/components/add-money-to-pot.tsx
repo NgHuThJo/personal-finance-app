@@ -33,7 +33,7 @@ type AddMoneyToPotProps = {
 };
 
 export function AddMoneyToPotDialog({
-  potData: { id, name, target, total },
+  potData: { id, name, target, total, themeColor },
 }: AddMoneyToPotProps) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -110,6 +110,7 @@ export function AddMoneyToPotDialog({
             description="New Amount"
             total={total + amountToAdd}
             target={target}
+            themeColor={themeColor}
           />
           <Field>
             <FieldLabel htmlFor="money-added">Amount to add</FieldLabel>

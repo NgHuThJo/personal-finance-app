@@ -53,6 +53,7 @@
 
   @media screen and (width >= 1024px) {
     grid-area: nav;
+    height: 100vh;
     top: 0;
     bottom: revert;
   }

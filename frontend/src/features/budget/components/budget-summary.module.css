@@ -33,6 +33,8 @@
 .category-label {
   --color-background-theme: currentColor;
 
+  display: flex;
+  align-items: center;
   position: relative;
   padding-left: 1rem;
 

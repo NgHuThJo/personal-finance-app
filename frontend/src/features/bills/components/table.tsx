@@ -85,7 +85,7 @@ export function BillsTable() {
           )
         ) : (
           <tr>
-            <td className={styles["no-transaction-found"]} colSpan={4}>
+            <td className={styles["no-transaction-found"]} colSpan={3}>
               No transactions found.
             </td>
           </tr>

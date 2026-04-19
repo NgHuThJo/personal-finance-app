@@ -51,9 +51,11 @@
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
 }
 
 .list-item {
+  display: grid;
   border-radius: var(--border-radius-4);
   position: relative;
   background-color: var(--color-background-surface-secondary);
@@ -62,6 +64,8 @@
 .list-value {
   display: grid;
   gap: 0.5rem;
+  align-items: center;
+  grid-template-rows: repeat(2, 1fr);
   padding-left: 1rem;
 }
 
@@ -87,7 +91,7 @@
 .theme-icon {
   --color-theme-icon: currentColor;
 
-  width: 0.5rem;
+  width: 0.25rem;
   height: 100%;
   border-radius: var(--border-radius-6);
   position: absolute;

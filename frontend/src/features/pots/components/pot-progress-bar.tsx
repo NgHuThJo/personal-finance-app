@@ -1,17 +1,23 @@
 import styles from "./pot-progress-bar.module.css";
+import type { ThemeColor } from "#frontend/shared/client";
+import { getColorHexCode } from "#frontend/shared/utils/color";
 import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
 
 type PotProgressBarProps = {
   description: string;
   total: number;
   target: number;
+  themeColor: ThemeColor;
 };
 
 export function PotProgressBar({
   description,
   total,
   target,
+  themeColor,
 }: PotProgressBarProps) {
+  const hexColor = getColorHexCode(themeColor);
+
   return (
     <div className={styles["card-content"]}>
       <div className={styles["card-content-header"]}>
@@ -28,6 +34,7 @@ export function PotProgressBar({
           className={styles["card-content-progress-bar"]}
           style={{
             "--width-progress-bar": `${Math.round((total / target) * 100)}%`,
+            "--color-background-progressbar": `${hexColor}`,
           }}
         ></div>
       </div>

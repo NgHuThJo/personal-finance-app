@@ -64,6 +64,7 @@ export function PotCard({ potData }: PotCardProps) {
           description="Total saved"
           total={total}
           target={target}
+          themeColor={themeColor}
         />
         <CardFooter>
           <AddMoneyToPotDialog potData={potData} />

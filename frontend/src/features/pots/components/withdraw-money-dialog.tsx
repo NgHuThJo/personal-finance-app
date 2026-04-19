@@ -36,7 +36,7 @@ type WithdrawMoneyDialogProps = {
 };
 
 export function WithdrawMoneyDialog({
-  potData: { id, name, target, total },
+  potData: { id, name, target, total, themeColor },
 }: WithdrawMoneyDialogProps) {
   const {
     control,
@@ -138,6 +138,7 @@ export function WithdrawMoneyDialog({
             description="New Amount"
             total={total - draftAmount}
             target={target}
+            themeColor={themeColor}
           />
           <Field>
             <FieldLabel htmlFor="withdraw-amount">

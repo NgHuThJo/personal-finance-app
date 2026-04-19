@@ -10,12 +10,9 @@ export function AccountSummary() {
   return (
     <ul className={styles["list"]}>
       <DashboardPotsSummary />
-      <DashboardBudgetSummary />
       <DashboardTransactionSummary />
+      <DashboardBudgetSummary />
       <DashboardBillsSummary />
-      <div className={styles["list-item-content"]}>
-        <p>No data provided.</p>
-      </div>
     </ul>
   );
 }

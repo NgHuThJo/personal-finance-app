@@ -24,7 +24,7 @@ export function PotCardPopover({
           <Dots />
         </Button>
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent align="end">
         <div className={styles.layout}>
           <Button
             type="button"
