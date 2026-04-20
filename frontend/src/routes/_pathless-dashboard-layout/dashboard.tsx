@@ -11,7 +11,7 @@ import {
   logoutUserMutation,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { Button } from "#frontend/shared/primitives/button";
-import { Loader } from "#frontend/shared/primitives/loader";
+import { Skeleton } from "#frontend/shared/primitives/skeleton";
 
 export const Route = createFileRoute("/_pathless-dashboard-layout/dashboard")({
   component: Index,
@@ -53,10 +53,16 @@ function Index() {
           Logout
         </Button>
       </header>
-      <Suspense fallback={<Loader />}>
-        <BalanceSummary />
-      </Suspense>
-      <AccountSummary />
+      <div>
+        <Suspense fallback={<Skeleton height={100} />}>
+          <BalanceSummary />
+        </Suspense>
+      </div>
+      <div>
+        <Suspense fallback={<Skeleton />}>
+          <AccountSummary />
+        </Suspense>
+      </div>
     </div>
   );
 }

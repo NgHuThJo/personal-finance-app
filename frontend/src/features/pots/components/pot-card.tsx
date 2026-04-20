@@ -10,7 +10,6 @@ import type { GetAllPotsResponse } from "#frontend/shared/client";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "#frontend/shared/primitives/card";
@@ -66,10 +65,10 @@ export function PotCard({ potData }: PotCardProps) {
           target={target}
           themeColor={themeColor}
         />
-        <CardFooter>
+        <div className={styles["footer-cta"]}>
           <AddMoneyToPotDialog potData={potData} />
           <WithdrawMoneyDialog potData={potData} />
-        </CardFooter>
+        </div>
         {isEditDialogOpen && (
           <EditPotDialog
             potData={potData}

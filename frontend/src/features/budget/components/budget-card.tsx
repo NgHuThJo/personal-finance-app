@@ -121,12 +121,13 @@ export function BudgetCard({ budgetData }: BudgetCardProps) {
             <ul className={styles["transaction-list"]}>
               {filteredTransactions.map(
                 ({
+                  id,
                   otherUser: { name },
                   amount,
                   transactionDate,
                   senderId,
                 }) => (
-                  <li className={styles["transaction"]}>
+                  <li className={styles["transaction"]} key={id}>
                     <span className={styles["transaction-name"]}>{name}</span>
                     <div className={styles["transaction-summary"]}>
                       <span

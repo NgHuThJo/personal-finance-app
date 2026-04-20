@@ -116,6 +116,7 @@ export function AddMoneyToPotDialog({
             <FieldLabel htmlFor="money-added">Amount to add</FieldLabel>
             <Controller
               name="addAmount"
+              defaultValue={0}
               control={control}
               rules={{
                 required: "Amount is required",

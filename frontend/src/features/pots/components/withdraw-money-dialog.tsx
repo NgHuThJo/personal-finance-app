@@ -147,6 +147,7 @@ export function WithdrawMoneyDialog({
             <Controller
               control={control}
               name="withdrawAmount"
+              defaultValue={0}
               rules={{
                 required: "Amount is required",
                 validate: {

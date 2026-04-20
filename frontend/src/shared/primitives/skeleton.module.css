@@ -1,0 +1,19 @@
+@keyframes glow {
+  from {
+    background-color: var(--color-text-link-primary);
+  }
+  to {
+    background-color: var(--color-navigation-secondary);
+  }
+}
+
+.skeleton {
+  --width-skeleton: auto;
+  --height-skeleton: 100%;
+
+  width: var(--width-skeleton);
+  height: var(--height-skeleton);
+  border-radius: var(--border-radius-6);
+  background-color: var(--color-background-surface-primary);
+  animation: 1s infinite alternate glow;
+}
