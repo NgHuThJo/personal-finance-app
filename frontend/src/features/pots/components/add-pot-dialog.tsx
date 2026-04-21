@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import styles from "./add-pot-dialog.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
@@ -32,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "#frontend/shared/primitives/select";
+import { Spinner } from "#frontend/shared/primitives/spinner";
 import { colorHexList } from "#frontend/shared/utils/color";
 
 export function AddPotDialog() {
@@ -52,18 +54,20 @@ export function AddPotDialog() {
     }),
     enabled: false,
   });
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     ...createPotMutation({
       client: clientWithAuth,
       credentials: "include",
     }),
-    onSuccess: async () => {
-      Logger.info("Money successfully withdrawn from pot");
-      await queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
+    onSuccess: () => {
+      Logger.info("Pot successfully created");
+      queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
       setOpen(false);
       reset();
+      toast.success("Pot successfully created");
     },
     onError: (error) => {
+      toast.error(error.detail);
       Logger.error("Pot could not be created", error);
 
       switch (error.status) {
@@ -211,8 +215,8 @@ export function AddPotDialog() {
               )}
             ></Controller>
           </Field>
-          <Button type="submit" variant="cta-primary">
-            +Add New Pot
+          <Button type="submit" variant="cta-primary" disabled={isPending}>
+            {isPending ? <Spinner /> : "+Add New Pot"}
           </Button>
         </form>
       </DialogContent>

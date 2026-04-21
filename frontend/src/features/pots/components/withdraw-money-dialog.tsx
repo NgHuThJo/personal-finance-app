@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Controller, useForm, useWatch } from "react-hook-form";
+import { toast } from "react-toastify";
 import styles from "./withdraw-money.module.css";
 import { PotProgressBar } from "#frontend/features/pots/components/pot-progress-bar";
 import { clientWithAuth } from "#frontend/shared/api/client";
@@ -29,6 +30,7 @@ import {
   FieldLabel,
 } from "#frontend/shared/primitives/field";
 import { Input } from "#frontend/shared/primitives/input";
+import { Spinner } from "#frontend/shared/primitives/spinner";
 import { makeZodErrorsUserFriendly } from "#frontend/shared/utils/zod";
 
 type WithdrawMoneyDialogProps = {
@@ -46,18 +48,20 @@ export function WithdrawMoneyDialog({
     formState: { errors },
   } = useForm<WithdrawMoneyFromPotRequest>();
   const queryClient = useQueryClient();
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     ...withdrawMoneyFromPotMutation({
       client: clientWithAuth,
       credentials: "include",
     }),
-    onSuccess: async () => {
+    onSuccess: () => {
       Logger.info("Money successfully withdrawn from pot");
-      await queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
+      queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
       reset();
+      toast.success("Money successfully withdrawn");
     },
     onError: (error) => {
       Logger.info("Money could not be withdrawn", error);
+      toast.error(error.detail);
 
       switch (error.status) {
         case 422: {
@@ -194,8 +198,8 @@ export function WithdrawMoneyDialog({
               )}
             ></Controller>
           </Field>
-          <Button variant="cta-primary" type="submit">
-            Confirm Withdrawal
+          <Button variant="cta-primary" type="submit" disabled={isPending}>
+            {isPending ? <Spinner /> : "Confirm Withdrawal"}
           </Button>
         </form>
         <DialogClose />

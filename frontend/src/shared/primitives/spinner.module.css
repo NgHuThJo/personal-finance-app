@@ -1,0 +1,17 @@
+@keyframes rotate {
+  0% {
+    rotate: 0deg;
+  }
+  100% {
+    rotate: 360deg;
+  }
+}
+
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 0.25rem solid var(--color-background-cta-primary);
+  border-bottom-color: var(--color-background-surface-tertiary);
+  border-radius: 50%;
+  animation: 1s linear infinite rotate;
+}

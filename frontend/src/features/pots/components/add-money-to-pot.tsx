@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
+import { toast } from "react-toastify";
 import styles from "./add-money-to-pot.module.css";
 import { PotProgressBar } from "#frontend/features/pots/components/pot-progress-bar";
 import { clientWithAuth } from "#frontend/shared/api/client";
@@ -27,6 +28,7 @@ import {
   FieldError,
 } from "#frontend/shared/primitives/field";
 import { Input } from "#frontend/shared/primitives/input";
+import { Spinner } from "#frontend/shared/primitives/spinner";
 
 type AddMoneyToPotProps = {
   potData: GetAllPotsResponse;
@@ -47,19 +49,21 @@ export function AddMoneyToPotDialog({
     mode: "onChange",
     reValidateMode: "onChange",
   });
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     ...addMoneyToPotMutation({
       client: clientWithAuth,
       credentials: "include",
     }),
-    onSuccess: async () => {
+    onSuccess: () => {
       Logger.info("Money successfully deposited in pot");
-      await queryClient.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: getAllPotsQueryKey(),
       });
       reset();
+      toast.success("Money successfully deposited in pot");
     },
     onError: (error) => {
+      toast.error(error.detail);
       Logger.info("Deposit to pot failed", error);
 
       switch (error.status) {
@@ -164,8 +168,8 @@ export function AddMoneyToPotDialog({
               )}
             />
           </Field>
-          <Button type="submit" variant="cta-primary">
-            Confirm Addition
+          <Button type="submit" variant="cta-primary" disabled={isPending}>
+            {isPending ? <Spinner /> : "Confirm Addition"}
           </Button>
         </form>
       </DialogContent>

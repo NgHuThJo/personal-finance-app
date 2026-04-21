@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import styles from "./add-pot-dialog.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
@@ -33,6 +34,7 @@ import {
   SelectGroup,
   SelectItem,
 } from "#frontend/shared/primitives/select";
+import { Spinner } from "#frontend/shared/primitives/spinner";
 import { colorHexList } from "#frontend/shared/utils/color";
 
 type EditPotDialogProps = {
@@ -68,19 +70,21 @@ export function EditPotDialog({
     enabled: false,
   });
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     ...editPotMutation({
       client: clientWithAuth,
       credentials: "include",
     }),
-    onSuccess: async () => {
+    onSuccess: () => {
       Logger.info("Pot successfully edited");
-      await queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
+      queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
       toggleEditDialog(false);
       reset();
+      toast.success("Pot successfully edited");
     },
     onError: (error) => {
       Logger.error("Pot could not be edited", error);
+      toast.error(error.detail);
 
       switch (error.status) {
         case 400: {
@@ -235,8 +239,8 @@ export function EditPotDialog({
               )}
             ></Controller>
           </Field>
-          <Button type="submit" variant="cta-primary">
-            Submit
+          <Button type="submit" variant="cta-primary" disabled={isPending}>
+            {isPending ? <Spinner /> : "Submit"}
           </Button>
         </form>
       </DialogContent>

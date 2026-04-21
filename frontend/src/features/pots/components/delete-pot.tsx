@@ -1,5 +1,6 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import styles from "./delete-pot.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
@@ -16,6 +17,7 @@ import {
   DialogTitle,
 } from "#frontend/shared/primitives/dialog";
 import { FieldError } from "#frontend/shared/primitives/field";
+import { Spinner } from "#frontend/shared/primitives/spinner";
 
 type DeletePotProps = {
   potData: GetAllPotsResponse;
@@ -34,18 +36,20 @@ export function DeletePotDialog({
     reset,
     formState: { errors },
   } = useForm();
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     ...deletePotMutation({
       client: clientWithAuth,
       credentials: "include",
     }),
-    onSuccess: async () => {
+    onSuccess: () => {
       Logger.info("Pot successfully deleted");
-      await queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
+      queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
       toggleDeleteDialog(false);
       reset();
+      toast.success("Pot successfully deleted");
     },
     onError: (error) => {
+      toast.error(error.detail);
       Logger.error("Pot could not be deleted", error);
 
       setError(`root.server`, {
@@ -79,11 +83,19 @@ export function DeletePotDialog({
           <FieldError>{errors.root["server"].message}</FieldError>
         )}
         <div className={styles["cta-layout"]}>
-          <Button variant="destructive" onClick={handleDelete}>
-            Yes, confirm deletion
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={isPending}
+          >
+            {isPending ? <Spinner /> : "Yes, confirm deletion"}
           </Button>
-          <Button variant="abort" onClick={handleAbortDelete}>
-            No, go back
+          <Button
+            variant="abort"
+            onClick={handleAbortDelete}
+            disabled={isPending}
+          >
+            {isPending ? <Spinner /> : "No, go back"}
           </Button>
         </div>
       </DialogContent>
