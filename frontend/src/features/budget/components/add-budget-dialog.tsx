@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import styles from "./add-budget-dialog.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
@@ -33,6 +34,7 @@ import {
   SelectValue,
   SelectItem,
 } from "#frontend/shared/primitives/select";
+import { Spinner } from "#frontend/shared/primitives/spinner";
 import { colorHexList } from "#frontend/shared/utils/color";
 import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 
@@ -59,21 +61,23 @@ export function AddBudgetDialog() {
       client: clientWithAuth,
     }),
   });
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     ...createBudgetMutation({
       client: clientWithAuth,
       credentials: "include",
     }),
-    onSuccess: async () => {
+    onSuccess: () => {
       Logger.info("Budget successfully created");
-      await queryClient.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: getAllBudgetsQueryKey(),
       });
       reset();
       setOpen(false);
+      toast.success("Budget successfully created");
     },
     onError: (error) => {
       Logger.error("Budget could not be created", error);
+      toast.error(error.detail);
 
       switch (error.status) {
         case 400: {
@@ -240,8 +244,8 @@ export function AddBudgetDialog() {
               )}
             ></Controller>
           </Field>
-          <Button type="submit" variant="cta-primary">
-            +Add New Budget
+          <Button type="submit" variant="cta-primary" disabled={isPending}>
+            {isPending ? <Spinner /> : "+Add New Budget"}
           </Button>
         </form>
       </DialogContent>

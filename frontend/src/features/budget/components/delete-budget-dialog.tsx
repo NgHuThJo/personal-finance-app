@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import styles from "./delete-budget-dialog.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
@@ -16,6 +17,7 @@ import {
   DialogTitle,
 } from "#frontend/shared/primitives/dialog";
 import { FieldError } from "#frontend/shared/primitives/field";
+import { Spinner } from "#frontend/shared/primitives/spinner";
 import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 
 type DeleteBudgetProps = {
@@ -34,20 +36,22 @@ export function DeleteBudgetDialog({
     setError,
     formState: { errors },
   } = useForm();
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     ...deleteBudgetMutation({
       client: clientWithAuth,
       credentials: "include",
     }),
     onSuccess: async () => {
       Logger.info("Budget successfully deleted");
-      await queryClient.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: getAllBudgetsQueryKey(),
       });
       toggleDeleteDialog(false);
+      toast.success("Budget successfully deleted");
     },
     onError: (error) => {
       Logger.error("Budget could not be deleted", error);
+      toast.error(error.detail);
 
       setError(`root.server-unauthorized`, {
         type: String(error.type),
@@ -80,11 +84,19 @@ export function DeleteBudgetDialog({
           <FieldError>{errors.root["server-unauthorized"].message}</FieldError>
         )}
         <div className={styles["cta-layout"]}>
-          <Button variant="destructive" onClick={handleDelete}>
-            Yes, confirm deletion
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={isPending}
+          >
+            {isPending ? <Spinner /> : "Yes, confirm deletion"}
           </Button>
-          <Button variant="abort" onClick={handleAbortDelete}>
-            No, go back
+          <Button
+            variant="abort"
+            onClick={handleAbortDelete}
+            disabled={isPending}
+          >
+            {isPending ? <Spinner /> : "No, go back"}
           </Button>
         </div>
       </DialogContent>

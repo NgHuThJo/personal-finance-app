@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import styles from "./add-budget-dialog.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
@@ -34,6 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "#frontend/shared/primitives/select";
+import { Spinner } from "#frontend/shared/primitives/spinner";
 import { colorHexList } from "#frontend/shared/utils/color";
 import { capitalizeFirstLetter } from "#frontend/shared/utils/string";
 
@@ -74,20 +76,22 @@ export function EditBudgetDialog({
       credentials: "include",
     }),
   });
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     ...editBudgetMutation({
       client: clientWithAuth,
       credentials: "include",
     }),
-    onSuccess: async () => {
+    onSuccess: () => {
       Logger.info("Budget successfully edited");
-      await queryClient.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: getAllBudgetsQueryKey(),
       });
       toggleEditDialog(false);
+      toast.success("Budget successfully edited");
     },
     onError: (error) => {
       Logger.error("Budget could not be edited", error);
+      toast.error(error.detail);
 
       switch (error.status) {
         case 400: {
@@ -250,8 +254,8 @@ export function EditBudgetDialog({
               )}
             ></Controller>
           </Field>
-          <Button type="submit" variant="cta-primary">
-            Submit
+          <Button type="submit" variant="cta-primary" disabled={isPending}>
+            {isPending ? <Spinner /> : "Submit"}
           </Button>
         </form>
       </DialogContent>
