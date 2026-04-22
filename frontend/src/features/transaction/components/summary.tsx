@@ -6,22 +6,20 @@ import { TransactionSearchBar } from "#frontend/features/transaction/components/
 import { TransactionSortDropdown } from "#frontend/features/transaction/components/sort-dropdown";
 import { TransactionTable } from "#frontend/features/transaction/components/table";
 
-import { Loader } from "#frontend/shared/primitives/loader";
+import { Skeleton } from "#frontend/shared/primitives/skeleton";
 
 export function TransactionSummary() {
   return (
     <div className={styles["layout"]}>
       <header className={styles["sort-header"]}>
         <TransactionSearchBar />
-        <Suspense fallback={<Loader />}>
+        <Suspense fallback={<Skeleton width={100} height={50} />}>
           <CategoryFilter />
         </Suspense>
         <TransactionSortDropdown />
       </header>
-      <Suspense fallback={<Loader />}>
-        <TransactionTable />
-      </Suspense>
-      <Suspense fallback={<Loader />}>
+      <TransactionTable />
+      <Suspense fallback={<Skeleton height={100} />}>
         <TransactionPaginationLinks />
       </Suspense>
     </div>

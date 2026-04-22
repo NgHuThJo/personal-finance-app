@@ -1,16 +1,19 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getRouteApi, Link } from "@tanstack/react-router";
 import styles from "./pagination-links.module.css";
 import { CaretLeft, CaretRight } from "#frontend/assets/icons/icons";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { getAllTransactionsOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
+import { Skeleton } from "#frontend/shared/primitives/skeleton";
 
 export function TransactionPaginationLinks() {
   const route = getRouteApi("/_pathless-dashboard-layout/transactions");
   const { page, pageSize, category, searchQuery, sortKey } = route.useSearch();
   const {
-    data: { transactionCount },
-  } = useSuspenseQuery({
+    data: transactionData,
+    isPending,
+    error,
+  } = useQuery({
     ...getAllTransactionsOptions({
       client: clientWithAuth,
       credentials: "include",
@@ -22,9 +25,18 @@ export function TransactionPaginationLinks() {
         searchQuery,
       },
     }),
+    placeholderData: keepPreviousData,
   });
 
-  const pageCount = Math.ceil(transactionCount / pageSize);
+  if (isPending) {
+    return <Skeleton height={100} />;
+  }
+
+  if (error) {
+    return <div>{error.detail}</div>;
+  }
+
+  const pageCount = Math.ceil(transactionData.transactionCount / pageSize);
 
   return (
     <div className={styles["pagination-layout"]}>

@@ -43,7 +43,7 @@ export function CategoryFilter() {
       <DropdownMenuTrigger asChild>
         <Button>Filter by category</Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent align="start">
         {extendedCategories.map((category) => (
           <DropdownMenuItem
             onSelect={() => handleCategoryChoice(category)}

@@ -15,12 +15,6 @@ export function BudgetPieChart() {
       credentials: "include",
     }),
   });
-  //   const { data: categoryData } = useSuspenseQuery({
-  //     ...getAllCategoriesOptions({
-  //       client: clientWithAuth,
-  //       credentials: "include",
-  //     }),
-  //   });
   const {
     data: { data: transactionData },
   } = useSuspenseQuery({

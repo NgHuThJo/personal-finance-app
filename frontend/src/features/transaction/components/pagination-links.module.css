@@ -1,23 +1,27 @@
 .pagination-layout {
   display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
   justify-content: space-between;
   align-items: center;
 }
 
 .pagination-button-layout {
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .link {
   padding: 0.75rem;
   border-radius: var(--border-radius-3);
-  color: var(--color-text-inverse);
-  background-color: var(--color-background-cta-primary);
+  color: var(--color-text-primary);
+  background-color: var(--color-background-canvas-primary);
 }
 
 .active-link {
-  background-color: var(--color-background-surface-tertiary);
+  color: var(--color-text-inverse);
+  background-color: var(--color-background-cta-primary);
 }
 
 .next-back-link {

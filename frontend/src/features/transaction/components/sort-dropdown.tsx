@@ -67,7 +67,7 @@ export function TransactionSortDropdown() {
       <DropdownMenuTrigger asChild>
         <Button>Sort</Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent align="end">
         {sortKeyArray.map(({ key, label }) => (
           <DropdownMenuItem onSelect={() => handleSortChoice(key)} key={key}>
             {label}
