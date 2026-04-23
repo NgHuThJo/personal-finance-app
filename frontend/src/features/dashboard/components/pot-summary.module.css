@@ -30,7 +30,10 @@
 .summary {
   display: grid;
   gap: 2rem;
-  grid-template-columns: auto 1fr;
+
+  @media screen and (width >= 480px) {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .sum-layout {

@@ -1,12 +1,14 @@
 .pagination-layout {
   display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
 }
 
 .pagination-button-layout {
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
 .link {

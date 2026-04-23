@@ -6,34 +6,58 @@
     padding: 1.5rem 1.25rem;
     border-radius: var(--border-radius-6);
   }
+
+  @media screen and (width >= 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (width >= 1440px) {
+    grid-template-columns: revert;
+    grid-template-rows: repeat(2, auto);
+  }
 }
 
 .total-bill-summary {
   display: grid;
   gap: 2rem;
+  grid-template-columns: auto 1fr;
+  align-items: center;
   background-color: var(--color-background-surface-primary);
   color: var(--color-text-inverse);
+
+  @media screen and (width >= 768px) {
+    grid-template-columns: revert;
+    align-items: revert;
+  }
 }
 
 .total-bill-description {
   display: grid;
   gap: 0.75rem;
   line-height: 1.5;
+  font-weight: var(--font-weight-action);
 }
+
 .total-bill-number {
   font-weight: var(--font-weight-heading);
   font-size: var(--font-size-heading);
 }
 
 .general-bill-summary {
+  display: grid;
+  gap: 1rem;
   background-color: var(--color-background-surface-secondary);
+}
+
+.general-bill-summary-list {
+  align-self: end;
 }
 
 .general-bill-summary-listitem {
   display: flex;
   gap: 1rem;
   justify-content: space-between;
-  padding: 1rem;
+  padding-block: 1rem;
   color: var(--color-text-secondary);
 
   &:not(:last-of-type) {

@@ -22,7 +22,8 @@ export function BillsSearchBar() {
     <Field variant="search">
       <Input
         type="text"
-        placeholder="Search bills..."
+        placeholder="Search bills by name"
+        size={25}
         onChange={(e) => debounceSearch(e.currentTarget.value)}
       />
     </Field>

@@ -29,24 +29,35 @@
 
 .piechart-layout {
   display: grid;
+  justify-items: center;
   gap: 2rem;
-  grid-template-columns: auto 1fr;
+
+  @media screen and (width >= 768px) {
+    grid-template-columns: auto 1fr;
+    justify-items: stretch;
+  }
 }
 
 .list {
   display: grid;
   gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+
+  @media screen and (width >= 768px) {
+    grid-template-columns: revert;
+  }
 }
 
 .list-item {
   display: flex;
+  gap: 0.5rem;
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
   position: relative;
   border-radius: var(--border-radius-6);
   background: var(--color-background-canvas-primary);
-  overflow: hidden;
+  overflow-x: auto;
 }
 
 .theme-icon {

@@ -9,7 +9,6 @@ const inputVariants = cva(styles.input, {
       default: styles["default-input"],
       search: styles["search"],
     },
-    size: {},
   },
   defaultVariants: {},
   compoundVariants: [],
@@ -19,14 +18,13 @@ export function Input({
   className,
   type,
   variant,
-  size,
   ...props
 }: ComponentProps<"input"> & VariantProps<typeof inputVariants>) {
   return (
     <input
       type={type}
       data-slot="input"
-      className={cn(inputVariants({ variant, size, className }))}
+      className={cn(inputVariants({ variant, className }))}
       {...props}
     />
   );

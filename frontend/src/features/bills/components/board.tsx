@@ -5,14 +5,14 @@ import { BillsSearchBar } from "#frontend/features/bills/components/searchbar";
 import { BillsSortDropdown } from "#frontend/features/bills/components/sort-dropdown";
 import { BillsSummary } from "#frontend/features/bills/components/summary";
 import { BillsTable } from "#frontend/features/bills/components/table";
-import { Loader } from "#frontend/shared/primitives/loader";
+import { Skeleton } from "#frontend/shared/primitives/skeleton";
 
 export function BillsBoard() {
   return (
     <div className={styles.layout}>
       <h1>Recurring Bills</h1>
       <div className={styles.content}>
-        <Suspense fallback={<Loader />}>
+        <Suspense fallback={<Skeleton height={200} />}>
           <BillsSummary />
         </Suspense>
         <div className={styles.table}>
@@ -20,12 +20,8 @@ export function BillsBoard() {
             <BillsSearchBar />
             <BillsSortDropdown />
           </div>
-          <Suspense fallback={<Loader />}>
-            <BillsTable />
-          </Suspense>
-          <Suspense fallback={<Loader />}>
-            <BillsPaginationLinks />
-          </Suspense>
+          <BillsTable />
+          <BillsPaginationLinks />
         </div>
       </div>
     </div>

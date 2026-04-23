@@ -1,6 +1,7 @@
 .table {
   table-layout: fixed;
   border-collapse: collapse;
+  min-width: max-content;
   width: 100%;
   color: var(--color-text-secondary);
 
@@ -28,14 +29,6 @@
 .table-header {
   font-weight: var(--font-weight-heading);
   color: var(--color-text-primary);
-  background-color: var(--color-background-canvas-primary);
-
-  &:first-of-type {
-    border-top-left-radius: var(--border-radius-6);
-  }
-  &:last-of-type {
-    border-top-right-radius: var(--border-radius-6);
-  }
 }
 
 .table-cell-amount {
@@ -54,4 +47,22 @@
 
 .minus {
   color: var(--color-status-error);
+}
+
+.overflow-container {
+  overflow-x: auto;
+}
+
+.paid {
+  color: var(--color-status-success);
+}
+
+.due {
+  color: var(--color-status-error);
+}
+
+.transaction-date {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }

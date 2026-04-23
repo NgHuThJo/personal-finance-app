@@ -22,7 +22,8 @@ export function TransactionSearchBar() {
     <Field variant="search">
       <Input
         type="text"
-        placeholder="Search transactions..."
+        placeholder="Search transaction by name"
+        size={25}
         onChange={(e) => debounceSearch(e.currentTarget.value)}
       />
     </Field>

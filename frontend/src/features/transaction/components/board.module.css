@@ -13,4 +13,11 @@
 
 .heading {
   font-size: 1.125rem;
+
+  @media screen and (width >= 375px) {
+    font-size: var(--font-size-subheading);
+  }
+  @media screen and (width >= 480px) {
+    font-size: var(--font-size-heading);
+  }
 }

@@ -59,7 +59,7 @@ export function BillsSummary() {
       <div className={styles["total-bill-summary"]}>
         <Receipt2 />
         <div className={styles["total-bill-description"]}>
-          <span>Total bills</span>
+          <span>Total Bills</span>
           <span className={styles["total-bill-number"]}>
             {numberFormatter.formatNumber({
               number: totalBill,

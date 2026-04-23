@@ -65,9 +65,9 @@ export function BillsSortDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button>Sort</Button>
+        <Button>Sort by</Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent align="start">
         {sortKeyArray.map(({ key, label }) => (
           <DropdownMenuItem onSelect={() => handleSortChoice(key)} key={key}>
             {label}

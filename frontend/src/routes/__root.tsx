@@ -4,7 +4,6 @@ import {
   type QueryClient,
 } from "@tanstack/react-query";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { useEffect, useEffectEvent } from "react";
 import { ToastContainer } from "react-toastify";
 import { Logger } from "#frontend/shared/app/logging";
@@ -61,7 +60,7 @@ function Root() {
     <>
       <Outlet />
       <ToastContainer />
-      <TanStackRouterDevtools />
+      {/* <TanStackRouterDevtools /> */}
     </>
   );
 }

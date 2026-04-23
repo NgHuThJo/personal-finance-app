@@ -65,7 +65,7 @@ export function TransactionSortDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button>Sort</Button>
+        <Button>Sort by</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {sortKeyArray.map(({ key, label }) => (

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import styles from "./add-transaction-dialog.module.css";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { Logger } from "#frontend/shared/app/logging";
@@ -32,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "#frontend/shared/primitives/select";
+import { Spinner } from "#frontend/shared/primitives/spinner";
 
 export function AddTransactionDialog() {
   const [open, setOpen] = useState(false);
@@ -44,7 +46,7 @@ export function AddTransactionDialog() {
     handleSubmit,
     formState: { errors },
   } = useForm<CreateTransactionRequest>();
-  const { data: categoryData } = useQuery({
+  const { data: categoryData, isPending } = useQuery({
     ...getAllCategoriesOptions({
       client: clientWithAuth,
       credentials: "include",
@@ -55,16 +57,18 @@ export function AddTransactionDialog() {
       client: clientWithAuth,
       credentials: "include",
     }),
-    onSuccess: async () => {
+    onSuccess: () => {
       Logger.info("Transaction successfully created");
-      await queryClient.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: getAllTransactionsQueryKey(),
       });
       reset();
       setOpen(false);
+      toast.success("Transaction successfully created");
     },
     onError: (error) => {
       Logger.error("Transaction could not be created", error);
+      toast.error(error.detail);
 
       switch (error.status) {
         case 400: {
@@ -228,8 +232,8 @@ export function AddTransactionDialog() {
               )}
             ></Controller>
           </Field>
-          <Button type="submit" variant="cta-primary">
-            +Add New Transaction
+          <Button type="submit" variant="cta-primary" disabled={isPending}>
+            {isPending ? <Spinner /> : "+Add New Transaction"}
           </Button>
         </form>
       </DialogContent>

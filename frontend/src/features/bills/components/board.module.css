@@ -1,12 +1,8 @@
 .layout {
   display: grid;
   grid-template-rows: auto 1fr;
-  align-items: start;
+  /* align-items: start; */
   gap: 2rem;
-  /* 
-  @media screen and (width >= 768px) {
-    grid-template-columns: auto 1fr;
-  } */
 }
 
 .header {
@@ -21,11 +17,22 @@
 
 .content {
   display: grid;
+  grid-template-rows: auto 1fr;
   gap: 0.75rem;
+
+  @media screen and (width >= 1440px) {
+    grid-template-rows: revert;
+    grid-template-columns: 30rem 1fr;
+
+    > :first-child {
+      align-self: start;
+    }
+  }
 }
 
 .table {
   display: grid;
+  grid-template-rows: auto 1fr auto;
   gap: 2rem;
   padding: 2rem;
   border-radius: var(--border-radius-6);
@@ -34,5 +41,7 @@
 
 .filters {
   display: flex;
-  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
 }

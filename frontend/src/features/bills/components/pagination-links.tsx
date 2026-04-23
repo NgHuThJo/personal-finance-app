@@ -1,16 +1,19 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getRouteApi, Link } from "@tanstack/react-router";
 import styles from "./pagination-links.module.css";
 import { CaretLeft, CaretRight } from "#frontend/assets/icons/icons";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { getAllRecurringBillsOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
+import { Skeleton } from "#frontend/shared/primitives/skeleton";
 
 export function BillsPaginationLinks() {
   const route = getRouteApi("/_pathless-dashboard-layout/bills");
   const { page, pageSize, searchQuery, sortKey } = route.useSearch();
   const {
-    data: { transactionCount },
-  } = useSuspenseQuery({
+    data: transactionData,
+    isPending,
+    error,
+  } = useQuery({
     ...getAllRecurringBillsOptions({
       client: clientWithAuth,
       credentials: "include",
@@ -23,7 +26,15 @@ export function BillsPaginationLinks() {
     }),
   });
 
-  const pageCount = Math.ceil(transactionCount / pageSize);
+  if (isPending) {
+    return <Skeleton height={100} />;
+  }
+
+  if (error) {
+    return <p>{error.detail}</p>;
+  }
+
+  const pageCount = Math.ceil(transactionData?.transactionCount / pageSize);
 
   return (
     <div className={styles["pagination-layout"]}>
