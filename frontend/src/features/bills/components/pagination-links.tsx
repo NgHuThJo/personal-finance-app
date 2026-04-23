@@ -5,6 +5,10 @@ import { CaretLeft, CaretRight } from "#frontend/assets/icons/icons";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { getAllRecurringBillsOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { Skeleton } from "#frontend/shared/primitives/skeleton";
+import {
+  calculatePageCount,
+  calculatePaginationWindow,
+} from "#frontend/shared/utils/pagination";
 
 export function BillsPaginationLinks() {
   const route = getRouteApi("/_pathless-dashboard-layout/bills");
@@ -34,7 +38,16 @@ export function BillsPaginationLinks() {
     return <p>{error.detail}</p>;
   }
 
-  const pageCount = Math.ceil(transactionData?.transactionCount / pageSize);
+  const pageCount = calculatePageCount({
+    totalItemCount: transactionData.transactionCount,
+    pageSize,
+  });
+  const { isPageEdgeAtEnd, isPageEdgeAtStart, leftPageEdge, pageWindowSize } =
+    calculatePaginationWindow({
+      page,
+      pageCount,
+      pageRange: 3,
+    });
 
   return (
     <div className={styles["pagination-layout"]}>
@@ -49,21 +62,53 @@ export function BillsPaginationLinks() {
         Back
       </Link>
       <div className={styles["pagination-button-layout"]}>
-        {Array.from({ length: pageCount }).map((_, index) => (
+        {!isPageEdgeAtStart ? (
+          <>
+            <Link
+              from="/bills"
+              to="."
+              className={styles["link"]}
+              search={(prev) => ({ ...prev, page: 1 })}
+              activeProps={{
+                className: styles["active-link"],
+              }}
+            >
+              {1}
+            </Link>
+            <span>...</span>
+          </>
+        ) : null}
+        {Array.from({ length: pageWindowSize }).map((_, index) => (
           <Link
             from="/bills"
             to="."
             className={styles["link"]}
-            search={(prev) => ({ ...prev, page: index + 1 })}
+            search={(prev) => ({ ...prev, page: leftPageEdge + index })}
             activeProps={{
               className: styles["active-link"],
             }}
             key={index}
           >
-            {index + 1}
+            {leftPageEdge + index}
           </Link>
         ))}
       </div>
+      {!isPageEdgeAtEnd ? (
+        <>
+          <span>...</span>
+          <Link
+            from="/bills"
+            to="."
+            className={styles["link"]}
+            search={(prev) => ({ ...prev, page: pageCount })}
+            activeProps={{
+              className: styles["active-link"],
+            }}
+          >
+            {pageCount}
+          </Link>
+        </>
+      ) : null}
       <Link
         from="/bills"
         to="."
