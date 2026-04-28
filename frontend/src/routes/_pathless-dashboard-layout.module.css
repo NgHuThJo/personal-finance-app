@@ -8,7 +8,7 @@
 
 .layout {
   --padding-inline-macro-grid: var(--spacing-4);
-  --width-column-macro-grid-breakout: 20rem;
+  --width-column-macro-grid-breakout: 15rem;
   --width-max-macro-grid-content: 50rem;
 
   display: grid;

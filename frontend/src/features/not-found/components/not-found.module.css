@@ -1,25 +1,44 @@
 .layout {
   display: grid;
-  grid-column: breakout-start / breakout-end;
+  grid-template-rows: auto 1fr;
+  justify-items: center;
   align-items: start;
-  align-content: start;
+  place-self: center;
+  padding-inline: 4rem;
   gap: 4rem;
+  background-color: var(--color-background-canvas-primary);
+}
+
+.header {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+
+  p {
+    font-weight: var(--font-weight-heading);
+    font-size: var(--font-size-heading);
+    color: var(--color-status-error);
+    text-align: center;
+  }
 }
 
 .body {
   display: grid;
   justify-items: center;
-  justify-self: center;
   gap: 1.5rem;
-  padding: 2.5rem 1rem;
+  text-align: center;
 
-  h1 {
-    font-weight: var(--font-weight-bold);
-    font-size: var(--font-size-7);
+  p {
+    font-weight: var(--font-weight-heading);
+    font-size: 3rem;
   }
 
   p {
     font-size: var(--font-size-heading);
     color: var(--color-status-error-message);
   }
+}
+
+.error-icon {
+  width: 5rem;
 }

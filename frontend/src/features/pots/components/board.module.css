@@ -27,3 +27,12 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+.translation {
+  transition: translate 1s linear;
+}
+
+.dragging {
+  user-select: none;
+  touch-action: none;
+}

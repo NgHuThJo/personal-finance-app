@@ -47,7 +47,7 @@ export function DashboardPotsSummary() {
         </div>
         <ul className={styles["list"]}>
           {highestPotTargets.map((pot) => (
-            <li className={styles["list-item"]}>
+            <li className={styles["list-item"]} key={pot.id}>
               <span
                 className={styles["theme-icon"]}
                 style={{
