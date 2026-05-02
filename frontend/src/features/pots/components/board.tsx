@@ -112,6 +112,7 @@ export function PotsBoard() {
 
     const handlePointerDown = (event: PointerEvent) => {
       const target = event.target as HTMLElement;
+
       const nearestPotCard = target.closest(`li`);
 
       if (!nearestPotCard) {
@@ -119,7 +120,7 @@ export function PotsBoard() {
       }
 
       currentTargetRef.current = nearestPotCard;
-      currentTargetRef.current.setPointerCapture(event.pointerId);
+      // currentTargetRef.current.setPointerCapture(event.pointerId);
 
       const currentTargetRect = nearestPotCard.getBoundingClientRect();
       const currentTargetPageX = window.pageXOffset + currentTargetRect.left;
@@ -138,9 +139,6 @@ export function PotsBoard() {
       currentTargetRef.current.classList.add(styles?.["dragging"]);
 
       currentTargetRef.current.ondragstart = disableBrowserDefaultDragStart;
-      dispatch({
-        type: "dragStart",
-      });
     };
 
     const handlePointerUp = (event: PointerEvent) => {
@@ -151,6 +149,9 @@ export function PotsBoard() {
         return;
       }
 
+      // VERY IMPORTANT: if you do not remove the inline styles, then they would be reapplied after the animation has finished
+      currentTargetRef.current.style.translate = "";
+      currentTargetRef.current.classList.remove(styles["dragging"] as string);
       const matchedElement = document
         .elementsFromPoint(event.clientX, event.clientY)
         .filter((element) => {
@@ -163,100 +164,54 @@ export function PotsBoard() {
         })[0] as HTMLElement;
 
       if (!matchedElement) {
-        currentTargetRef.current.style.translate = "";
         return;
       }
 
       const matchedRect = matchedElement.getBoundingClientRect();
-      const fromMatchedToTarget = {
-        dx:
-          origins.current.currentElementPageX -
-          (matchedRect.left + window.pageXOffset),
-        dy:
-          origins.current.currentElementPageY -
-          (matchedRect.top + window.pageYOffset),
-      };
-
-      const fromTargetToMatch = {
-        dx:
-          matchedRect.left +
-          window.pageXOffset -
-          (origins.current.currentElementPageX +
-            origins.current.currentTranslatePageX),
-        dy:
-          matchedRect.top +
-          window.pageYOffset -
-          (origins.current.currentElementPageY +
-            origins.current.currentTranslatePageY),
-      };
-
-      // VERY IMPORTANT: if you do not remove the inline styles, then they would be reapplied after the animation has finished
+      const currentTargetRect =
+        currentTargetRef.current.getBoundingClientRect();
       if (styles["switching"] === undefined) {
         throw new Error(
           `${PotsBoard.name} stylesheet does not have "switching" class`,
         );
       }
+      const elementMap = new Map<HTMLElement, DOMRect>();
+      elementMap.set(matchedElement, matchedRect);
+      elementMap.set(currentTargetRef.current, currentTargetRect);
 
-      matchedElement.classList.add(styles["switching"]);
-      currentTargetRef.current.classList.add(styles["switching"]);
+      swapDomElementNodes(matchedElement, currentTargetRef.current);
 
-      const matchedElementAnimation = matchedElement.animate(
-        [
-          {
-            transform: "translate(0px, 0px)",
-          },
-          {
-            transform: `translate(${fromMatchedToTarget.dx}px, ${fromMatchedToTarget.dy}px)`,
-          },
-        ],
-        {
-          easing: "linear",
-          duration: 100,
-          iterations: 1,
-        },
-      );
-      const currentTargetAnimation = currentTargetRef.current.animate(
-        [
-          {
-            transform: `translate(${fromTargetToMatch.dx}px, ${fromTargetToMatch.dy}px)`,
-          },
-          {
-            transform: `translate(${-fromMatchedToTarget.dx}px, ${-fromMatchedToTarget.dy}px)`,
-          },
-        ],
-        {
-          easing: "linear",
-          duration: 100,
-          iterations: 1,
-        },
-      );
+      elementMap.forEach((prevRect, element) => {
+        const currRect = element.getBoundingClientRect();
 
-      const handleAnimationEnd = (event: Event) => {
-        event.currentTarget?.removeEventListener(
-          "animationend",
-          handleAnimationEnd,
+        const dx = prevRect.left - currRect.left;
+        const dy = prevRect.top - currRect.top;
+
+        matchedElement.classList.add(styles["switching"] as string);
+        currentTargetRef.current?.classList.add(styles["switching"] as string);
+
+        const animation = element.animate(
+          [
+            {
+              transform: `translate(${dx}px, ${dy}px)`,
+            },
+            {
+              transform: `translate(${0}px, ${0}px)`,
+            },
+          ],
+          {
+            easing: "linear",
+            duration: 1000,
+          },
         );
 
-        if (!currentTargetRef.current) {
-          return;
-        }
-
-        if (styles["switching"] === undefined) {
-          throw new Error(
-            `${PotsBoard.name} stylesheet does not have "switching" class`,
+        animation.finished.then(() => {
+          matchedElement.classList.add(styles["switching"] as string);
+          currentTargetRef.current?.classList.add(
+            styles["switching"] as string,
           );
-        }
-
-        currentTargetRef.current.style.translate = "";
-
-        matchedElement.classList.remove(styles["switching"]);
-        currentTargetRef.current.classList.remove(styles["switching"]);
-        matchedElement.classList.remove(styles["dragging"]);
-        currentTargetRef.current.classList.remove(styles["dragging"]);
-        swapDomElementNodes(matchedElement, currentTargetRef.current);
-      };
-
-      currentTargetAnimation.addEventListener("finish", handleAnimationEnd);
+        });
+      });
     };
 
     potListElement.addEventListener("pointerdown", handlePointerDown);
