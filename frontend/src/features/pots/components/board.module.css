@@ -36,3 +36,7 @@
   user-select: none;
   touch-action: none;
 }
+
+.switching {
+  pointer-events: none;
+}

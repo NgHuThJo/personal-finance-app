@@ -6,6 +6,7 @@ import { PotCard } from "#frontend/features/pots/components/pot-card";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { getAllPotsOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { useThrottle } from "#frontend/shared/hooks/use-throttle";
+import { swapDomElementNodes } from "#frontend/shared/utils/dom";
 
 type Action = {
   type: "dragStart" | "dragEnd";
@@ -36,50 +37,38 @@ export function PotsBoard() {
       client: clientWithAuth,
     }),
   });
-  const eventOrigin = useRef({
+  const origins = useRef({
     eventPageX: 0,
     eventPageY: 0,
+    currentElementPageX: 0,
+    currentElementPageY: 0,
+    currentTranslatePageX: 0,
+    currentTranslatePageY: 0,
   });
   const potListRef = useRef<HTMLUListElement>(null);
-  const targetMapRef = useRef<
-    Map<
-      HTMLElement,
-      {
-        elementPageX: number;
-        elementPageY: number;
-        currentTranslateX: number;
-        currentTranslateY: number;
-      }
-    >
-  >(new Map());
   const currentTargetRef = useRef<HTMLElement>(null);
   const throttledPointerMoveCallback = useThrottle((e: PointerEvent) => {
     if (state !== "dragging" || !currentTargetRef.current) {
       return;
     }
-    const currentElement = targetMapRef.current.get(currentTargetRef.current);
 
-    if (!currentElement) {
-      return;
-    }
-
-    const rawX = e.pageX - eventOrigin.current.eventPageX;
-    const rawY = e.pageY - eventOrigin.current.eventPageY;
+    const rawX = e.pageX - origins.current.eventPageX;
+    const rawY = e.pageY - origins.current.eventPageY;
     const transforms = {
       x: rawX,
       y: rawY,
     };
     const targetRect = currentTargetRef.current.getBoundingClientRect();
 
-    const minX = -currentElement.elementPageX;
-    const minY = -currentElement.elementPageY;
+    const minX = -origins.current.currentElementPageX;
+    const minY = -origins.current.currentElementPageY;
     const maxX =
       document.documentElement.scrollWidth -
-      currentElement.elementPageX -
+      origins.current.currentElementPageX -
       targetRect.width;
     const maxY =
       document.documentElement.scrollHeight -
-      currentElement.elementPageY -
+      origins.current.currentElementPageY -
       targetRect.height;
 
     transforms.x = Math.min(maxX, Math.max(transforms.x, minX));
@@ -106,10 +95,9 @@ export function PotsBoard() {
         behavior: "smooth",
       });
     }
-
-    currentElement.currentTranslateX = transforms.x;
-    currentElement.currentTranslateY = transforms.y;
     currentTargetRef.current.style.translate = `${transforms.x}px ${transforms.y}px`;
+    origins.current.currentTranslatePageX = transforms.x;
+    origins.current.currentTranslatePageY = transforms.y;
   }, 1000 / 60);
 
   useEffect(() => {
@@ -123,8 +111,6 @@ export function PotsBoard() {
     };
 
     const handlePointerDown = (event: PointerEvent) => {
-      requestAnimationFrame(() => {});
-
       const target = event.target as HTMLElement;
       const nearestPotCard = target.closest(`li`);
 
@@ -132,36 +118,24 @@ export function PotsBoard() {
         return;
       }
 
-      const rectangle = nearestPotCard.getBoundingClientRect();
-
-      if (!targetMapRef.current.has(nearestPotCard)) {
-        targetMapRef.current.set(nearestPotCard, {
-          elementPageX: window.pageXOffset + rectangle.left,
-          elementPageY: window.pageYOffset + rectangle.top,
-          currentTranslateX: 0,
-          currentTranslateY: 0,
-        });
-      }
       currentTargetRef.current = nearestPotCard;
-      const currentTarget = targetMapRef.current.get(nearestPotCard);
-
-      if (!currentTarget) {
-        return;
-      }
-
-      eventOrigin.current.eventPageX =
-        event.pageX - currentTarget.currentTranslateX;
-      eventOrigin.current.eventPageY =
-        event.pageY - currentTarget.currentTranslateY;
-
       currentTargetRef.current.setPointerCapture(event.pointerId);
+
+      const currentTargetRect = nearestPotCard.getBoundingClientRect();
+      const currentTargetPageX = window.pageXOffset + currentTargetRect.left;
+      const currentTargetPageY = window.pageYOffset + currentTargetRect.top;
+
+      origins.current.eventPageX = event.pageX;
+      origins.current.eventPageY = event.pageY;
+      origins.current.currentElementPageX = currentTargetPageX;
+      origins.current.currentElementPageY = currentTargetPageY;
 
       if (styles["dragging"] === undefined) {
         throw new Error(
           `${PotsBoard.name} stylesheet does not have "dragging" class`,
         );
       }
-      currentTargetRef.current.classList.add(styles["dragging"]);
+      currentTargetRef.current.classList.add(styles?.["dragging"]);
 
       currentTargetRef.current.ondragstart = disableBrowserDefaultDragStart;
       dispatch({
@@ -177,7 +151,6 @@ export function PotsBoard() {
         return;
       }
 
-      const currentElement = targetMapRef.current.get(currentTargetRef.current);
       const matchedElement = document
         .elementsFromPoint(event.clientX, event.clientY)
         .filter((element) => {
@@ -189,21 +162,101 @@ export function PotsBoard() {
           );
         })[0] as HTMLElement;
 
-      if (!matchedElement || !currentElement) {
+      if (!matchedElement) {
+        currentTargetRef.current.style.translate = "";
         return;
       }
 
       const matchedRect = matchedElement.getBoundingClientRect();
       const fromMatchedToTarget = {
         dx:
-          currentElement.elementPageX - (matchedRect.left + window.pageXOffset),
+          origins.current.currentElementPageX -
+          (matchedRect.left + window.pageXOffset),
         dy:
-          currentElement.elementPageY - (matchedRect.top + window.pageYOffset),
+          origins.current.currentElementPageY -
+          (matchedRect.top + window.pageYOffset),
       };
 
-      matchedElement.style.translate = `${fromMatchedToTarget.dx}px ${fromMatchedToTarget.dy}px`;
+      const fromTargetToMatch = {
+        dx:
+          matchedRect.left +
+          window.pageXOffset -
+          (origins.current.currentElementPageX +
+            origins.current.currentTranslatePageX),
+        dy:
+          matchedRect.top +
+          window.pageYOffset -
+          (origins.current.currentElementPageY +
+            origins.current.currentTranslatePageY),
+      };
 
-      // targetRef.current.style.translate = "";
+      // VERY IMPORTANT: if you do not remove the inline styles, then they would be reapplied after the animation has finished
+      if (styles["switching"] === undefined) {
+        throw new Error(
+          `${PotsBoard.name} stylesheet does not have "switching" class`,
+        );
+      }
+
+      matchedElement.classList.add(styles["switching"]);
+      currentTargetRef.current.classList.add(styles["switching"]);
+
+      const matchedElementAnimation = matchedElement.animate(
+        [
+          {
+            transform: "translate(0px, 0px)",
+          },
+          {
+            transform: `translate(${fromMatchedToTarget.dx}px, ${fromMatchedToTarget.dy}px)`,
+          },
+        ],
+        {
+          easing: "linear",
+          duration: 100,
+          iterations: 1,
+        },
+      );
+      const currentTargetAnimation = currentTargetRef.current.animate(
+        [
+          {
+            transform: `translate(${fromTargetToMatch.dx}px, ${fromTargetToMatch.dy}px)`,
+          },
+          {
+            transform: `translate(${-fromMatchedToTarget.dx}px, ${-fromMatchedToTarget.dy}px)`,
+          },
+        ],
+        {
+          easing: "linear",
+          duration: 100,
+          iterations: 1,
+        },
+      );
+
+      const handleAnimationEnd = (event: Event) => {
+        event.currentTarget?.removeEventListener(
+          "animationend",
+          handleAnimationEnd,
+        );
+
+        if (!currentTargetRef.current) {
+          return;
+        }
+
+        if (styles["switching"] === undefined) {
+          throw new Error(
+            `${PotsBoard.name} stylesheet does not have "switching" class`,
+          );
+        }
+
+        currentTargetRef.current.style.translate = "";
+
+        matchedElement.classList.remove(styles["switching"]);
+        currentTargetRef.current.classList.remove(styles["switching"]);
+        matchedElement.classList.remove(styles["dragging"]);
+        currentTargetRef.current.classList.remove(styles["dragging"]);
+        swapDomElementNodes(matchedElement, currentTargetRef.current);
+      };
+
+      currentTargetAnimation.addEventListener("finish", handleAnimationEnd);
     };
 
     potListElement.addEventListener("pointerdown", handlePointerDown);
@@ -215,11 +268,11 @@ export function PotsBoard() {
 
     return () => {
       potListElement.removeEventListener("pointerdown", handlePointerDown);
-      potListElement.addEventListener(
+      potListElement.removeEventListener(
         "pointermove",
         throttledPointerMoveCallback,
       );
-      potListElement.addEventListener("pointerup", handlePointerUp);
+      potListElement.removeEventListener("pointerup", handlePointerUp);
     };
   }, [throttledPointerMoveCallback]);
 
