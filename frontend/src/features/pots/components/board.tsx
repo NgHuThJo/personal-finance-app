@@ -139,6 +139,8 @@ export function PotsBoard() {
       currentTargetRef.current.classList.add(styles?.["dragging"]);
 
       currentTargetRef.current.ondragstart = disableBrowserDefaultDragStart;
+
+      dispatch({ type: "dragStart" });
     };
 
     const handlePointerUp = (event: PointerEvent) => {
@@ -201,15 +203,12 @@ export function PotsBoard() {
           ],
           {
             easing: "linear",
-            duration: 1000,
+            duration: 500,
           },
         );
 
         animation.finished.then(() => {
-          matchedElement.classList.add(styles["switching"] as string);
-          currentTargetRef.current?.classList.add(
-            styles["switching"] as string,
-          );
+          element.classList.remove(styles["switching"] as string);
         });
       });
     };
