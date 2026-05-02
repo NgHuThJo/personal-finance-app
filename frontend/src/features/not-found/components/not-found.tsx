@@ -1,27 +1,33 @@
+import { useNavigate } from "@tanstack/react-router";
 import styles from "./not-found.module.css";
 import { icon_error, icon_retry } from "#frontend/assets/images";
-import { TopHeader } from "#frontend/features/not-found/components/top-header";
 import { Button } from "#frontend/shared/primitives/button";
 import { Image } from "#frontend/shared/primitives/image";
 
-type NotFoundProps = {
-  retry: () => void;
-};
+export function NotFound() {
+  const navigate = useNavigate();
 
-export function NotFound({ retry }: NotFoundProps) {
+  const handleRetry = () => {
+    navigate({
+      to: "/dashboard",
+      replace: true,
+    });
+  };
+
   return (
     <div className={styles.layout}>
-      <TopHeader />
+      <header className={styles["header"]}>
+        <img src={icon_error} className={styles["error-icon"]} />
+        <p>Something went wrong</p>
+      </header>
       <div className={styles.body}>
-        <Image src={icon_error} className="icon-sm" />
-        <h1>Something went wrong</h1>
         <p>
-          We couldn’t connect to the server (API error). Please try again in a
-          few moments.
+          The page you tried to visit does not exist. Please check the URL and
+          retry.
         </p>
-        <Button variant="cta-primary" onClick={retry}>
+        <Button variant="cta-primary" onClick={handleRetry}>
           <Image src={icon_retry} />
-          Retry
+          Back to dashboard
         </Button>
       </div>
     </div>

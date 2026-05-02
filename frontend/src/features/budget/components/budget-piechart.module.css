@@ -1,6 +1,6 @@
 .piechart {
-  --width-piechart: 15rem;
-  --height-piechart: 15rem;
+  --width-piechart: 12.5rem;
+  --height-piechart: 12.5rem;
 
   display: grid;
   align-items: center;
@@ -8,7 +8,6 @@
   width: var(--width-piechart);
   height: var(--height-piechart);
   border-radius: 50%;
-  /* background-image: conic-gradient(red, green); */
 }
 
 .text-container {

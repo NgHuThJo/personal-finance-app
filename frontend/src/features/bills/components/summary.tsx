@@ -72,7 +72,7 @@ export function BillsSummary() {
         <h2>Summary</h2>
         <ul className={styles["general-bill-summary-list"]}>
           {billSummaryList.map(([key, object]) => (
-            <li className={styles["general-bill-summary-listitem"]}>
+            <li className={styles["general-bill-summary-listitem"]} key={key}>
               <span>{key}</span>
               <span
                 className={styles["listitem-value"]}

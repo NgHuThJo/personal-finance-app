@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getRouteApi, Link } from "@tanstack/react-router";
 import styles from "./pagination-links.module.css";
 import { CaretLeft, CaretRight } from "#frontend/assets/icons/icons";
@@ -28,6 +28,7 @@ export function BillsPaginationLinks() {
         searchQuery,
       },
     }),
+    placeholderData: keepPreviousData,
   });
 
   if (isPending) {

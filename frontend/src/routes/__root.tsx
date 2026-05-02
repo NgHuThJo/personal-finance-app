@@ -6,6 +6,7 @@ import {
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { useEffect, useEffectEvent } from "react";
 import { ToastContainer } from "react-toastify";
+import { NotFound } from "#frontend/features/not-found/components/not-found";
 import { Logger } from "#frontend/shared/app/logging";
 import {
   createRefreshTokenOptions,
@@ -16,6 +17,7 @@ import { Loader } from "#frontend/shared/primitives/loader";
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
     component: Root,
+    notFoundComponent: () => <NotFound retry={() => {}} />,
   },
 );
 

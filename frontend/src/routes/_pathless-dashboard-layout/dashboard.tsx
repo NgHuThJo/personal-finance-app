@@ -36,7 +36,9 @@ function Index() {
         queryKey: createRefreshTokenQueryKey(),
       });
 
-      router.invalidate();
+      router.navigate({
+        to: "/login",
+      });
     },
   });
 
