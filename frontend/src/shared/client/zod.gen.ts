@@ -346,7 +346,7 @@ export const zLoginGoogleUserData = z.object({
     query: z.optional(z.never())
 });
 
-export const zLogoutGoogleUserData = z.object({
+export const zLoginGitHubUserData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.optional(z.never())

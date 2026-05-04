@@ -2,6 +2,7 @@ namespace backend.Src.Models;
 
 public enum AuthProvider
 {
+    GitHub,
     Google,
 }
 

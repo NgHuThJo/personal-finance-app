@@ -4,7 +4,7 @@ import styles from "./pagination-links.module.css";
 import { CaretLeft, CaretRight } from "#frontend/assets/icons/icons";
 import { clientWithAuth } from "#frontend/shared/api/client";
 import { getAllTransactionsOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
-import { Skeleton } from "#frontend/shared/primitives/skeleton";
+import { Spinner } from "#frontend/shared/primitives/spinner";
 import {
   calculatePageCount,
   calculatePaginationWindow,
@@ -33,7 +33,11 @@ export function TransactionPaginationLinks() {
   });
 
   if (isPending) {
-    return <Skeleton height={100} />;
+    return (
+      <div className={styles["spinner-container"]}>
+        <Spinner />
+      </div>
+    );
   }
 
   if (error) {

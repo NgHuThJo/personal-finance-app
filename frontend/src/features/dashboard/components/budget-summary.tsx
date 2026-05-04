@@ -28,28 +28,34 @@ export function DashboardBudgetSummary() {
           <CaretRight />
         </Link>
       </div>
-      <div className={styles["piechart-layout"]}>
-        <BudgetPieChart />
-        <ul className={styles["list"]}>
-          {slicedData.map((budget) => (
-            <li className={styles["list-item"]} key={budget.id}>
-              <span
-                className={styles["theme-icon"]}
-                style={{
-                  "--color-theme-icon": getColorHexCode(budget.themeColor),
-                }}
-              ></span>
-              <span className={styles["key"]}>{budget.category}</span>
-              <span className={styles["amount"]}>
-                {numberFormatter.formatNumber({
-                  number: budget.maximum,
-                  options: numberFormatter.getDollarOptions(),
-                })}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {slicedData.length ? (
+        <div className={styles["piechart-layout"]}>
+          <BudgetPieChart />
+          <ul className={styles["list"]}>
+            {slicedData.map((budget) => (
+              <li className={styles["list-item"]} key={budget.id}>
+                <span
+                  className={styles["theme-icon"]}
+                  style={{
+                    "--color-theme-icon": getColorHexCode(budget.themeColor),
+                  }}
+                ></span>
+                <span className={styles["key"]}>{budget.category}</span>
+                <span className={styles["amount"]}>
+                  {numberFormatter.formatNumber({
+                    number: budget.maximum,
+                    options: numberFormatter.getDollarOptions(),
+                  })}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <p className={styles["no-budget"]}>
+          You currently do not have set any budgets.
+        </p>
+      )}
     </div>
   );
 }

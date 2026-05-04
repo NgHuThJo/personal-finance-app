@@ -1,4 +1,5 @@
 using System.Net;
+using backend.src.Features;
 using backend.Src.Shared;
 
 namespace backend.Src.Features;
@@ -190,8 +191,9 @@ public static class RouteGrouper
             .WithName(nameof(LoginGoogleUserEndpoint.LoginGoogleUser))
             .WithSummary("Redirects to Google login");
         group
-            .MapPost("logout/google", LogoutGoogleUserEndpoint.LogoutGoogleUser)
-            .WithName(nameof(LogoutGoogleUserEndpoint.LogoutGoogleUser));
+            .MapGet("login/github", LoginGitHubUserEndpoint.LoginGitHubUser)
+            .WithName(nameof(LoginGitHubUserEndpoint.LoginGitHubUser))
+            .WithSummary("Redirects to GitHub login");
 
         return app;
     }

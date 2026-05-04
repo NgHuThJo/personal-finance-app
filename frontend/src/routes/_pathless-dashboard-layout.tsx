@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
+import { Suspense } from "react";
 import styles from "./_pathless-dashboard-layout.module.css";
 import { DashboardNavigation } from "#frontend/features/dashboard/components/dashboard-navigation";
 import { Logger } from "#frontend/shared/app/logging";
 import { createRefreshTokenOptions } from "#frontend/shared/client/@tanstack/react-query.gen";
+import { Spinner } from "#frontend/shared/primitives/spinner";
 
 export const Route = createFileRoute("/_pathless-dashboard-layout")({
   component: DashboardLayout,
@@ -24,13 +26,21 @@ function DashboardLayout() {
   }
 
   return (
-    <div className={styles.page}>
-      <main className={styles.layout}>
-        <Outlet />
-      </main>
-      <div className={styles["nav-wrapper"]}>
-        <DashboardNavigation />
+    <Suspense
+      fallback={
+        <div className={styles["spinner-container"]}>
+          <Spinner />
+        </div>
+      }
+    >
+      <div className={styles.page}>
+        <main className={styles.layout}>
+          <Outlet />
+        </main>
+        <div className={styles["nav-wrapper"]}>
+          <DashboardNavigation />
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 }

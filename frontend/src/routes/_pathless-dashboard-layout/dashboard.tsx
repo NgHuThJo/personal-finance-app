@@ -11,7 +11,7 @@ import {
   logoutUserMutation,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { Button } from "#frontend/shared/primitives/button";
-import { Skeleton } from "#frontend/shared/primitives/skeleton";
+import { Spinner } from "#frontend/shared/primitives/spinner";
 
 export const Route = createFileRoute("/_pathless-dashboard-layout/dashboard")({
   component: Index,
@@ -56,15 +56,25 @@ function Index() {
         </Button>
       </header>
       <div>
-        <Suspense fallback={<Skeleton height={100} />}>
+        <Suspense
+          fallback={
+            <div className={styles["spinner-container"]}>
+              <Spinner />
+            </div>
+          }
+        >
           <BalanceSummary />
         </Suspense>
       </div>
-      <div>
-        <Suspense fallback={<Skeleton />}>
-          <AccountSummary />
-        </Suspense>
-      </div>
+      <Suspense
+        fallback={
+          <div className={styles["spinner-container"]}>
+            <Spinner />
+          </div>
+        }
+      >
+        <AccountSummary />
+      </Suspense>
     </div>
   );
 }

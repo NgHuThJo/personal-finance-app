@@ -3,9 +3,14 @@ import {
   useQueryClient,
   type QueryClient,
 } from "@tanstack/react-query";
-import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
+import {
+  createRootRouteWithContext,
+  Outlet,
+  useNavigate,
+} from "@tanstack/react-router";
 import { useEffect, useEffectEvent } from "react";
 import { ToastContainer } from "react-toastify";
+import { ErrorBoundary } from "#frontend/features/error/components/error";
 import { NotFound } from "#frontend/features/not-found/components/not-found";
 import { Logger } from "#frontend/shared/app/logging";
 import {
@@ -17,11 +22,13 @@ import { Loader } from "#frontend/shared/primitives/loader";
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
     component: Root,
-    notFoundComponent: () => <NotFound retry={() => {}} />,
+    notFoundComponent: () => <NotFound />,
+    errorComponent: ErrorBoundary,
   },
 );
 
 function Root() {
+  const navigate = useNavigate();
   const { isPending } = useQuery({
     ...createRefreshTokenOptions({
       credentials: "include",
@@ -43,7 +50,12 @@ function Root() {
       return;
     }
 
-    queryClient.setQueryData(createRefreshTokenQueryKey(), accessToken);
+    /// VERY IMPORTANT: MAKE SURE THAT THE TYPE STRUCTURE MATCHES BECAUSE THIS METHOD BYPASSES TYPESCRIPT
+    queryClient.setQueryData(createRefreshTokenQueryKey(), { accessToken });
+
+    navigate({
+      to: "/dashboard",
+    });
   });
 
   useEffect(() => {

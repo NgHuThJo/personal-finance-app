@@ -452,14 +452,14 @@ export type LoginGoogleUserResponses = {
     200: unknown;
 };
 
-export type LogoutGoogleUserData = {
+export type LoginGitHubUserData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/v1/auth/logout/google';
+    url: '/v1/auth/login/github';
 };
 
-export type LogoutGoogleUserResponses = {
+export type LoginGitHubUserResponses = {
     /**
      * OK
      */

@@ -6,7 +6,7 @@ import {
   createRefreshTokenOptions,
   getAllTransactionsOptions,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
-import { Skeleton } from "#frontend/shared/primitives/skeleton";
+import { Spinner } from "#frontend/shared/primitives/spinner";
 import { dateTimeFormatter } from "#frontend/shared/utils/intl/datetime-format";
 import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
 import { decodeJwt } from "#frontend/shared/utils/object";
@@ -38,7 +38,11 @@ export function TransactionTable() {
   });
 
   if (isPending) {
-    return <Skeleton />;
+    return (
+      <div className={styles["spinner-container"]}>
+        <Spinner />
+      </div>
+    );
   }
   if (error) {
     return <div>{error.detail}</div>;

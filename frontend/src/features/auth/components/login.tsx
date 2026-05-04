@@ -163,6 +163,29 @@ export function Login() {
     );
   };
 
+  const onGitHubLogin = () => {
+    const newUrl = URL.parse(import.meta.env.VITE_GITHUB_LOGIN_URL);
+
+    if (newUrl === null) {
+      Logger.error(
+        `Invalid URL passed as argument to URL.${URL.parse.name}, cannot `,
+      );
+      return;
+    }
+    const popupLeft =
+      pageSizeObject.screenX +
+      (pageSizeObject.browserWindowX - pageSizeObject.popupWidth) / 2;
+    const popupTop =
+      pageSizeObject.screenY +
+      (pageSizeObject.browserWindowY - pageSizeObject.popupHeight) / 2;
+
+    window.open(
+      newUrl,
+      "_blank",
+      `popup=true, width=${pageSizeObject.popupWidth}, height=${pageSizeObject.popupHeight}; left=${popupLeft}, top=${popupTop}`,
+    );
+  };
+
   return (
     <form onSubmit={onSubmit} className={styles.form}>
       <h1>Login</h1>
@@ -238,6 +261,15 @@ export function Login() {
         data-testid="google-login"
       >
         Login with Google
+      </Button>
+      <Button
+        type="button"
+        variant="cta-primary"
+        disabled={isPending}
+        onClick={onGitHubLogin}
+        data-testid="github-login"
+      >
+        Login with GitHub
       </Button>
       <p className={styles["cta-link"]}>
         Need to create an account? <Link to="/signup">Sign up</Link>

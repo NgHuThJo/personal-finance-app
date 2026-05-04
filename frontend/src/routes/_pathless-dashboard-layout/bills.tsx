@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Suspense } from "react";
 import { BillsBoard } from "#frontend/features/bills/components/board";
 import type { TransactionSortKey } from "#frontend/shared/client";
+import { Loader } from "#frontend/shared/primitives/loader";
 
 export const Route = createFileRoute("/_pathless-dashboard-layout/bills")({
   validateSearch: (search) => {
@@ -15,5 +17,9 @@ export const Route = createFileRoute("/_pathless-dashboard-layout/bills")({
 });
 
 function RouteComponent() {
-  return <BillsBoard />;
+  return (
+    <Suspense fallback={<Loader />}>
+      <BillsBoard />
+    </Suspense>
+  );
 }

@@ -68,3 +68,10 @@
 .plus {
   color: var(--color-status-success);
 }
+
+.no-transaction {
+  max-width: revert;
+  font-weight: var(--font-weight-action);
+  font-size: 1rem;
+  text-align: center;
+}

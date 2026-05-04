@@ -13,5 +13,5 @@
   border: 0.25rem solid var(--color-background-cta-primary);
   border-bottom-color: var(--color-background-surface-tertiary);
   border-radius: 50%;
-  animation: 1s linear infinite rotate;
+  animation: 1s ease-in-out infinite rotate;
 }

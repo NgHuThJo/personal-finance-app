@@ -144,7 +144,7 @@ export function PotsBoard() {
     };
 
     const handlePointerUp = (event: PointerEvent) => {
-      currentTargetRef.current?.releasePointerCapture(event.pointerId);
+      // currentTargetRef.current?.releasePointerCapture(event.pointerId);
       dispatch({ type: "dragEnd" });
 
       if (!currentTargetRef.current) {

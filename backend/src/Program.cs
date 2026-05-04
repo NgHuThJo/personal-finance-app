@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -8,6 +9,7 @@ using backend.Src.Features;
 using backend.Src.Models;
 using backend.Src.Shared;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
@@ -115,6 +117,150 @@ builder
         // Use this to prevent sub claim from being mapped to legacy namespaces
         options.MapInboundClaims = false;
     })
+    .AddGitHub(options =>
+    {
+        var githubSecretConfig = builder.Configuration.GetRequiredSection(
+            "Authentication:GitHub"
+        );
+        var clientId = githubSecretConfig["ClientId"];
+        var clientSecret = githubSecretConfig["ClientSecret"];
+
+        if (clientId is null || clientSecret is null)
+        {
+            throw new InvalidOperationException(
+                $"GitHub clientId or clientSecret cannot be found in user secrets store"
+            );
+        }
+
+        options.ClientId = clientId;
+        options.ClientSecret = clientSecret;
+        options.CallbackPath = "/signin-github";
+        options.Scope.Add("user:email");
+        options.SaveTokens = true;
+
+        options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
+        options.ClaimActions.MapJsonKey(ClaimTypes.Name, "login");
+
+        // Add additional claims before the auth ticket is finalized
+        options.Events.OnCreatingTicket = async (context) =>
+        {
+            var request = new HttpRequestMessage(
+                HttpMethod.Get,
+                "https://api.github.com/user/emails"
+            );
+
+            request.Headers.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                context.AccessToken
+            );
+
+            var response = await context.Backchannel.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var json = JsonDocument.Parse(
+                await response.Content.ReadAsStringAsync()
+            );
+
+            var primaryEmail = json
+                .RootElement.EnumerateArray()
+                .FirstOrDefault(j => j.GetProperty("primary").GetBoolean())
+                .GetProperty("email")
+                .GetString();
+
+            if (!string.IsNullOrWhiteSpace(primaryEmail))
+            {
+                context?.Identity?.AddClaim(
+                    new Claim(ClaimTypes.Email, primaryEmail)
+                );
+            }
+        };
+
+        // Ticket is ready for use here
+        options.Events.OnTicketReceived = async (context) =>
+        {
+            var services = context.HttpContext.RequestServices;
+            var jwtProvider = services.GetRequiredService<JwtTokenProvider>();
+            var dbContext = services.GetRequiredService<AppDbContext>();
+
+            var githubId = context
+                .Principal?.FindFirst(ClaimTypes.NameIdentifier)
+                ?.Value;
+            var username = context.Principal?.FindFirst(ClaimTypes.Name)?.Value;
+            var email = context.Principal?.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (
+                string.IsNullOrWhiteSpace(githubId)
+                || string.IsNullOrWhiteSpace(username)
+                || string.IsNullOrWhiteSpace(email)
+            )
+            {
+                throw new InvalidOperationException(
+                    "Required claims are missing from identity token"
+                );
+            }
+
+            var providerInfo = await dbContext
+                .UserAuthProviders.Include(u => u.User)
+                .Where(u =>
+                    u.Provider == AuthProvider.GitHub
+                    && u.ProviderUserId == githubId
+                )
+                .SingleOrDefaultAsync();
+
+            User user;
+            if (providerInfo is null)
+            {
+                user = new User
+                {
+                    Email = email,
+                    Name = username,
+                    Balance = new Balance(),
+                    AuthProvider = new UserAuthProvider
+                    {
+                        Provider = AuthProvider.GitHub,
+                        ProviderUserId = githubId,
+                    },
+                };
+
+                dbContext.Add(user);
+
+                await dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                user = providerInfo.User;
+            }
+
+            var accessToken = jwtProvider.GenerateAccessToken(user.Id);
+            var refreshToken = new RefreshToken
+            {
+                Token = jwtProvider.GenerateRefreshToken(),
+                ExpiresAtUtc = DateTimeOffset.UtcNow.AddDays(7),
+                User = user,
+            };
+
+            dbContext.RefreshTokens.Add(refreshToken);
+            await dbContext.SaveChangesAsync();
+
+            context?.HttpContext.Response.Cookies.Append(
+                "refresh_token",
+                refreshToken.Token,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.None,
+                    Secure = true,
+                    MaxAge = TimeSpan.FromDays(7),
+                }
+            );
+
+            context?.Response.Redirect(
+                $"https://localhost:5173/redirect/#{accessToken}"
+            );
+
+            context?.HandleResponse();
+        };
+    })
     .AddOpenIdConnect(options =>
     {
         var oidcConfig = builder.Configuration.GetRequiredSection(
@@ -149,7 +295,7 @@ builder
             var services = context.HttpContext.RequestServices;
 
             var db = services.GetRequiredService<AppDbContext>();
-            var JwtTokenProvider =
+            var jwtTokenProvider =
                 services.GetRequiredService<JwtTokenProvider>();
 
             var sub = context?.Principal?.FindFirst("sub")?.Value;
@@ -167,17 +313,13 @@ builder
                 );
             }
 
-            Console.WriteLine(db);
-
             var providerRecord = await db
                 .UserAuthProviders.Include(p => p.User)
                 .SingleOrDefaultAsync(p =>
                     p.Provider == AuthProvider.Google && p.ProviderUserId == sub
                 );
 
-            User user;
-
-            // Create new user if not associated with a provider
+            User user; // Create new user if not associated with a provider
             if (providerRecord is null)
             {
                 user = new User
@@ -200,10 +342,10 @@ builder
                 user = providerRecord.User;
             }
 
-            var accessToken = JwtTokenProvider.GenerateAccessToken(user.Id);
+            var accessToken = jwtTokenProvider.GenerateAccessToken(user.Id);
             var refreshToken = new RefreshToken
             {
-                Token = JwtTokenProvider.GenerateRefreshToken(),
+                Token = jwtTokenProvider.GenerateRefreshToken(),
                 ExpiresAtUtc = DateTime.UtcNow.AddDays(7),
                 UserId = user.Id,
             };
@@ -230,20 +372,13 @@ builder
         {
             var jwt = (string)context.HttpContext.Items["access_token"]!;
 
-            // context.Response.Cookies.Append(
-            //     "access_token",
-            //     jwt,
-            //     new CookieOptions
-            //     {
-            //         Secure = true,
-            //         SameSite = SameSiteMode.None,
-            //     }
-            // );
-
             context.Response.Redirect(
                 $"https://localhost:5173/redirect/#{jwt}"
             );
 
+            // Used to prevent default auth flow
+            // Necessary if you implement your own auth flow, JWT in this case
+            // Without it the current redirect would be overridden by the challenge redirect
             context.HandleResponse();
 
             return Task.CompletedTask;

@@ -45,33 +45,41 @@ export function DashboardTransactionSummary() {
           <CaretRight />
         </Link>
       </div>
-      <ul className={styles["list"]}>
-        {transactionData.map((transaction) => (
-          <li className={styles["list-item"]} key={transaction.id}>
-            <div>
-              <span className={styles.name}>{transaction.otherUser.name}</span>
-            </div>
-            <div className={styles.metadata}>
-              <span
-                className={`${styles.amount} ${styles[transactionRules.isUserSender(userId, transaction.senderId) ? "minus" : "plus"]}`}
-              >
-                {transactionRules.isUserSender(userId, transaction.senderId)
-                  ? "-"
-                  : "+"}
-                {numberFormatter.formatNumber({
-                  number: transaction.amount,
-                  options: numberFormatter.getDollarOptions(),
-                })}
-              </span>
-              <span className={styles.date}>
-                {dateTimeFormatter.formatDate({
-                  date: new Date(transaction.transactionDate),
-                })}
-              </span>
-            </div>
-          </li>
-        ))}
-      </ul>
+      {transactionData.length ? (
+        <ul className={styles["list"]}>
+          {transactionData.map((transaction) => (
+            <li className={styles["list-item"]} key={transaction.id}>
+              <div>
+                <span className={styles.name}>
+                  {transaction.otherUser.name}
+                </span>
+              </div>
+              <div className={styles.metadata}>
+                <span
+                  className={`${styles.amount} ${styles[transactionRules.isUserSender(userId, transaction.senderId) ? "minus" : "plus"]}`}
+                >
+                  {transactionRules.isUserSender(userId, transaction.senderId)
+                    ? "-"
+                    : "+"}
+                  {numberFormatter.formatNumber({
+                    number: transaction.amount,
+                    options: numberFormatter.getDollarOptions(),
+                  })}
+                </span>
+                <span className={styles.date}>
+                  {dateTimeFormatter.formatDate({
+                    date: new Date(transaction.transactionDate),
+                  })}
+                </span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className={styles["no-transaction"]}>
+          No transaction has been made yet.
+        </p>
+      )}
     </div>
   );
 }

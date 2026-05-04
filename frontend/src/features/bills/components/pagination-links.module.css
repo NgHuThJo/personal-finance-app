@@ -36,3 +36,10 @@
     pointer-events: none;
   }
 }
+
+.spinner-container {
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+}

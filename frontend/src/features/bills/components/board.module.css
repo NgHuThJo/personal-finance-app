@@ -45,3 +45,10 @@
   flex-wrap: wrap;
   align-items: center;
 }
+
+.spinner-container {
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+}

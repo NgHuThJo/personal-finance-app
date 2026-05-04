@@ -111,7 +111,11 @@ export function Signup() {
             type={isPasswordVisible ? "text" : "password"}
             id="password"
           />
-          <Button size="icon" onClick={togglePasswordVisibility}>
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={togglePasswordVisibility}
+          >
             <IconEye />
           </Button>
         </div>

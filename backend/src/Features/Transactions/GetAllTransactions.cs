@@ -123,6 +123,7 @@ public class GetAllTransactionsHandler(AppDbContext context)
         var query = _context
             .Transactions
             // Query and filter
+            .ForUser(userId)
             .SearchCounterParty(userId, searchQuery)
             .FilterCategory(category)
             // Sort
