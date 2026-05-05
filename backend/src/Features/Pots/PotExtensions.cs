@@ -115,13 +115,6 @@ public static class PotExtensions
         string name
     )
     {
-        if (PotRules.HasSameName(state.PotName, name))
-        {
-            return Result<PotState, PotError>.Fail(
-                new PotError.PotNameAlreadyExists()
-            );
-        }
-
         return Result<PotState, PotError>.Ok(state with { PotName = name });
     }
 

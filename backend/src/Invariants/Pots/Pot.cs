@@ -7,7 +7,4 @@ public static class PotRules
 
     public static bool ExceedsTarget(decimal total, decimal target) =>
         total > target;
-
-    public static bool HasSameName(string oldPotName, string newPotName) =>
-        oldPotName == newPotName;
 }

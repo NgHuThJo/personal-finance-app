@@ -35,7 +35,7 @@ function Root() {
     }),
     throwOnError: false,
     staleTime: Infinity,
-    retry: 1,
+    retry: false,
   });
   const queryClient = useQueryClient();
   const onOpenIdConnectDone = useEffectEvent((event: MessageEvent) => {

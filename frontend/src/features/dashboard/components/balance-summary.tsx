@@ -8,6 +8,7 @@ export function BalanceSummary() {
   const { data } = useSuspenseQuery({
     ...getBalanceByUserIdOptions({
       client: clientWithAuth,
+      credentials: "include",
     }),
   });
 

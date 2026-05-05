@@ -136,7 +136,9 @@ public class EditPotHandler(
         }
 
         var duplicateName = await _context
-            .Pots.Where(p => p.Name == command.PotName)
+            .Pots.Where(p =>
+                p.UserId == userId && p.Id != potId && p.Name == command.PotName
+            )
             .SingleOrDefaultAsync(ct);
 
         if (duplicateName is not null)

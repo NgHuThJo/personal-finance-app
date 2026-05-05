@@ -88,7 +88,7 @@ public class CreatePotHandler(
     )
     {
         var usedPotName = await _context
-            .Pots.Where(p => p.Name == command.Name)
+            .Pots.Where(p => p.UserId == userId && p.Name == command.Name)
             .Select(p => p.Name)
             .SingleOrDefaultAsync(ct);
 
