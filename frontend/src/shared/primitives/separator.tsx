@@ -1,6 +1,6 @@
 import { Separator as SeparatorPrimitive } from "@radix-ui/react-separator";
 import type { ComponentProps } from "react";
-import styles from "./Separator.module.css";
+import styles from "./separator.module.css";
 import { cn } from "#frontend/shared/utils/cn";
 
 export function Separator({

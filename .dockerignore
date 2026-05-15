@@ -1,0 +1,11 @@
+**/bin
+**/obj
+**/TestResults
+**/.vs
+**/.git
+**/*.user
+**/*.log
+**/node_modules
+
+*.cache/
+*.csproj.lscache

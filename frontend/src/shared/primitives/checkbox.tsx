@@ -1,5 +1,5 @@
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import styles from "./Checkbox.module.css";
+import styles from "./checkbox.module.css";
 import { CheckIcon } from "#frontend/assets/icons/icons";
 
 function Checkbox({

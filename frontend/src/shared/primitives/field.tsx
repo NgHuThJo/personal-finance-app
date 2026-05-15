@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { useMemo } from "react";
-import styles from "./Field.module.css";
+import styles from "./field.module.css";
 import { Label } from "#frontend/shared/primitives/label";
 import { Separator } from "#frontend/shared/primitives/separator";
 import { cn } from "#frontend/shared/utils/cn";
