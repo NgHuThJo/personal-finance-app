@@ -15,7 +15,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
@@ -107,6 +106,17 @@ builder.Services.AddDbContext<AppDbContext>(
 );
 builder.Services.AddCors(options =>
 {
+    var config = builder
+        .Configuration.GetRequiredSection("App")
+        .Get<AppConfig>();
+
+    if (config?.FrontendUrl is null)
+    {
+        throw new InvalidDataException(
+            "App url config is missing frontend url"
+        );
+    }
+
     options.AddPolicy(
         "DevCorsPolicy",
         policy =>
@@ -115,7 +125,7 @@ builder.Services.AddCors(options =>
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials()
-                .WithOrigins("https://localhost:5173");
+                .WithOrigins(config.FrontendUrl);
         }
     );
 });
@@ -297,8 +307,19 @@ builder
                 }
             );
 
+            var appConfig = builder
+                .Configuration.GetRequiredSection("App")
+                .Get<AppConfig>();
+
+            if (appConfig?.FrontendRedirectUrl is null)
+            {
+                throw new InvalidDataException(
+                    "App config does not contain frontend url"
+                );
+            }
+
             context?.Response.Redirect(
-                $"https://localhost:5173/redirect/#{accessToken}"
+                $"{appConfig.FrontendRedirectUrl}/#{accessToken}"
             );
 
             context?.HandleResponse();
@@ -423,8 +444,19 @@ builder
         {
             var jwt = (string)context.HttpContext.Items["access_token"]!;
 
+            var appConfig = builder
+                .Configuration.GetRequiredSection("App")
+                .Get<AppConfig>();
+
+            if (appConfig?.FrontendRedirectUrl is null)
+            {
+                throw new InvalidDataException(
+                    "App config does not contain frontend url"
+                );
+            }
+
             context.Response.Redirect(
-                $"https://localhost:5173/redirect/#{jwt}"
+                $"{appConfig.FrontendRedirectUrl}/#{jwt}"
             );
 
             // Used to prevent default auth flow
