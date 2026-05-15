@@ -1,21 +1,22 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using backend.Src.Config;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
 namespace backend.Src.Shared;
 
-public class JwtTokenProvider(IConfiguration config)
+public class JwtTokenProvider(IOptions<JwtConfig> config)
 {
-    private readonly IConfiguration _config = config;
+    private readonly JwtConfig _jwtConfig = config.Value;
 
     public string GenerateAccessToken(int userId)
     {
-        var jwtConfig = _config.GetSection("Jwt:Schemas:Bearer");
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtConfig["SecretKey"]!)
+            Encoding.UTF8.GetBytes(_jwtConfig.SecretKey)
         );
         var credentials = new SigningCredentials(
             key,
@@ -31,13 +32,11 @@ public class JwtTokenProvider(IConfiguration config)
                     Guid.NewGuid().ToString()
                 ),
             ]),
-            Issuer = jwtConfig["Issuer"]!,
-            Audience = jwtConfig["Audience"]!,
+            Issuer = _jwtConfig.Issuer,
+            Audience = _jwtConfig.Audience,
             NotBefore = DateTime.UtcNow,
             IssuedAt = DateTime.UtcNow,
-            Expires = DateTime.UtcNow.AddMinutes(
-                jwtConfig.GetValue<int>("Expires")
-            ),
+            Expires = DateTime.UtcNow.AddMinutes(_jwtConfig.Expires),
             SigningCredentials = credentials,
         };
 

@@ -21,9 +21,9 @@ runInteractiveDocker() {
 }
 
 processDotnetSecrets() {
-    local projectDir=$1
+    local projectDir="$1"
 
-    dotnet user-secrets list --project "$1" | sed 's/:/__/g; s/ //g' | awk -F= '{ print toupper($1) "=" $2}' > "$projectDir/.env"
+    dotnet user-secrets list --project "$1" | sed 's/:/__/g; s/[[:space:]]*=[[:space:]]*/=/' > "$projectDir/.env"
 
     return 0
 }
@@ -41,8 +41,8 @@ whileLoop() {
     # Assigning variables with and without quotes has same behavior, rare quote exception
     local i=$1
     while [ "$i" -lt 3 ]; do
+        printf '%s\n' "$((i))"
         i=$((i + 1))
-        printf '%s\n' "$((i + 1))"
     done
 }
 
@@ -65,6 +65,7 @@ delegate() {
         getDockerContainerId) getDockerContainerId "$@" ;;
         readFile) readFile "$@" ;;
         forLoop) forLoop "$@" ;;
+        whileLoop) whileLoop "$@" ;;
         processDotnetSecrets) processDotnetSecrets "$@" ;;
         *) printf '%s\n' "Unknown command: $1" >&2; exit 1;;
     esac

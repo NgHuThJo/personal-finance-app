@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
+using backend.Src.Config;
 using backend.Src.Features;
 using backend.Src.Models;
 using backend.Src.Shared;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
@@ -21,7 +23,6 @@ using Serilog;
 
 // Args come from public static void main(string[] args), they are command line arguments
 var builder = WebApplication.CreateBuilder(args);
-var defaultJwt = builder.Configuration.GetSection("Jwt:Schemas:Bearer");
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -45,9 +46,23 @@ foreach (var interceptorType in interceptorTypes)
 
 // Register hosted service for due transactions
 // builder.Services.AddHostedService<TransactionBackgroundService>();
-
 builder.Services.AddSingleton<JwtTokenProvider>();
 builder.Services.AddScoped<CurrentUser>();
+
+// Register option classes which map to config sections
+builder.Services.Configure<JwtConfig>(
+    builder.Configuration.GetSection("Jwt:Schemas:Bearer")
+);
+builder.Services.Configure<PostgresConfig>(
+    builder.Configuration.GetSection("PostgresConnection")
+);
+builder.Services.Configure<GoogleOAuthConfig>(
+    builder.Configuration.GetSection("Authentication:Google")
+);
+builder.Services.Configure<GitHubOAuthConfig>(
+    builder.Configuration.GetSection("Authentication:GitHub")
+);
+
 builder.Services.AddProblemDetails(options =>
 {
     options.CustomizeProblemDetails = context =>
@@ -73,10 +88,22 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     //     new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
     // );
 });
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(
-        builder.Configuration.GetConnectionString("PostgresConnection")
-    )
+builder.Services.AddDbContext<AppDbContext>(
+    (options) =>
+    {
+        var config = builder
+            .Configuration.GetRequiredSection("ConnectionStrings")
+            .Get<PostgresConfig>();
+
+        if (config?.PostgresConnection is null)
+        {
+            throw new InvalidDataException(
+                "Postgres connection string is not initialized"
+            );
+        }
+
+        options.UseNpgsql(config?.PostgresConnection);
+    }
 );
 builder.Services.AddCors(options =>
 {
@@ -97,20 +124,35 @@ builder
     {
         options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        ;
     })
+    .AddBearerToken()
     .AddJwtBearer(options =>
     {
+        var jwtConfig = builder
+            .Configuration.GetRequiredSection("Jwt:Schemas:Bearer")
+            .Get<JwtConfig>();
+
+        if (
+            jwtConfig?.Audience is null
+            || jwtConfig?.Issuer is null
+            || jwtConfig?.SecretKey is null
+        )
+        {
+            throw new InvalidDataException(
+                "Jwt keys cannot be found in config file"
+            );
+        }
+
         options.TokenValidationParameters = new()
         {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = defaultJwt["Issuer"],
-            ValidAudience = defaultJwt["Audience"],
+            ValidIssuer = jwtConfig.Issuer,
+            ValidAudience = jwtConfig.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(defaultJwt["SecretKey"]!)
+                Encoding.UTF8.GetBytes(jwtConfig.SecretKey)
             ),
             ClockSkew = TimeSpan.Zero,
         };
@@ -119,16 +161,17 @@ builder
     })
     .AddGitHub(options =>
     {
-        var githubSecretConfig = builder.Configuration.GetRequiredSection(
-            "Authentication:GitHub"
-        );
-        var clientId = githubSecretConfig["ClientId"];
-        var clientSecret = githubSecretConfig["ClientSecret"];
+        var githubSecretConfig = builder
+            .Configuration.GetRequiredSection("Authentication:GitHub")
+            .Get<GitHubOAuthConfig>();
+
+        var clientId = githubSecretConfig?.ClientId;
+        var clientSecret = githubSecretConfig?.ClientSecret;
 
         if (clientId is null || clientSecret is null)
         {
             throw new InvalidOperationException(
-                $"GitHub clientId or clientSecret cannot be found in user secrets store"
+                $"GitHub clientId or clientSecret cannot be found in config file"
             );
         }
 
@@ -263,16 +306,24 @@ builder
     })
     .AddOpenIdConnect(options =>
     {
-        var oidcConfig = builder.Configuration.GetRequiredSection(
-            "OpenIDConnectSettings:Google"
-        );
-        var googleSecretConfig = builder.Configuration.GetSection(
-            "Authentication:Google"
-        );
+        var oidcConfig = builder
+            .Configuration.GetRequiredSection("Authentication:Google")
+            .Get<GoogleOAuthConfig>();
 
-        options.Authority = oidcConfig["Authority"];
-        options.ClientId = oidcConfig["ClientId"];
-        options.ClientSecret = googleSecretConfig["ClientSecret"];
+        if (
+            oidcConfig?.Authority is null
+            || oidcConfig?.ClientId is null
+            || oidcConfig?.ClientSecret is null
+        )
+        {
+            throw new InvalidOperationException(
+                $"Google clientId or clientSecret cannot be found in config file"
+            );
+        }
+
+        options.Authority = oidcConfig.Authority;
+        options.ClientId = oidcConfig.ClientId;
+        options.ClientSecret = oidcConfig.ClientSecret;
 
         options.SignInScheme =
             CookieAuthenticationDefaults.AuthenticationScheme;

@@ -23,7 +23,7 @@ services:
     depends_on:
       - db
     environment:
-      ConnectionStrings__PostgresConnection: "Host=localhost;Database=app;Port=5432;Username=postgres;Password=postgres"
+      -
     networks:
       - app_net
     expose:
