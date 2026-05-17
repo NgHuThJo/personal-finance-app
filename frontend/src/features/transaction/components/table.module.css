@@ -1,7 +1,7 @@
 .table {
-  table-layout: fixed;
+  /* table-layout: fixed; */
   border-collapse: collapse;
-  min-width: max-content;
+  /* min-width: max-content; */
   width: 100%;
   color: var(--color-text-secondary);
 
