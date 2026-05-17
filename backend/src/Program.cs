@@ -548,6 +548,34 @@ builder.Services.AddSerilog(Log.Logger);
 
 var app = builder.Build();
 
+// Run migrations before app.Run()
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    // Handle startup race with Docker database
+    var retries = 10;
+
+    while (retries > 0)
+    {
+        try
+        {
+            db.Database.Migrate();
+            break;
+        }
+        catch
+        {
+            retries--;
+            Thread.Sleep(TimeSpan.FromSeconds(2));
+        }
+    }
+
+    if (retries == 0)
+    {
+        throw new Exception("Could not apply migrations");
+    }
+}
+
 // Use Serilog middleware, add this before any other middleware for ordering reasons
 app.UseSerilogRequestLogging();
 

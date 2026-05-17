@@ -89,7 +89,7 @@ export function Login() {
       credentials: "include",
     }),
     onSuccess: async (accessToken) => {
-      Logger.info(`Login successful, access token:`, accessToken);
+      Logger.info(`Login successful`);
       /* Make sure you use the response type of the createRefreshToken endpoint
       because it differs from the loginUser response type */
       queryClient.setQueryData<CreateRefreshTokenResponse>(
@@ -141,7 +141,10 @@ export function Login() {
   );
 
   const onGoogleLogin = () => {
-    const newUrl = URL.parse(import.meta.env.VITE_GOOGLE_LOGIN_URL);
+    const newUrl = URL.parse(
+      import.meta.env.VITE_GOOGLE_LOGIN_PATH,
+      window.location.origin,
+    );
 
     if (newUrl === null) {
       Logger.error(
@@ -164,7 +167,10 @@ export function Login() {
   };
 
   const onGitHubLogin = () => {
-    const newUrl = URL.parse(import.meta.env.VITE_GITHUB_LOGIN_URL);
+    const newUrl = URL.parse(
+      import.meta.env.VITE_GITHUB_LOGIN_PATH,
+      import.meta.env.VITE_FRONTEND_URL,
+    );
 
     if (newUrl === null) {
       Logger.error(

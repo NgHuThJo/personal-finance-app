@@ -14,7 +14,7 @@ export const Route = createFileRoute("/redirect")({
     const targetWindow = window.opener as Window;
     targetWindow.postMessage(
       accessToken,
-      `${import.meta.env.VITE_DEV_SERVER_URL}`,
+      `${import.meta.env.VITE_FRONTEND_URL}`,
     );
 
     window.close();

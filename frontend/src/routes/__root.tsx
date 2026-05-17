@@ -39,8 +39,8 @@ function Root() {
   });
   const queryClient = useQueryClient();
   const onOpenIdConnectDone = useEffectEvent((event: MessageEvent) => {
-    if (event.origin !== `${import.meta.env.VITE_DEV_SERVER_URL}`) {
-      Logger.info("Redirect from popup failed");
+    if (event.origin !== `${import.meta.env.VITE_FRONTEND_URL}`) {
+      Logger.info("Redirect from popup failed", event.origin);
       return;
     }
 

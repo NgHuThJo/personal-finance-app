@@ -38,7 +38,7 @@ const requestBodyDictionary = new Map<Request, Request>();
 // Create new instance because deep cloning does not work with functions as properties
 export const clientWithAuth = createClient(
   createConfig<ClientOptions>({
-    baseUrl: import.meta.env.VITE_BACKEND_BASE_URL,
+    baseUrl: "/api",
   }),
 );
 
