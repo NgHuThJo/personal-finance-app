@@ -1,0 +1,38 @@
+name: Personal finance app deployment
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: build docker images
+        run: docker compose build
+      - name: run backend tests
+        working-directory: backend/tests/integrationtests
+        run: docker compose run -rm backend dotnet test
+
+      - name: start app
+        run: docker compose up -d
+      - name: wait for app
+        run: |
+          for i in {1...30}; do
+            curl -f http://localhost:80/health && exit 0
+            sleep 2
+          done
+          docker compose logs
+          exit 1
+
+      - name: run playwright
+        run: docker compose exec -T frontend playwright test
+
+      - name: show loags
+        if: failure()
+        run: docker compose logs
