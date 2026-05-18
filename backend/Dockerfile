@@ -3,6 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /
 COPY *.sln .
 COPY backend ./backend
+RUN ls -R 
 RUN dotnet restore backend/Src/backend.csproj && dotnet publish backend/Src/backend.csproj -c Release -o /app
 
 # Test stage

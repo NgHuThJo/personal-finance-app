@@ -3,6 +3,7 @@ name: Personal finance app deployment
 on:
   push:
     branches: ["main"]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -13,12 +14,19 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v6
+      - name: create backend env file
+        run: |
+          printf '%s' "AUTHENTICATION__GITHUB__CLIENTID=${{ secrets.AUTHENTICATION__GITHUB__CLIENTID }}" >> backend/Src/.env
+          printf '%s' "AUTHENTICATION__GITHUB__CLIENTSECRET=${{ secrets.AUTHENTICATION__GITHUB__CLIENTSECRET }}" >> backend/Src/.env
+          printf '%s' "AUTHENTICATION__GOOGLE__CLIENTID=${{ secrets.AUTHENTICATION__GOOGLE__CLIENTID }}" >> backend/Src/.env
+          printf '%s' "AUTHENTICATION__GOOGLE__CLIENTSECRET=${{ secrets.AUTHENTICATION__GOOGLE__CLIENTSECRET }}" >> backend/Src/.env
+          printf '%s' "CONNECTIONSTRINGS__POSTGRESCONNECTION=${{ secrets.CONNECTIONSTRINGS__POSTGRESCONNECTION }}" >> backend/Src/.env
+          printf '%s' "JWT__SCHEMAS__BEARER__SECRETKEY=${{ secrets.JWT__SCHEMAS__BEARER__SECRETKEY }}" >> backend/Src/.env
       - name: build docker images
         run: docker compose build
       - name: run backend tests
         working-directory: backend/tests/integrationtests
         run: docker compose run -rm backend dotnet test
-
       - name: start app
         run: docker compose up -d
       - name: wait for app
@@ -33,6 +41,6 @@ jobs:
       - name: run playwright
         run: docker compose exec -T frontend playwright test
 
-      - name: show loags
+      - name: show logs
         if: failure()
         run: docker compose logs
