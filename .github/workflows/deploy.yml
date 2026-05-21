@@ -1,0 +1,80 @@
+name: Personal finance app deployment
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY: financeapp.azurecr.io
+  RESOURCE_GROUP: finance-app
+  FRONTEND_CONTAINER_NAME: frontend
+  BACKEND_CONTAINER_NAME: backend
+  TAG: ${{ github.sha }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Mandatory if you use environment secrets and not repository secrets
+    environment: personal_finance_app
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: build backend image
+        run: |
+          docker build \
+          -t "$REGISTRY/backend:$TAG" \
+          -f backend/Dockerfile \
+          .
+      - name: build frontend image
+        run: |
+          docker build \
+          -t "$REGISTRY/frontend:$TAG" \
+          -f frontend/Dockerfile \
+          .
+      - name: log in to azure container registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }}
+          password: ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
+      - name: push backend image
+        run: docker push ${{ env.REGISTRY }}/backend:${{ env.TAG }}
+      - name: push frontend image
+        run: docker push ${{ env.REGISTRY }}/frontend:${{ env.TAG }}
+      - name: azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: deploy backend to azure container apps
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          imageToDeploy: ${{ env.REGISTRY }}/backend:${{ env.TAG }}
+          resourceGroup: ${{ env.RESOURCE_GROUP }}
+          containerAppName: ${{ env.BACKEND_CONTAINER_NAME }}
+          containerAppEnvironment: finance-app-env
+          location: germanywestcentral
+          ingress: external
+          targetPort: 8080
+          registryUrl: ${{ env.REGISTRY }}
+          registryUsername: ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
+          environmentVariables: |
+            ASPNETCORE_ENVIRONMENT=Production
+            ASPNETCORE_URLS=http://+:8080
+      - name: deploy frontend to azure container apps
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          imageToDeploy: ${{ env.REGISTRY }}/frontend:${{ env.TAG }}
+          resourceGroup: ${{ env.RESOURCE_GROUP }}
+          containerAppName: ${{ env.FRONTEND_CONTAINER_NAME }}
+          containerAppEnvironment: finance-app-env
+          location: germanywestcentral
+          ingress: external
+          targetPort: 80
+          registryUrl: ${{ env.REGISTRY }}
+          registryUsername: ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
