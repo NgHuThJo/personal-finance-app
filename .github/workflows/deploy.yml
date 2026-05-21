@@ -63,8 +63,9 @@ jobs:
           registryUsername: ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
           environmentVariables: |
-            ASPNETCORE_ENVIRONMENT=Production
-            ASPNETCORE_URLS=http://+:8080
+            ASPNETCORE__ENVIRONMENT=Production
+            ASPNETCORE__URLS=http://+:8080
+            CONNECTIONSTRINGS__POSTGRESCONNECTION=${{ secrets.CONNECTIONSTRINGS__POSTGRESCONNECTION }}
       - name: deploy frontend to azure container apps
         uses: azure/container-apps-deploy-action@v1
         with:
