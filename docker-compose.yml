@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   db:
     image: postgres:latest
@@ -16,12 +14,15 @@ services:
       - app_net
 
   backend:
+    # This is bash parameter substitution, i.e. use TAG variable if it exists in the shell,
+    # otherwise use default value "latest"
+    image: financeapp.azurecr.io/backend:${TAG:-latest}
     build:
       context: .
       dockerfile: ./backend/Dockerfile
     restart: always
     env_file:
-      - ./backend/src/.env
+      - ./backend/Src/.env
     depends_on:
       - db
     networks:
@@ -32,6 +33,7 @@ services:
       - dp_keys:/root/.aspnet/DataProtection-Keys
 
   frontend:
+    image: financeapp.azurecr.io/frontend:${TAG:-latest}
     build:
       context: .
       dockerfile: ./frontend/Dockerfile

@@ -8,6 +8,7 @@ import { configDefaults } from "vitest/config";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
+  const isDev = process.env.NODE_ENV !== "production";
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
@@ -18,10 +19,12 @@ export default defineConfig(({ mode }) => {
       // ...,
     ],
     server: {
-      https: {
-        key: fs.readFileSync("./certs/localhost+1-key.pem"),
-        cert: fs.readFileSync("./certs/localhost+1.pem"),
-      },
+      https: isDev
+        ? {
+            key: fs.readFileSync("./certs/localhost+1-key.pem"),
+            cert: fs.readFileSync("./certs/localhost+1.pem"),
+          }
+        : undefined,
       proxy: {
         "/api": {
           target: env.VITE_BACKEND_URL,

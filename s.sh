@@ -20,6 +20,10 @@ runInteractiveDocker() {
     docker exec -it "$1" sh
 }
 
+runGhAct() {
+    gh act --secret-file .secrets -s GITHUB_TOKEN="$(gh auth token)"
+}
+
 processDotnetSecrets() {
     local projectDir="$1"
 
@@ -64,6 +68,7 @@ delegate() {
         runInteractiveDocker) runInteractiveDocker "$@" ;;
         getDockerContainerId) getDockerContainerId "$@" ;;
         readFile) readFile "$@" ;;
+        runGhAct) runGhAct "$@" ;;
         forLoop) forLoop "$@" ;;
         whileLoop) whileLoop "$@" ;;
         processDotnetSecrets) processDotnetSecrets "$@" ;;
