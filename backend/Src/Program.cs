@@ -586,10 +586,11 @@ if (app.Environment.IsDevelopment())
     app.UseCors("DevCorsPolicy");
     app.MapScalarApiReference();
 }
-else
-{
-    app.UseHttpsRedirection();
-}
+
+// else
+// {
+//     app.UseHttpsRedirection();
+// }
 
 app.UseAuthentication();
 app.UseAuthorization();
