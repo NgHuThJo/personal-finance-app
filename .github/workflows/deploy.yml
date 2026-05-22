@@ -66,6 +66,11 @@ jobs:
             ASPNETCORE__ENVIRONMENT=Production
             ASPNETCORE__URLS=http://+:8080
             CONNECTIONSTRINGS__POSTGRESCONNECTION=${{ secrets.CONNECTIONSTRINGS__POSTGRESCONNECTION }}
+            JWT__SCHEMAS__BEARER__SECRETKEY=${{ secrets.JWT__SCHEMAS__BEARER__SECRETKEY }}
+            AUTHENTICATION__GOOGLE__CLIENTSECRET=${{ secrets.AUTHENTICATION__GOOGLE__CLIENTSECRET }}
+            AUTHENTICATION__GOOGLE__CLIENTID=${{ secrets.AUTHENTICATION__GOOGLE__CLIENTID }}
+            AUTHENTICATION__GITHUB__CLIENTSECRET=${{ secrets.AUTHENTICATION__GITHUB__CLIENTSECRET }}
+            AUTHENTICATION__GITHUB__CLIENTID=${{ secrets.AUTHENTICATION__GITHUB__CLIENTID }}
       - name: deploy frontend to azure container apps
         uses: azure/container-apps-deploy-action@v1
         with:
