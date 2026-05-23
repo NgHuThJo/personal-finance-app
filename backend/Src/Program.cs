@@ -13,6 +13,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -551,6 +552,16 @@ builder.WebHost.ConfigureKestrel(options =>
     options.ListenAnyIP(8080);
 });
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor
+        | ForwardedHeaders.XForwardedHost
+        | ForwardedHeaders.XForwardedProto;
+    options.KnownProxies.Clear();
+    options.KnownIPNetworks.Clear();
+});
+
 var app = builder.Build();
 
 // Run migrations before app.Run()
@@ -596,6 +607,46 @@ if (app.Environment.IsDevelopment())
 // {
 //     app.UseHttpsRedirection();
 // }
+
+app.Use(
+    async (context, next) =>
+    {
+        var logger = context.RequestServices.GetRequiredService<
+            ILogger<Program>
+        >();
+
+        logger.LogInformation(
+            """$"BEFORE forwarding headers: URL: {Url}, Host: {Host}, X-Forwarded-Host: {XFH}, X-Forwarded-Proto: {XFP}""",
+            $"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString}",
+            context.Request.Host,
+            context.Request.Headers["X-Forwarded-Host"].ToString(),
+            context.Request.Headers["X-Forwarded-Proto"].ToString()
+        );
+
+        await next();
+    }
+);
+
+app.UseForwardedHeaders();
+
+app.Use(
+    async (context, next) =>
+    {
+        var logger = context.RequestServices.GetRequiredService<
+            ILogger<Program>
+        >();
+
+        logger.LogInformation(
+            """$"AFTER forwarding headers: URL: {Url}, Host: {Host}, X-Forwarded-Host: {XFH}, X-Forwarded-Proto: {XFP}""",
+            $"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString}",
+            context.Request.Host,
+            context.Request.Headers["X-Forwarded-Host"].ToString(),
+            context.Request.Headers["X-Forwarded-Proto"].ToString()
+        );
+
+        await next();
+    }
+);
 
 app.UseAuthentication();
 app.UseAuthorization();

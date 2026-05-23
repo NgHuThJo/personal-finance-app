@@ -146,6 +146,8 @@ export function Login() {
       window.location.origin,
     );
 
+    console.log("window origin google:", newUrl);
+
     if (newUrl === null) {
       Logger.error(
         `Invalid URL passed as argument to URL.${URL.parse.name}, cannot `,
@@ -171,6 +173,8 @@ export function Login() {
       import.meta.env.VITE_GITHUB_LOGIN_PATH,
       import.meta.env.VITE_FRONTEND_URL,
     );
+
+    console.log("window origin github:", newUrl);
 
     if (newUrl === null) {
       Logger.error(

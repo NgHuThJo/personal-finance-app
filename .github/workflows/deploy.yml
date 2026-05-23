@@ -68,8 +68,6 @@ jobs:
             --name ${{ env.BACKEND_CONTAINER_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --set-env-vars \
-            ASPNETCORE__ENVIRONMENT=Production \
-            ASPNETCORE__URLS=http://+:8080 \
             CONNECTIONSTRINGS__POSTGRESCONNECTION='${{ secrets.CONNECTIONSTRINGS__POSTGRESCONNECTION }}' \
             JWT__SCHEMAS__BEARER__SECRETKEY='${{ secrets.JWT__SCHEMAS__BEARER__SECRETKEY }}' \
             AUTHENTICATION__GOOGLE__CLIENTSECRET='${{ secrets.AUTHENTICATION__GOOGLE__CLIENTSECRET }}' \
