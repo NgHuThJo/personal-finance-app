@@ -558,6 +558,8 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
         ForwardedHeaders.XForwardedFor
         | ForwardedHeaders.XForwardedHost
         | ForwardedHeaders.XForwardedProto;
+    // Only loopback proxies are allowed by default
+    // Clear that restriction because forwarders are enabled by explicit configuration
     options.KnownProxies.Clear();
     options.KnownIPNetworks.Clear();
 });
@@ -616,11 +618,12 @@ app.Use(
         >();
 
         logger.LogInformation(
-            """$"BEFORE forwarding headers: URL: {Url}, Host: {Host}, X-Forwarded-Host: {XFH}, X-Forwarded-Proto: {XFP}""",
+            """BEFORE forwarding headers: URL: {Url}, Host: {Host}, X-Forwarded-Host: {XFH}, X-Forwarded-Proto: {XFP}, X-Forwarded-For: {XFF}""",
             $"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString}",
             context.Request.Host,
             context.Request.Headers["X-Forwarded-Host"].ToString(),
-            context.Request.Headers["X-Forwarded-Proto"].ToString()
+            context.Request.Headers["X-Forwarded-Proto"].ToString(),
+            context.Request.Headers["X-Fowarded-For"].ToString()
         );
 
         await next();
@@ -637,11 +640,12 @@ app.Use(
         >();
 
         logger.LogInformation(
-            """$"AFTER forwarding headers: URL: {Url}, Host: {Host}, X-Forwarded-Host: {XFH}, X-Forwarded-Proto: {XFP}""",
+            """AFTER forwarding headers: URL: {Url}, Host: {Host}, X-Forwarded-Host: {XFH}, X-Forwarded-Proto: {XFP}, X-Forwarded-For: {XFF}""",
             $"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString}",
             context.Request.Host,
             context.Request.Headers["X-Forwarded-Host"].ToString(),
-            context.Request.Headers["X-Forwarded-Proto"].ToString()
+            context.Request.Headers["X-Forwarded-Proto"].ToString(),
+            context.Request.Headers["X-Forwarded-For"].ToString()
         );
 
         await next();
