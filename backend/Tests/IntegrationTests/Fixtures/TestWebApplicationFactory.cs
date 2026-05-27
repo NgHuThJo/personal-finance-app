@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace backend.Tests.IntegrationTests;
@@ -18,6 +19,19 @@ public class TestWebApplicationFactory(string connectionString)
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.ConfigureAppConfiguration(
+            (context, config) =>
+            {
+                config.AddInMemoryCollection(
+                    new Dictionary<string, string?>
+                    {
+                        ["GitHub:ClientId"] = "test-client-id",
+                        ["GitHub:ClientSecret"] = "test-client-secret",
+                    }
+                );
+            }
+        );
+
         builder.ConfigureServices(services =>
         {
             var dbContextDescriptor = services.FirstOrDefault(s =>

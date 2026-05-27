@@ -4,9 +4,14 @@ using Xunit;
 
 namespace backend.Tests.IntegrationTests;
 
-public class BalanceTest(DatabaseFixture fixture) : IntegrationTestBase(fixture)
+[Trait("Category", "Balance")]
+public class BalanceTest(
+    DatabaseFixture fixture,
+    ITestOutputHelper outputHelper
+) : IntegrationTestBase(fixture)
 {
     private const string _uriPath = "v1/balances";
+    private readonly ITestOutputHelper _outputHelper = outputHelper;
 
     [Fact]
     public async Task GetBalanceByUserId_IfSuccessful_Return200()
@@ -18,6 +23,8 @@ public class BalanceTest(DatabaseFixture fixture) : IntegrationTestBase(fixture)
             path,
             TestContext.Current.CancellationToken
         );
+        var content = await getResponse.Content.ReadAsStringAsync();
+        _outputHelper.WriteLine($"in balance: {content}");
         // Assert
         getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }

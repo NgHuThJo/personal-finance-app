@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Json;
-using System.Runtime.Serialization;
 using backend.Shared.Test;
 using backend.Src.Features;
 using backend.Src.Models;
@@ -10,10 +9,11 @@ using Xunit;
 
 namespace backend.Tests.IntegrationTests;
 
-public class TransactionTest(DatabaseFixture fixture)
+public class TransactionTest(DatabaseFixture fixture, ITestOutputHelper output)
     : IntegrationTestBase(fixture)
 {
     private readonly string _uriPath = "/v1/transactions";
+    private readonly ITestOutputHelper _output = output;
 
     [Fact]
     public async Task CreateTransaction_IfSuccessful_Return204()
@@ -91,6 +91,12 @@ public class TransactionTest(DatabaseFixture fixture)
             jsonContent,
             TestContext.Current.CancellationToken
         );
+        _output.WriteLine(
+            "in createtransaction email after request",
+            postResponse
+        );
+        var body = await postResponse.Content.ReadAsStringAsync();
+        _output.WriteLine("createtransaction body:", body);
         // Assert
         postResponse
             .StatusCode.Should()

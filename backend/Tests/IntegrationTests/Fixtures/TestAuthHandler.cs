@@ -28,7 +28,7 @@ public class TestAuthHandler(
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Nbf, DateTime.UtcNow.ToString()),
             new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-            new(JwtRegisteredClaimNames.Iss, "https//:localhost:5096"),
+            new(JwtRegisteredClaimNames.Iss, "https://localhost:5096"),
             new(JwtRegisteredClaimNames.Aud, "app://"),
         };
 
@@ -45,7 +45,7 @@ public class TestAuthHandler(
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, _defaultUserId));
         }
 
-        var identity = new ClaimsIdentity(claims, "Test");
+        var identity = new ClaimsIdentity(claims, "TestScheme");
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, "TestScheme");
         var result = AuthenticateResult.Success(ticket);

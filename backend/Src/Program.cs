@@ -92,15 +92,8 @@ builder.Services.AddDbContext<AppDbContext>(
     (options) =>
     {
         var config = builder
-            .Configuration.GetRequiredSection("ConnectionStrings")
+            .Configuration.GetSection("ConnectionStrings")
             .Get<PostgresConfig>();
-
-        if (config?.PostgresConnection is null)
-        {
-            throw new InvalidDataException(
-                "Postgres connection string is not initialized"
-            );
-        }
 
         options.UseNpgsql(config?.PostgresConnection);
     }
