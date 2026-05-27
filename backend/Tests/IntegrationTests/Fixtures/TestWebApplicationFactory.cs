@@ -18,20 +18,8 @@ public class TestWebApplicationFactory(string connectionString)
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureTestServices(services =>
+        builder.ConfigureServices(services =>
         {
-            // Set this property to this class's property value whenever a TestAuthHandlerOptions is instantiated somewhere
-            services.Configure<TestAuthHandlerOptions>(options =>
-                options.DefaultUserId = DefaultUserId
-            );
-
-            services
-                .AddAuthentication("TestScheme")
-                .AddScheme<TestAuthHandlerOptions, TestAuthHandler>(
-                    "TestScheme",
-                    options => { }
-                );
-
             var dbContextDescriptor = services.FirstOrDefault(s =>
                 s.ServiceType == typeof(DbContextOptions<AppDbContext>)
             );
@@ -54,6 +42,21 @@ public class TestWebApplicationFactory(string connectionString)
             {
                 options.UseNpgsql(_connectionString);
             });
+        });
+
+        builder.ConfigureTestServices(services =>
+        {
+            // Set this property to this class's property value whenever a TestAuthHandlerOptions is instantiated somewhere
+            services.Configure<TestAuthHandlerOptions>(options =>
+                options.DefaultUserId = DefaultUserId
+            );
+
+            services
+                .AddAuthentication("TestScheme")
+                .AddScheme<TestAuthHandlerOptions, TestAuthHandler>(
+                    "TestScheme",
+                    options => { }
+                );
         });
     }
 }
