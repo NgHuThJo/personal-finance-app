@@ -194,7 +194,7 @@ public class PotApiTest(DatabaseFixture dbFixture)
     }
 
     [Fact]
-    public async Task EditPot_IfDuplicateName_Return409()
+    public async Task EditPot_IfDuplicateNameOnSameUser_Return204()
     {
         // Arrange
         var dbContext = Db.CreateDbContext();
@@ -229,7 +229,7 @@ public class PotApiTest(DatabaseFixture dbFixture)
             TestContext.Current.CancellationToken
         );
         // Assert
-        putResponse.StatusCode.Should().Be(HttpStatusCode.Conflict);
+        putResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
 
     [Fact]

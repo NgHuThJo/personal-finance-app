@@ -622,7 +622,7 @@ app.Use(
     }
 );
 
-// must be used before authentication and authorization
+// Must be used before authentication and authorization
 app.UseForwardedHeaders();
 
 // After forwarding headers

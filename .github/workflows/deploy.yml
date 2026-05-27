@@ -16,12 +16,28 @@ env:
   TAG: ${{ github.sha }}
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
-    # Mandatory if you use environment secrets and not repository secrets
-    environment: personal_finance_app
     steps:
       - name: checkout
+        uses: actions/checkout@v6
+      - name: setup dotnet
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+      - name: restore
+        run: dotnet restore backend/Tests/IntegrationTests
+      - name: build
+        run: dotnet build backend/Tests/IntegrationTests -c Release --no-restore
+      - name: run integrations tests
+        run: dotnet test backend/Tests/IntegrationTests -c Release --no-build --verbosity normal
+
+  build:
+    runs-on: ubuntu-latest
+    environment: personal_finance_app
+    needs: test
+    steps:
+      - name:
         uses: actions/checkout@v6
       - name: build backend image
         run: |
@@ -45,6 +61,12 @@ jobs:
         run: docker push ${{ env.REGISTRY }}/backend:${{ env.TAG }}
       - name: push frontend image
         run: docker push ${{ env.REGISTRY }}/frontend:${{ env.TAG }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment: personal_finance_app
+    needs: build
+    steps:
       - name: azure login
         uses: azure/login@v2
         with:
@@ -68,7 +90,7 @@ jobs:
             --name ${{ env.BACKEND_CONTAINER_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --set-env-vars \
-            ASPNETCORE__URLS=http://+:8080
+            ASPNETCORE__URLS=http://+:8080 \
             CONNECTIONSTRINGS__POSTGRESCONNECTION='${{ secrets.CONNECTIONSTRINGS__POSTGRESCONNECTION }}' \
             JWT__SCHEMAS__BEARER__SECRETKEY='${{ secrets.JWT__SCHEMAS__BEARER__SECRETKEY }}' \
             AUTHENTICATION__GOOGLE__CLIENTSECRET='${{ secrets.AUTHENTICATION__GOOGLE__CLIENTSECRET }}' \
