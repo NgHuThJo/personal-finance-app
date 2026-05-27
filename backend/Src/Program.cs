@@ -547,11 +547,6 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 builder.Services.AddSerilog(Log.Logger);
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(8080);
-});
-
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders =
@@ -603,13 +598,10 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseCors("DevCorsPolicy");
     app.MapScalarApiReference();
+    app.UseHttpsRedirection();
 }
 
-// else
-// {
-//     app.UseHttpsRedirection();
-// }
-
+// Before forwarding headers
 app.Use(
     async (context, next) =>
     {
@@ -630,8 +622,10 @@ app.Use(
     }
 );
 
+// must be used before authentication and authorization
 app.UseForwardedHeaders();
 
+// After forwarding headers
 app.Use(
     async (context, next) =>
     {

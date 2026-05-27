@@ -251,32 +251,34 @@ export function Login() {
           {errors.root?.["server-unauthorized"]?.message}
         </span>
       </label>
-      <Button
-        type="submit"
-        variant="cta-primary"
-        disabled={isPending}
-        data-testid="normal-login"
-      >
-        Login
-      </Button>
-      <Button
-        type="button"
-        variant="cta-primary"
-        disabled={isPending}
-        onClick={onGoogleLogin}
-        data-testid="google-login"
-      >
-        Login with Google
-      </Button>
-      <Button
-        type="button"
-        variant="cta-primary"
-        disabled={isPending}
-        onClick={onGitHubLogin}
-        data-testid="github-login"
-      >
-        Login with GitHub
-      </Button>
+      <div className={styles["button-list"]}>
+        <Button
+          type="submit"
+          variant="cta-primary"
+          disabled={isPending}
+          data-testid="normal-login"
+        >
+          Login
+        </Button>
+        <Button
+          type="button"
+          variant="cta-primary"
+          disabled={isPending}
+          onClick={onGoogleLogin}
+          data-testid="google-login"
+        >
+          Login with Google
+        </Button>
+        <Button
+          type="button"
+          variant="cta-primary"
+          disabled={isPending}
+          onClick={onGitHubLogin}
+          data-testid="github-login"
+        >
+          Login with GitHub
+        </Button>
+      </div>
       <p className={styles["cta-link"]}>
         Need to create an account? <Link to="/signup">Sign up</Link>
       </p>
