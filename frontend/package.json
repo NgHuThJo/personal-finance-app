@@ -7,10 +7,11 @@
   "scripts": {
     "start": "node dist/index.html",
     "dev": "vite",
-    "dev-test": "cross-env VITE_IS_E2E=true vite",
+    "dev-test": "cross-env NODE_ENV=production VITE_IS_E2E=true vite",
     "build": "vite build",
     "vitest": "vitest",
     "playwright": "npx playwright test --project=chromium",
+    "playwright-ci": "npx playwright test",
     "test-codegen": "npx playwright codegen --viewport-size=1920,1080 http://localhost:5173",
     "preview": "vite preview",
     "check-for-errors": "npx tsc --noEmit",

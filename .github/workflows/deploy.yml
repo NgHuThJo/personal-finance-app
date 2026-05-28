@@ -16,7 +16,7 @@ env:
   TAG: ${{ github.sha }}
 
 jobs:
-  test:
+  backend-test:
     runs-on: ubuntu-latest
     environment: personal_finance_app_test
     steps:
@@ -38,12 +38,29 @@ jobs:
           AUTHENTICATION__GITHUB__CLIENTSECRET: ${{ secrets.AUTHENTICATION__GITHUB__CLIENTSECRET }}
           AUTHENTICATION__GITHUB__CLIENTID: ${{ secrets.AUTHENTICATION__GITHUB__CLIENTID }}
 
+  frontend-test:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.57.0-noble
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: install dependencies
+        run: cd frontend && npm ci
+      - name: run playwright tests
+        run: cd frontend && npm run playwright-ci
+
   build:
     runs-on: ubuntu-latest
     environment: personal_finance_app
-    needs: test
+    needs: ["backend-test", "frontend-test"]
     steps:
-      - name:
+      - name: checkout
         uses: actions/checkout@v6
       - name: build backend image
         run: |
