@@ -40,7 +40,7 @@ jobs:
 
   frontend-test:
     runs-on: ubuntu-latest
-    container: mcr.microsoft.com/playwright:v1.57.0-noble
+    container: mcr.microsoft.com/playwright:v1.60.0-noble
     steps:
       - name: checkout
         uses: actions/checkout@v6
@@ -53,6 +53,8 @@ jobs:
       - name: install dependencies
         run: cd frontend && npm ci
       - name: run playwright tests
+        env:
+          HOME: /root
         run: cd frontend && npm run playwright-ci
 
   build:
