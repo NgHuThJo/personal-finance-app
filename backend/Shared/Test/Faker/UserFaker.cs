@@ -12,6 +12,7 @@ public static class UserFaker
             .RuleFor(u => u.Name, f => f.Name.FirstName())
             .RuleFor(u => u.Email, f => f.Internet.Email())
             .RuleFor(u => u.PasswordHash, f => f.Internet.Password())
+            .RuleFor(u => u.AvatarUrl, (Faker f) => f.Image.DataUri(32, 32))
             .RuleFor(
                 u => u.Pots,
                 f =>
@@ -30,13 +31,6 @@ public static class UserFaker
                         .BudgetFakerForSeeding(seed)
                         .Generate(TestConstants.TESTDATA_ENTITY_COUNT)
             )
-            // .RuleFor(
-            //     u => u.AuthProvider,
-            //     f =>
-            //         UserAuthProviderFaker
-            //             .CreateUserAuthProviderFaker()
-            //             .Generate()
-            // )
             .UseSeed(seed);
 
     public static Faker<User> UserFakerForTesting() =>
@@ -44,6 +38,7 @@ public static class UserFaker
             .RuleFor(u => u.Name, f => f.Name.FirstName())
             .RuleFor(u => u.Email, f => f.Internet.Email())
             .RuleFor(u => u.PasswordHash, f => f.Internet.Password())
+            .RuleFor(u => u.AvatarUrl, (Faker f) => f.Image.DataUri(32, 32))
             .RuleFor(
                 u => u.Balance,
                 f => BalanceFaker.BalanceFakerForTesting().Generate()
