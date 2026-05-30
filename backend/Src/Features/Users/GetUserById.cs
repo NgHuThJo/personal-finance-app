@@ -31,6 +31,10 @@ public record GetUserByIdResponse
 
     [MinLength(1)]
     public required string Name { get; init; }
+
+    [MinLength(1)]
+    public required string AvatarSeed { get; init; }
+    public required AvatarStyle AvatarStyle { get; init; }
 }
 
 public sealed class GetUserByIdEndpoint
@@ -79,7 +83,13 @@ public sealed class GetUserByIdHandler(
         }
 
         return new UserFound(
-            new GetUserByIdResponse { Email = user.Email, Name = user.Name }
+            new GetUserByIdResponse
+            {
+                Email = user.Email,
+                Name = user.Name,
+                AvatarSeed = user.AvatarSeed,
+                AvatarStyle = user.AvatarStyle,
+            }
         );
     }
 }

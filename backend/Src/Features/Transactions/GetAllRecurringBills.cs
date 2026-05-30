@@ -28,6 +28,8 @@ public record GetAllRecurringBillsUserDto
 {
     public required string Name { get; init; }
     public required string Email { get; init; }
+    public required string AvatarSeed { get; init; }
+    public required AvatarStyle AvatarStyle { get; init; }
 }
 
 public record GetAllRecurringBillsTransactionDto
@@ -136,11 +138,15 @@ public class GetAllRecurringBillsHandler(AppDbContext context)
                         {
                             Email = t.Recipient.Email,
                             Name = t.Recipient.Name,
+                            AvatarSeed = t.Recipient.AvatarSeed,
+                            AvatarStyle = t.Recipient.AvatarStyle,
                         }
                         : new GetAllRecurringBillsUserDto
                         {
                             Email = t.Sender.Email,
                             Name = t.Sender.Name,
+                            AvatarSeed = t.Sender.AvatarSeed,
+                            AvatarStyle = t.Sender.AvatarStyle,
                         },
             })
             .AsNoTracking()

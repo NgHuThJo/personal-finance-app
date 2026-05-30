@@ -44,6 +44,8 @@ public record GetAllTransactionsUserDto
 {
     public required string Name { get; init; }
     public required string Email { get; init; }
+    public required string AvatarSeed { get; init; }
+    public required AvatarStyle AvatarStyle { get; init; }
 }
 
 public record GetAllTransactionsTransactionDto
@@ -149,11 +151,15 @@ public class GetAllTransactionsHandler(AppDbContext context)
                         {
                             Email = t.Recipient.Email,
                             Name = t.Recipient.Name,
+                            AvatarSeed = t.Recipient.AvatarSeed,
+                            AvatarStyle = t.Recipient.AvatarStyle,
                         }
                         : new GetAllTransactionsUserDto
                         {
                             Email = t.Sender.Email,
                             Name = t.Sender.Name,
+                            AvatarSeed = t.Sender.AvatarSeed,
+                            AvatarStyle = t.Sender.AvatarStyle,
                         },
             })
             .AsNoTracking()
