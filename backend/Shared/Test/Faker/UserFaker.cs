@@ -1,4 +1,5 @@
 using backend.Src.Models;
+using backend.Src.Shared;
 using Bogus;
 
 namespace backend.Shared.Test;
@@ -12,7 +13,8 @@ public static class UserFaker
             .RuleFor(u => u.Name, f => f.Name.FirstName())
             .RuleFor(u => u.Email, f => f.Internet.Email())
             .RuleFor(u => u.PasswordHash, f => f.Internet.Password())
-            .RuleFor(u => u.AvatarUrl, (Faker f) => f.Image.DataUri(32, 32))
+            .RuleFor(u => u.AvatarSeed, f => AvatarGenerator.GenerateSeed())
+            .RuleFor(u => u.AvatarStyle, f => AvatarGenerator.GetRandomStyle())
             .RuleFor(
                 u => u.Pots,
                 f =>
@@ -38,7 +40,8 @@ public static class UserFaker
             .RuleFor(u => u.Name, f => f.Name.FirstName())
             .RuleFor(u => u.Email, f => f.Internet.Email())
             .RuleFor(u => u.PasswordHash, f => f.Internet.Password())
-            .RuleFor(u => u.AvatarUrl, (Faker f) => f.Image.DataUri(32, 32))
+            .RuleFor(u => u.AvatarSeed, f => AvatarGenerator.GenerateSeed())
+            .RuleFor(u => u.AvatarStyle, f => AvatarGenerator.GetRandomStyle())
             .RuleFor(
                 u => u.Balance,
                 f => BalanceFaker.BalanceFakerForTesting().Generate()

@@ -261,6 +261,8 @@ builder
                 {
                     Email = email,
                     Name = username,
+                    AvatarSeed = AvatarGenerator.GenerateSeed(),
+                    AvatarStyle = AvatarGenerator.GetRandomStyle(),
                     Balance = new Balance(),
                     AuthProvider = new UserAuthProvider
                     {
@@ -392,6 +394,8 @@ builder
                 {
                     Email = email,
                     Name = name,
+                    AvatarSeed = AvatarGenerator.GenerateSeed(),
+                    AvatarStyle = AvatarGenerator.GetRandomStyle(),
                     Balance = new Balance(),
                     AuthProvider = new UserAuthProvider
                     {

@@ -6,7 +6,8 @@ public class User
     public required string Email { get; set; }
     public required string Name { get; set; }
     public string? PasswordHash { get; set; }
-    public required string AvatarUrl { get; set; } = null!;
+    public required string AvatarSeed { get; set; } = null!;
+    public required AvatarStyle AvatarStyle { get; set; }
     public Balance Balance { get; set; } = null!;
     public UserAuthProvider? AuthProvider { get; set; }
     public List<Transaction> SentTransactions { get; set; } = [];

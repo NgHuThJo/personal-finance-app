@@ -111,6 +111,8 @@ public sealed class SignUpUserHandler(
         {
             Email = command.Email,
             Name = command.Name,
+            AvatarSeed = AvatarGenerator.GenerateSeed(),
+            AvatarStyle = AvatarGenerator.GetRandomStyle(),
             PasswordHash = hashedPassword,
             Balance = new Balance(),
         };
