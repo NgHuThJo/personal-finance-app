@@ -44,7 +44,10 @@ export function DeleteBudgetDialog({
     onSuccess: async () => {
       Logger.info("Budget successfully deleted");
       queryClient.invalidateQueries({
-        queryKey: getAllBudgetsQueryKey(),
+        queryKey: getAllBudgetsQueryKey({
+          client: clientWithAuth,
+          credentials: "include",
+        }),
       });
       toggleDeleteDialog(false);
       toast.success("Budget successfully deleted");

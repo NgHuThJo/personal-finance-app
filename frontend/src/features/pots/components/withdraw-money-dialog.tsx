@@ -55,7 +55,12 @@ export function WithdrawMoneyDialog({
     }),
     onSuccess: () => {
       Logger.info("Money successfully withdrawn from pot");
-      queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
+      queryClient.invalidateQueries({
+        queryKey: getAllPotsQueryKey({
+          client: clientWithAuth,
+          credentials: "include",
+        }),
+      });
       reset();
       toast.success("Money successfully withdrawn");
     },

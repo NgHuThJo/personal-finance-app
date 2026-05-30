@@ -57,7 +57,10 @@ export function AddMoneyToPotDialog({
     onSuccess: () => {
       Logger.info("Money successfully deposited in pot");
       queryClient.invalidateQueries({
-        queryKey: getAllPotsQueryKey(),
+        queryKey: getAllPotsQueryKey({
+          client: clientWithAuth,
+          credentials: "include",
+        }),
       });
       reset();
       toast.success("Money successfully deposited in pot");

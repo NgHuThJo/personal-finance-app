@@ -43,7 +43,12 @@ export function DeletePotDialog({
     }),
     onSuccess: () => {
       Logger.info("Pot successfully deleted");
-      queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
+      queryClient.invalidateQueries({
+        queryKey: getAllPotsQueryKey({
+          client: clientWithAuth,
+          credentials: "include",
+        }),
+      });
       toggleDeleteDialog(false);
       reset();
       toast.success("Pot successfully deleted");

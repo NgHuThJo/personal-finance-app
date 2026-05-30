@@ -61,7 +61,12 @@ export function AddPotDialog() {
     }),
     onSuccess: () => {
       Logger.info("Pot successfully created");
-      queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
+      queryClient.invalidateQueries({
+        queryKey: getAllPotsQueryKey({
+          client: clientWithAuth,
+          credentials: "include",
+        }),
+      });
       setOpen(false);
       reset();
       toast.success("Pot successfully created");

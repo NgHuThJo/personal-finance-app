@@ -84,7 +84,10 @@ export function EditBudgetDialog({
     onSuccess: () => {
       Logger.info("Budget successfully edited");
       queryClient.invalidateQueries({
-        queryKey: getAllBudgetsQueryKey(),
+        queryKey: getAllBudgetsQueryKey({
+          client: clientWithAuth,
+          credentials: "include",
+        }),
       });
       toggleEditDialog(false);
       toast.success("Budget successfully edited");

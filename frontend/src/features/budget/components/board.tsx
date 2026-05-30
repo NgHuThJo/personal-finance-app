@@ -10,6 +10,7 @@ export function BudgetBoard() {
   const { data: budgetData } = useSuspenseQuery({
     ...getAllBudgetsOptions({
       client: clientWithAuth,
+      credentials: "include",
     }),
   });
 

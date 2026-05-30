@@ -77,7 +77,12 @@ export function EditPotDialog({
     }),
     onSuccess: () => {
       Logger.info("Pot successfully edited");
-      queryClient.invalidateQueries({ queryKey: getAllPotsQueryKey() });
+      queryClient.invalidateQueries({
+        queryKey: getAllPotsQueryKey({
+          client: clientWithAuth,
+          credentials: "include",
+        }),
+      });
       toggleEditDialog(false);
       reset();
       toast.success("Pot successfully edited");

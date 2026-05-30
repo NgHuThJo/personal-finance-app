@@ -60,7 +60,10 @@ export function AddTransactionDialog() {
     onSuccess: () => {
       Logger.info("Transaction successfully created");
       queryClient.invalidateQueries({
-        queryKey: getAllTransactionsQueryKey(),
+        queryKey: getAllTransactionsQueryKey({
+          client: clientWithAuth,
+          credentials: "include",
+        }),
       });
       reset();
       setOpen(false);

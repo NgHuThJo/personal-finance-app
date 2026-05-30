@@ -69,7 +69,10 @@ export function AddBudgetDialog() {
     onSuccess: () => {
       Logger.info("Budget successfully created");
       queryClient.invalidateQueries({
-        queryKey: getAllBudgetsQueryKey(),
+        queryKey: getAllBudgetsQueryKey({
+          client: clientWithAuth,
+          credentials: "include",
+        }),
       });
       reset();
       setOpen(false);
