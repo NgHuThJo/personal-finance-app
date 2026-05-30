@@ -6,6 +6,13 @@ export const zAddMoneyToPotRequest = z.object({
     addAmount: z.number()
 });
 
+export const zAvatarStyle = z.enum([
+    'Adventurer',
+    'Bottts',
+    'Lorelei',
+    'Pixel_Art'
+]);
+
 export const zCategory = z.enum([
     'Entertainment',
     'Bills',
@@ -31,7 +38,9 @@ export const zCreateTransactionRequest = z.object({
 
 export const zGetAllRecurringBillsUserDto = z.object({
     name: z.string(),
-    email: z.string()
+    email: z.string(),
+    avatarSeed: z.string(),
+    avatarStyle: zAvatarStyle
 });
 
 export const zGetAllRecurringBillsTransactionDto = z.object({
@@ -52,7 +61,9 @@ export const zGetAllRecurringBillsResponse = z.object({
 
 export const zGetAllTransactionsUserDto = z.object({
     name: z.string(),
-    email: z.string()
+    email: z.string(),
+    avatarSeed: z.string(),
+    avatarStyle: zAvatarStyle
 });
 
 export const zGetAllTransactionsTransactionDto = z.object({
@@ -79,7 +90,9 @@ export const zGetBalanceByUserIdResponse = z.object({
 
 export const zGetUserByIdResponse = z.object({
     email: z.string(),
-    name: z.string().min(1)
+    name: z.string().min(1),
+    avatarSeed: z.string().min(1),
+    avatarStyle: zAvatarStyle
 });
 
 export const zHttpValidationProblemDetails = z.object({

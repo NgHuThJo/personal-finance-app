@@ -6,7 +6,7 @@ namespace backend.Src.Models;
 public enum AvatarStyle
 {
     Adventurer,
-    Botts,
+    Bottts,
     Lorelei,
     Pixel_Art,
 }

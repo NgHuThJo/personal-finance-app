@@ -8,7 +8,9 @@ import {
   createRefreshTokenOptions,
   getAllTransactionsOptions,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
+import { Image } from "#frontend/shared/primitives/image";
 import { appLinkOptions } from "#frontend/shared/router/options/linkOptions";
+import { diceBearerHelper } from "#frontend/shared/utils/avatar";
 import { dateTimeFormatter } from "#frontend/shared/utils/intl/datetime-format";
 import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
 import { decodeJwt } from "#frontend/shared/utils/object";
@@ -25,6 +27,25 @@ export function DashboardTransactionSummary() {
         pageSize: 5,
       },
     }),
+    select: (prev) => {
+      return {
+        ...prev,
+        data: prev.data.map((transaction) => {
+          const { avatarSeed, avatarStyle, ...rest } = transaction.otherUser;
+
+          return {
+            ...transaction,
+            otherUser: {
+              ...rest,
+              avatar: diceBearerHelper.createAvatarString(
+                avatarStyle,
+                avatarSeed,
+              ),
+            },
+          };
+        }),
+      };
+    },
   });
   const { data: accessToken } = useQuery({
     ...createRefreshTokenOptions(),
@@ -49,7 +70,12 @@ export function DashboardTransactionSummary() {
         <ul className={styles["list"]}>
           {transactionData.map((transaction) => (
             <li className={styles["list-item"]} key={transaction.id}>
-              <div>
+              <div className={styles["list-item-left"]}>
+                <Image
+                  className="icon-sm"
+                  src={transaction.otherUser.avatar}
+                  alt="avatar image"
+                />
                 <span className={styles.name}>
                   {transaction.otherUser.name}
                 </span>

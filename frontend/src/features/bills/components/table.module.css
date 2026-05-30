@@ -15,6 +15,10 @@
   }
 
   td:first-of-type {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+    align-items: center;
     font-weight: var(--font-weight-heading);
     color: var(--color-text-primary);
   }

@@ -35,6 +35,13 @@
   }
 }
 
+.list-item-left {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .link {
   display: flex;
   align-items: center;

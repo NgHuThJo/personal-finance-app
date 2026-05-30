@@ -6,7 +6,9 @@ import {
   createRefreshTokenOptions,
   getAllTransactionsOptions,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
+import { Image } from "#frontend/shared/primitives/image";
 import { Spinner } from "#frontend/shared/primitives/spinner";
+import { diceBearerHelper } from "#frontend/shared/utils/avatar";
 import { dateTimeFormatter } from "#frontend/shared/utils/intl/datetime-format";
 import { numberFormatter } from "#frontend/shared/utils/intl/number-format";
 import { decodeJwt } from "#frontend/shared/utils/object";
@@ -34,6 +36,25 @@ export function TransactionTable() {
         searchQuery,
       },
     }),
+    select: (prev) => {
+      return {
+        ...prev,
+        data: prev.data.map((transaction) => {
+          const { avatarSeed, avatarStyle, ...rest } = transaction.otherUser;
+
+          return {
+            ...transaction,
+            otherUser: {
+              ...rest,
+              avatar: diceBearerHelper.createAvatarString(
+                avatarStyle,
+                avatarSeed,
+              ),
+            },
+          };
+        }),
+      };
+    },
     placeholderData: keepPreviousData,
   });
 
@@ -83,11 +104,18 @@ export function TransactionTable() {
                 amount,
                 category,
                 transactionDate,
-                otherUser: { name },
+                otherUser: { name, avatar },
                 senderId,
               }) => (
                 <tr key={id}>
-                  <td>{name}</td>
+                  <td>
+                    <Image
+                      className="icon-sm"
+                      src={avatar}
+                      alt="avatar image"
+                    />
+                    <span>{name}</span>
+                  </td>
                   <td>{category}</td>
                   <td>
                     {dateTimeFormatter.formatDate({

@@ -8,6 +8,8 @@ export type AddMoneyToPotRequest = {
     addAmount: number;
 };
 
+export type AvatarStyle = 'Adventurer' | 'Bottts' | 'Lorelei' | 'Pixel_Art';
+
 export type Category = 'Entertainment' | 'Bills' | 'Groceries' | 'Transportation' | 'Education' | 'Lifestyle' | 'Shopping' | 'General';
 
 export type CreateBudgetRequest = {
@@ -80,6 +82,8 @@ export type GetAllRecurringBillsTransactionDto = {
 export type GetAllRecurringBillsUserDto = {
     name: string;
     email: string;
+    avatarSeed: string;
+    avatarStyle: AvatarStyle;
 };
 
 export type GetAllTransactionsResponse = {
@@ -101,6 +105,8 @@ export type GetAllTransactionsTransactionDto = {
 export type GetAllTransactionsUserDto = {
     name: string;
     email: string;
+    avatarSeed: string;
+    avatarStyle: AvatarStyle;
 };
 
 export type GetBalanceByUserIdResponse = {
@@ -112,6 +118,8 @@ export type GetBalanceByUserIdResponse = {
 export type GetUserByIdResponse = {
     email: string;
     name: string;
+    avatarSeed: string;
+    avatarStyle: AvatarStyle;
 };
 
 export type HttpValidationProblemDetails = {
