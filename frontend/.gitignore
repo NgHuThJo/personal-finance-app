@@ -24,7 +24,7 @@ npm-debug.log*
 
 # Misc
 *.log
-*.pem
+# *.pem
 .DS_Store
 Thumbs.db
 
