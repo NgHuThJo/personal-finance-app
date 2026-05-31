@@ -19,19 +19,6 @@ public class TestWebApplicationFactory(string connectionString)
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureAppConfiguration(
-            (context, config) =>
-            {
-                config.AddInMemoryCollection(
-                    new Dictionary<string, string?>
-                    {
-                        ["GitHub:ClientId"] = "test-client-id",
-                        ["GitHub:ClientSecret"] = "test-client-secret",
-                    }
-                );
-            }
-        );
-
         builder.ConfigureServices(services =>
         {
             var dbContextDescriptor = services.FirstOrDefault(s =>
