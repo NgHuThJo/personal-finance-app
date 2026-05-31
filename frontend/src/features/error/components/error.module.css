@@ -1,0 +1,21 @@
+.layout {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  place-content: center;
+  gap: 2rem;
+
+  span {
+    font-size: var(--font-size-subheading);
+    font-weight: var(--font-weight-action);
+  }
+}
+
+.error-message {
+  max-width: 65ch;
+  font-size: var(--font-size-heading);
+  font-weight: var(--font-weight-action);
+  text-align: center;
+  white-space: pre-line;
+  color: var(--color-status-error);
+}

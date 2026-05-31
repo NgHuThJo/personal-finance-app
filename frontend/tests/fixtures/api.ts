@@ -154,6 +154,8 @@ export const test = base.extend<{
                 otherUser: {
                   email: "somerandom@email.com",
                   name: "somerandomname",
+                  avatarSeed: "some-random-string",
+                  avatarStyle: "Lorelei",
                 },
                 senderId: ++idCounter,
                 recipientId: ++idCounter,
@@ -182,6 +184,8 @@ export const test = base.extend<{
                 otherUser: {
                   email: "somerandom@email.com",
                   name: "somerandomname",
+                  avatarSeed: "some-random-string",
+                  avatarStyle: "Lorelei",
                 },
                 senderId: ++idCounter,
                 recipientId: ++idCounter,
