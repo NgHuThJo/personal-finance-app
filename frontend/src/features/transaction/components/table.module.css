@@ -13,21 +13,21 @@
   td {
     padding: 1rem;
   }
-
-  td:first-of-type {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.5rem;
-    align-items: center;
-    font-weight: var(--font-weight-heading);
-    color: var(--color-text-primary);
-  }
 }
 
 .colgroup {
   col:not(:last-of-type) {
     border-right: var(--color-border-input-primary) solid 1px;
   }
+}
+
+.first-table-cell {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem;
+  align-items: center;
+  font-weight: var(--font-weight-heading);
+  color: var(--color-text-primary);
 }
 
 .table-header {
@@ -42,6 +42,8 @@
 
 .no-transaction-found {
   height: 10rem;
+  font-weight: var(--font-weight-heading);
+  color: var(--color-text-primary);
   text-align: center;
 }
 

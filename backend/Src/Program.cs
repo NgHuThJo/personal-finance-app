@@ -500,7 +500,7 @@ builder.Services.AddRateLimiter(options =>
         "fixed",
         options =>
         {
-            options.PermitLimit = 50;
+            options.PermitLimit = 100;
             options.Window = TimeSpan.FromMinutes(1);
         }
     );
@@ -519,8 +519,8 @@ builder.Services.AddRateLimiter(options =>
                     userId,
                     _ => new TokenBucketRateLimiterOptions
                     {
-                        TokenLimit = 50,
-                        TokensPerPeriod = 20,
+                        TokenLimit = 200,
+                        TokensPerPeriod = 100,
                         ReplenishmentPeriod = TimeSpan.FromMinutes(1),
                     }
                 );
@@ -530,7 +530,7 @@ builder.Services.AddRateLimiter(options =>
                 "anonymous",
                 _ => new FixedWindowRateLimiterOptions
                 {
-                    PermitLimit = 50,
+                    PermitLimit = 100,
                     Window = TimeSpan.FromMinutes(1),
                 }
             );

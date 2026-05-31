@@ -114,7 +114,7 @@ export function BillsTable() {
                 isTransactionDone,
               }) => (
                 <tr key={id}>
-                  <td>
+                  <td className={styles["first-table-cell"]}>
                     <Image
                       className="icon-sm"
                       src={avatar}
