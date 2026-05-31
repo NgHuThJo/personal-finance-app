@@ -13,6 +13,6 @@
 
 # Misc
 *.log
-*.pem
+# *.pem
 .DS_Store
 Thumbs.db
