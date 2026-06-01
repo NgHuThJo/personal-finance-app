@@ -4,6 +4,6 @@ COPY backend ./backend
 RUN dotnet restore backend/DatabaseSeeding/database-seeding.csproj
 RUN dotnet publish backend/DatabaseSeeding/database-seeding.csproj \
     -c Release \
-    -o .
+    -o app
 
-ENTRYPOINT ["dotnet", "database-seeding.dll"]
+ENTRYPOINT ["dotnet", "app/database-seeding.dll"]
