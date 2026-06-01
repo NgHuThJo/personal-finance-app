@@ -32,6 +32,10 @@
   height: 100%;
   background-color: var(--color-background-progressbar);
   transition: width 0.5s;
+
+  @starting-style {
+    width: 0;
+  }
 }
 
 .total-label {
