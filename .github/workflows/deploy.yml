@@ -33,6 +33,7 @@ jobs:
       - name: run integrations tests
         run: dotnet test backend/Tests/IntegrationTests -c Release --no-build --logger "console;verbosity=detailed"
         env:
+          JWT__SCHEMAS__BEARER__SECRETKEY: ${{ secrets.JWT__SCHEMAS__BEARER__SECRETKEY }}
           AUTHENTICATION__GOOGLE__CLIENTSECRET: ${{ secrets.AUTHENTICATION__GOOGLE__CLIENTSECRET }}
           AUTHENTICATION__GOOGLE__CLIENTID: ${{ secrets.AUTHENTICATION__GOOGLE__CLIENTID }}
           AUTHENTICATION__GITHUB__CLIENTSECRET: ${{ secrets.AUTHENTICATION__GITHUB__CLIENTSECRET }}

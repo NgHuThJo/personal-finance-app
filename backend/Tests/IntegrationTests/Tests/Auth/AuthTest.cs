@@ -5,15 +5,19 @@ using backend.Src.Features;
 using backend.Src.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
 using Xunit;
 
 namespace backend.Tests.IntegrationTests;
 
-public class AuthApiTest(DatabaseFixture fixture) : IntegrationTestBase(fixture)
+[Trait("Category", "Auth")]
+public class AuthApiTest(
+    DatabaseFixture fixture,
+    ITestOutputHelper outputHelper
+) : IntegrationTestBase(fixture)
 {
     // Pay attention to the missing trailing slash
     private const string _uriPath = "/v1/auth";
+    private readonly ITestOutputHelper _outputHelper = outputHelper;
 
     [Fact]
     public async Task SignUpUser_WhenSuccessful_ReturnsUser()
@@ -121,6 +125,7 @@ public class AuthApiTest(DatabaseFixture fixture) : IntegrationTestBase(fixture)
             jsonContent,
             TestContext.Current.CancellationToken
         );
+        _outputHelper.WriteLine(await postResponse.Content.ReadAsStringAsync());
         // Assert
         postResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         postResponse.Headers.TryGetValues("Set-Cookie", out var cookies);
@@ -270,6 +275,7 @@ public class AuthApiTest(DatabaseFixture fixture) : IntegrationTestBase(fixture)
             TestContext.Current.CancellationToken
         );
         // Assert
+        _outputHelper.WriteLine(await postResponse.Content.ReadAsStringAsync());
         postResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var responsePayload =
             await postResponse.Content.ReadFromJsonAsync<CreateRefreshTokenResponse>(
