@@ -7,6 +7,7 @@ Personal Finance App is a fullstack web application developed as part of a chall
 - **Expense and income management**
 - **Budget and pot management**
 - **Transaction and bill management**
+- **Sort transactions and bills**
 - **OAuth integrations with Google and GitHub**
 - **JWT + refresh-token-based authentication with email and password**
 
@@ -20,6 +21,9 @@ Personal Finance App is a fullstack web application developed as part of a chall
   - Playwright
   - TypeScript
   - Vite
+  - Vitest
+  - Zod
+  - Zustand
 
 - ### Backend
   - ASP.NET - Minimal API
@@ -36,8 +40,8 @@ Personal Finance App is a fullstack web application developed as part of a chall
 
 To see the demo with pre-filled data, you can log in with the following credentials:
 
-- **Email**: `test@email.com`
-- **Password**: `test1234`
+- **Email**: `Melisa.Rutherford@hotmail.com`
+- **Password**: `NwRKisYopJ`
 
 ## Acknowledgements
 

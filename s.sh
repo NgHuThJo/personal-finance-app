@@ -16,9 +16,33 @@ getDockerContainerId() {
     awk -v pattern="$1" '$NF == pattern { print $1 }'
 }
 
+getAzureSubscriptionIdByName() {
+    # Local keyword prevents global leakage of name variable
+    local name="$1"
+
+    # Pipe in JMESPath query acts on the prior projection result
+    # Note: single quote within the query is not interpreted by the shell
+    az account list --query "[?state=='Enabled' && name=='$name'] | [0].id" -o tsv
+}
+
+enableAzureSubscription() {
+    local id
+    id=$(getAzureSubscriptionIdByName "$1")
+
+    az account subscription enable --subscription-id "$id"
+}
+
+cancelAzureSubscription() {
+    local id
+    id=$(getAzureSubscriptionIdByName "$1")
+
+    az account subscription cancel --subscription-id "$id"
+}
+
 runInteractiveDocker() {
     docker exec -it "$1" sh
 }
+
 
 runGhAct() {
     gh act --secret-file .secrets -s GITHUB_TOKEN="$(gh auth token)"
@@ -67,6 +91,8 @@ delegate() {
         runDocker) runDocker "$@" ;;
         runInteractiveDocker) runInteractiveDocker "$@" ;;
         getDockerContainerId) getDockerContainerId "$@" ;;
+        enableAzureSubscription) enableAzureSubscription "$@" ;;
+        cancelAzureSubscription) cancelAzureSubscription "$@" ;;
         readFile) readFile "$@" ;;
         runGhAct) runGhAct "$@" ;;
         forLoop) forLoop "$@" ;;
