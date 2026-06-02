@@ -17,12 +17,12 @@ public static class PasswordHasher
     )
     {
         // TODO: REMOVE THIS LINE AFTER YOU ARE DONE WITH YOUR APP
-        return PasswordVerificationResult.Success;
+        // return PasswordVerificationResult.Success;
 
-        // return _hasher.VerifyHashedPassword(
-        //     null!,
-        //     hashedPassword,
-        //     providedPassword
-        // );
+        return _hasher.VerifyHashedPassword(
+            null!,
+            hashedPassword,
+            providedPassword
+        );
     }
 }

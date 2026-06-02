@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using backend.Shared.Test;
 using backend.Src.Features;
 using backend.Src.Models;
+using backend.Src.Shared;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
@@ -108,7 +109,7 @@ public class AuthApiTest(
                 u =>
                 {
                     u.Email = email;
-                    u.PasswordHash = password;
+                    u.PasswordHash = PasswordHasher.HashPassword(password);
                 },
                 out User user
             );
