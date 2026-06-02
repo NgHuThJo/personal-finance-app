@@ -125,7 +125,6 @@ public class AuthApiTest(
             jsonContent,
             TestContext.Current.CancellationToken
         );
-        _outputHelper.WriteLine(await postResponse.Content.ReadAsStringAsync());
         // Assert
         postResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         postResponse.Headers.TryGetValues("Set-Cookie", out var cookies);
@@ -275,7 +274,6 @@ public class AuthApiTest(
             TestContext.Current.CancellationToken
         );
         // Assert
-        _outputHelper.WriteLine(await postResponse.Content.ReadAsStringAsync());
         postResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var responsePayload =
             await postResponse.Content.ReadFromJsonAsync<CreateRefreshTokenResponse>(
