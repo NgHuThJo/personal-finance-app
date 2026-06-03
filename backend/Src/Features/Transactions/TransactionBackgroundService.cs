@@ -21,7 +21,10 @@ public class TransactionBackgroundService(IServiceScopeFactory scopeFactory)
                 var now = DateTimeOffset.UtcNow;
 
                 var dueTransactions = await db
-                    .Transactions.Where(t => t.IsRecurring || !t.IsProcessed)
+                    .Transactions.Where(t =>
+                        (t.IsRecurring || !t.IsProcessed)
+                        && t.TransactionDate <= now
+                    )
                     .Include(t => t.Sender)
                         .ThenInclude(u => u.Balance)
                     .Include(t => t.Recipient)
