@@ -12,7 +12,10 @@ public static class UserFaker
         new Faker<User>()
             .RuleFor(u => u.Name, f => f.Name.FirstName())
             .RuleFor(u => u.Email, f => f.Internet.Email())
-            .RuleFor(u => u.PasswordHash, f => f.Internet.Password())
+            .RuleFor(
+                u => u.PasswordHash,
+                f => PasswordHasher.HashPassword("password")
+            )
             .RuleFor(u => u.AvatarSeed, f => AvatarGenerator.GenerateSeed())
             .RuleFor(u => u.AvatarStyle, f => AvatarGenerator.GetRandomStyle())
             .RuleFor(
