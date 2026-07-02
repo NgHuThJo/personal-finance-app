@@ -107,12 +107,12 @@ jobs:
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           containerAppName: ${{ env.BACKEND_CONTAINER_NAME }}
           containerAppEnvironment: personal-finance-app-env
-          location: germanywestcentral
+          location: francecentral
           ingress: external
           targetPort: 8080
           registryUrl: ${{ env.REGISTRY }}
-          registryUsername: ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }}
-          registryPassword: ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
+          registryUsername: ${{ vars.DOCKERHUB_USERNAME }}
+          registryPassword: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: set backend environment variables
         run: |
           az containerapp update \
@@ -133,12 +133,12 @@ jobs:
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           containerAppName: ${{ env.FRONTEND_CONTAINER_NAME }}
           containerAppEnvironment: personal-finance-app-env
-          location: germanywestcentral
+          location: francecentral
           ingress: external
           targetPort: 80
           registryUrl: ${{ env.REGISTRY }}
-          registryUsername: ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }}
-          registryPassword: ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
+          registryUsername: ${{ vars.DOCKERHUB_USERNAME }}
+          registryPassword: ${{ secrets.DOCKERHUB_TOKEN }}
 
   seedDatabase:
     runs-on: ubuntu-latest
