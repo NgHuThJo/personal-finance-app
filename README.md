@@ -41,7 +41,7 @@ Personal Finance App is a fullstack web application developed as part of a chall
 To see the demo with pre-filled data, you can log in with the following credentials:
 
 - **Email**: `Melisa.Rutherford@hotmail.com`
-- **Password**: `NwRKisYopJ`
+- **Password**: `password`
 
 ## Acknowledgements
 
