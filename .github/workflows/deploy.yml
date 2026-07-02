@@ -9,8 +9,11 @@ permissions:
   contents: read
 
 env:
-  REGISTRY: financeapp.azurecr.io
-  RESOURCE_GROUP: finance-app
+  REGISTRY: docker.io
+  DOCKER_NAMESPACE: nhtj
+  DOCKER_FRONTEND_REPO_NAME: personal-finance-app-frontend
+  DOCKER_BACKEND_REPO_NAME: personal-finance-app-backend
+  RESOURCE_GROUP: personal-finance-app
   FRONTEND_CONTAINER_NAME: frontend
   BACKEND_CONTAINER_NAME: backend
   TAG: ${{ github.sha }}
@@ -68,25 +71,25 @@ jobs:
       - name: build backend image
         run: |
           docker build \
-          -t "$REGISTRY/backend:$TAG" \
+          -t "$REGISTRY/$DOCKER_NAMESPACE/$DOCKER_BACKEND_REPO_NAME:$TAG" \
           -f backend/Dockerfile \
           .
       - name: build frontend image
         run: |
           docker build \
-          -t "$REGISTRY/frontend:$TAG" \
+          -t "$REGISTRY/$DOCKER_NAMESPACE/$DOCKER_FRONTEND_REPO_NAME:$TAG" \
           -f frontend/Dockerfile \
           .
-      - name: log in to azure container registry
+      - name: log in to docker hub
         uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.AZURE_CONTAINER_REGISTRY_USERNAME }}
-          password: ${{ secrets.AZURE_CONTAINER_REGISTRY_PASSWORD }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: push backend image
-        run: docker push ${{ env.REGISTRY }}/backend:${{ env.TAG }}
+        run: docker push ${{ env.REGISTRY }}/${{ env.DOCKER_NAMESPACE}}/${{env.DOCKER_BACKEND_REPO_NAME}}:${{ env.TAG }}
       - name: push frontend image
-        run: docker push ${{ env.REGISTRY }}/frontend:${{ env.TAG }}
+        run: docker push ${{ env.REGISTRY }}/${{ env.DOCKER_NAMESPACE}}/${{env.DOCKER_FRONTEND_REPO_NAME}}:${{ env.TAG }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -100,10 +103,10 @@ jobs:
       - name: deploy backend to azure container apps
         uses: azure/container-apps-deploy-action@v1
         with:
-          imageToDeploy: ${{ env.REGISTRY }}/backend:${{ env.TAG }}
+          imageToDeploy: ${{ env.REGISTRY }}/${{ env.DOCKER_NAMESPACE}}/${{env.DOCKER_BACKEND_REPO_NAME}}:${{ env.TAG }}
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           containerAppName: ${{ env.BACKEND_CONTAINER_NAME }}
-          containerAppEnvironment: finance-app-env
+          containerAppEnvironment: personal-finance-app-env
           location: germanywestcentral
           ingress: external
           targetPort: 8080
@@ -126,10 +129,10 @@ jobs:
       - name: deploy frontend to azure container apps
         uses: azure/container-apps-deploy-action@v1
         with:
-          imageToDeploy: ${{ env.REGISTRY }}/frontend:${{ env.TAG }}
+          imageToDeploy: ${{ env.REGISTRY }}/${{ env.DOCKER_NAMESPACE}}/${{env.DOCKER_FRONTEND_REPO_NAME}}:${{ env.TAG }}
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           containerAppName: ${{ env.FRONTEND_CONTAINER_NAME }}
-          containerAppEnvironment: finance-app-env
+          containerAppEnvironment: personal-finance-app-env
           location: germanywestcentral
           ingress: external
           targetPort: 80
