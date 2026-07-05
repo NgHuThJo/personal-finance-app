@@ -153,7 +153,7 @@ namespace backend.DatabaseSeeding
             await using var scope = app.Services.CreateAsyncScope();
             await using var dbContext =
                 scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            await dbContext.Database.EnsureCreatedAsync();
+            await dbContext.Database.MigrateAsync();
 
             Console.WriteLine("Seeding successful");
         }
