@@ -193,7 +193,7 @@ export function Login() {
   const onGitHubLogin = () => {
     const newUrl = URL.parse(
       import.meta.env.VITE_GITHUB_LOGIN_PATH,
-      import.meta.env.VITE_FRONTEND_URL,
+      window.location.origin,
     );
 
     if (newUrl === null) {
