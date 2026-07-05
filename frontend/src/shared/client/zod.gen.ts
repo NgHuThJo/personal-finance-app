@@ -365,6 +365,17 @@ export const zLoginGitHubUserData = z.object({
     query: z.optional(z.never())
 });
 
+export const zLoginGuestUserData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+/**
+ * OK
+ */
+export const zLoginGuestUserResponse = z.string();
+
 export const zGetBalanceByUserIdData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),

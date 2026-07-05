@@ -11,6 +11,7 @@ import type {
 } from "#frontend/shared/client";
 import {
   createRefreshTokenQueryKey,
+  loginGuestUserMutation,
   loginUserMutation,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
 import { useToggle } from "#frontend/shared/hooks/use-toggle";
@@ -84,6 +85,27 @@ export function Login() {
     setError,
     formState: { errors },
   } = useForm<LoginUserRequest>();
+  const { mutate: mutateGuestLogin, isPending: isGuestLoginPending } =
+    useMutation({
+      ...loginGuestUserMutation({
+        credentials: "include",
+      }),
+      onSuccess: async (accessToken) => {
+        Logger.info("Guest login successful");
+
+        queryClient.setQueryData<CreateRefreshTokenResponse>(
+          createRefreshTokenQueryKey(),
+          {
+            accessToken,
+          },
+        );
+
+        await route.navigate({
+          to: "/dashboard",
+          replace: true,
+        });
+      },
+    });
   const { mutate, isPending } = useMutation({
     ...loginUserMutation({
       credentials: "include",
@@ -128,6 +150,8 @@ export function Login() {
       }
     },
   });
+
+  const isLoginPending = (() => isPending || isGuestLoginPending)();
 
   const onSubmit = handleSubmit(
     (data) => {
@@ -192,6 +216,10 @@ export function Login() {
     );
   };
 
+  const onGuestLogin = () => {
+    mutateGuestLogin({});
+  };
+
   return (
     <form onSubmit={onSubmit} className={styles.form}>
       <h1>Login</h1>
@@ -253,9 +281,18 @@ export function Login() {
       </label>
       <div className={styles["button-list"]}>
         <Button
+          type="button"
+          variant="guest"
+          disabled={isLoginPending}
+          onClick={onGuestLogin}
+          data-testid="guest-login"
+        >
+          Login as Guest
+        </Button>
+        <Button
           type="submit"
           variant="cta-primary"
-          disabled={isPending}
+          disabled={isLoginPending}
           data-testid="normal-login"
         >
           Login
@@ -263,7 +300,7 @@ export function Login() {
         <Button
           type="button"
           variant="cta-primary"
-          disabled={isPending}
+          disabled={isLoginPending}
           onClick={onGoogleLogin}
           data-testid="google-login"
         >
@@ -272,7 +309,7 @@ export function Login() {
         <Button
           type="button"
           variant="cta-primary"
-          disabled={isPending}
+          disabled={isLoginPending}
           onClick={onGitHubLogin}
           data-testid="github-login"
         >

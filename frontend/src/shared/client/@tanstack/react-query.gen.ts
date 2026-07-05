@@ -3,8 +3,8 @@
 import { type DefaultError, type InfiniteData, infiniteQueryOptions, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { addMoneyToPot, createBudget, createPot, createRefreshToken, createTransaction, deleteBudget, deletePot, editBudget, editPot, getAllBudgets, getAllCategories, getAllPots, getAllRecurringBills, getAllTransactions, getBalanceByUserId, getUserById, loginGitHubUser, loginGoogleUser, loginUser, logoutUser, type Options, signUpUser, withdrawMoneyFromPot } from '../sdk.gen';
-import type { AddMoneyToPotData, AddMoneyToPotError, AddMoneyToPotResponse, CreateBudgetData, CreateBudgetError, CreatePotData, CreatePotError, CreateRefreshTokenData, CreateRefreshTokenError, CreateRefreshTokenResponse2, CreateTransactionData, CreateTransactionError, CreateTransactionResponse, DeleteBudgetData, DeleteBudgetError, DeleteBudgetResponse, DeletePotData, DeletePotError, DeletePotResponse, EditBudgetData, EditBudgetError, EditBudgetResponse, EditPotData, EditPotError, EditPotResponse, GetAllBudgetsData, GetAllBudgetsError, GetAllBudgetsResponse2, GetAllCategoriesData, GetAllCategoriesError, GetAllCategoriesResponse, GetAllPotsData, GetAllPotsResponse2, GetAllRecurringBillsData, GetAllRecurringBillsError, GetAllRecurringBillsResponse2, GetAllTransactionsData, GetAllTransactionsError, GetAllTransactionsResponse2, GetBalanceByUserIdData, GetBalanceByUserIdError, GetBalanceByUserIdResponse2, GetUserByIdData, GetUserByIdError, GetUserByIdResponse2, LoginGitHubUserData, LoginGoogleUserData, LoginUserData, LoginUserError, LoginUserResponse, LogoutUserData, LogoutUserError, LogoutUserResponse, SignUpUserData, SignUpUserError, SignUpUserResponse2, WithdrawMoneyFromPotData, WithdrawMoneyFromPotError, WithdrawMoneyFromPotResponse } from '../types.gen';
+import { addMoneyToPot, createBudget, createPot, createRefreshToken, createTransaction, deleteBudget, deletePot, editBudget, editPot, getAllBudgets, getAllCategories, getAllPots, getAllRecurringBills, getAllTransactions, getBalanceByUserId, getUserById, loginGitHubUser, loginGoogleUser, loginGuestUser, loginUser, logoutUser, type Options, signUpUser, withdrawMoneyFromPot } from '../sdk.gen';
+import type { AddMoneyToPotData, AddMoneyToPotError, AddMoneyToPotResponse, CreateBudgetData, CreateBudgetError, CreatePotData, CreatePotError, CreateRefreshTokenData, CreateRefreshTokenError, CreateRefreshTokenResponse2, CreateTransactionData, CreateTransactionError, CreateTransactionResponse, DeleteBudgetData, DeleteBudgetError, DeleteBudgetResponse, DeletePotData, DeletePotError, DeletePotResponse, EditBudgetData, EditBudgetError, EditBudgetResponse, EditPotData, EditPotError, EditPotResponse, GetAllBudgetsData, GetAllBudgetsError, GetAllBudgetsResponse2, GetAllCategoriesData, GetAllCategoriesError, GetAllCategoriesResponse, GetAllPotsData, GetAllPotsResponse2, GetAllRecurringBillsData, GetAllRecurringBillsError, GetAllRecurringBillsResponse2, GetAllTransactionsData, GetAllTransactionsError, GetAllTransactionsResponse2, GetBalanceByUserIdData, GetBalanceByUserIdError, GetBalanceByUserIdResponse2, GetUserByIdData, GetUserByIdError, GetUserByIdResponse2, LoginGitHubUserData, LoginGoogleUserData, LoginGuestUserData, LoginGuestUserResponse, LoginUserData, LoginUserError, LoginUserResponse, LogoutUserData, LogoutUserError, LogoutUserResponse, SignUpUserData, SignUpUserError, SignUpUserResponse2, WithdrawMoneyFromPotData, WithdrawMoneyFromPotError, WithdrawMoneyFromPotResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -231,6 +231,23 @@ export const loginGitHubUserOptions = (options?: Options<LoginGitHubUserData>) =
     },
     queryKey: loginGitHubUserQueryKey(options)
 });
+
+/**
+ * Log in as guest user
+ */
+export const loginGuestUserMutation = (options?: Partial<Options<LoginGuestUserData>>): UseMutationOptions<LoginGuestUserResponse, DefaultError, Options<LoginGuestUserData>> => {
+    const mutationOptions: UseMutationOptions<LoginGuestUserResponse, DefaultError, Options<LoginGuestUserData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await loginGuestUser({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
 
 export const getBalanceByUserIdQueryKey = (options?: Options<GetBalanceByUserIdData>) => createQueryKey('getBalanceByUserId', options);
 

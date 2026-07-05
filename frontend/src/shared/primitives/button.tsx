@@ -15,6 +15,7 @@ const buttonVariants = cva(styles.button, {
       abort: styles.abort,
       ["cta-primary"]: styles["cta-primary"],
       ["cta-secondary"]: styles["cta-secondary"],
+      guest: styles["guest"],
     },
     size: {
       default: styles["default-size"],

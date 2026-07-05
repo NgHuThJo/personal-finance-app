@@ -474,6 +474,22 @@ export type LoginGitHubUserResponses = {
     200: unknown;
 };
 
+export type LoginGuestUserData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/auth/login/guest';
+};
+
+export type LoginGuestUserResponses = {
+    /**
+     * OK
+     */
+    200: string;
+};
+
+export type LoginGuestUserResponse = LoginGuestUserResponses[keyof LoginGuestUserResponses];
+
 export type GetBalanceByUserIdData = {
     body?: never;
     path?: never;

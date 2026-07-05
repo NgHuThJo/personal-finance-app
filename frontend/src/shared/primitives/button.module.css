@@ -119,11 +119,23 @@
 .success {
   color: var(--color-status-success);
 }
+
 .error {
   color: var(--color-status-error);
 }
 
+.guest {
+  padding-block: var(--spacing-6);
+  color: var(--color-text-cta-primary);
+  background-color: var(--color-status-success);
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
 /* Custom */
+
 .cta-primary {
   padding-block: var(--spacing-6);
   color: var(--color-text-cta-primary);
@@ -139,6 +151,10 @@
   font-weight: var(--font-weight-heading);
   font-size: var(--font-size-content-primary);
   background-color: var(--color-background-canvas-primary);
+
+  &:disabled {
+    opacity: 0.5;
+  }
 }
 
 @media (prefers-reduced-motion) {
