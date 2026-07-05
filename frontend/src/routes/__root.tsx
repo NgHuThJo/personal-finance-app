@@ -11,13 +11,13 @@ import {
 import { useEffect, useEffectEvent } from "react";
 import { ToastContainer } from "react-toastify";
 import { ErrorBoundary } from "#frontend/features/error/components/error";
+import { ColdStartMessage } from "#frontend/features/not-found/components/coldstart-message";
 import { NotFound } from "#frontend/features/not-found/components/not-found";
 import { Logger } from "#frontend/shared/app/logging";
 import {
   createRefreshTokenOptions,
   createRefreshTokenQueryKey,
 } from "#frontend/shared/client/@tanstack/react-query.gen";
-import { Loader } from "#frontend/shared/primitives/loader";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
@@ -67,7 +67,7 @@ function Root() {
   }, []);
 
   if (isPending) {
-    return <Loader />;
+    return <ColdStartMessage />;
   }
 
   return (

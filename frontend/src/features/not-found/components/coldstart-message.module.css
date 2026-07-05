@@ -1,0 +1,36 @@
+.page-loader {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  place-content: center;
+  gap: 4rem;
+  text-align: center;
+}
+
+.loading-title {
+  font-size: 3rem;
+  font-weight: var(--font-weight-heading);
+
+  &::after {
+    content: "";
+    animation: 3s linear infinite typewriter;
+  }
+}
+
+p {
+  max-width: 50ch;
+  font-size: var(--font-size-subheading);
+  font-weight: var(--font-weight-heading);
+}
+
+@keyframes typewriter {
+  25% {
+    content: ".";
+  }
+  50% {
+    content: "..";
+  }
+  75% {
+    content: "...";
+  }
+}
