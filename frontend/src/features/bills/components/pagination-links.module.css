@@ -1,9 +1,18 @@
 .pagination-layout {
+  position: sticky;
+  bottom: 5rem;
   display: flex;
-  gap: 1rem;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: var(--border-radius-4);
+  background-color: lightgray;
+
+  @media (width >= 1024px) {
+    bottom: 0;
+  }
 }
 
 .pagination-button-layout {
