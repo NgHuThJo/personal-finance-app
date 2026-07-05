@@ -107,7 +107,7 @@ jobs:
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           containerAppName: ${{ env.BACKEND_CONTAINER_NAME }}
           containerAppEnvironment: personal-finance-app-env
-          location: francecentral
+          location: polandcentral
           ingress: external
           targetPort: 8080
           registryUrl: ${{ env.REGISTRY }}
@@ -133,7 +133,7 @@ jobs:
           resourceGroup: ${{ env.RESOURCE_GROUP }}
           containerAppName: ${{ env.FRONTEND_CONTAINER_NAME }}
           containerAppEnvironment: personal-finance-app-env
-          location: francecentral
+          location: polandcentral
           ingress: external
           targetPort: 80
           registryUrl: ${{ env.REGISTRY }}

@@ -194,6 +194,10 @@ public static class RouteGrouper
             .MapGet("login/github", LoginGitHubUserEndpoint.LoginGitHubUser)
             .WithName(nameof(LoginGitHubUserEndpoint.LoginGitHubUser))
             .WithSummary("Redirects to GitHub login");
+        group
+            .MapPost("login/guest", LoginGuestUserEndpoint.LoginGuestUser)
+            .WithName(nameof(LoginGuestUserEndpoint.LoginGuestUser))
+            .WithSummary("Log in as guest user");
 
         return app;
     }
