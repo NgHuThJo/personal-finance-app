@@ -91,13 +91,13 @@ Change current working directory first before running the commands after it:
 cd backend/src
 ```
 
-Run the development server:
+Start the development server:
 
 ```bash
 dotnet run
 ```
 
-Pubilsh
+Publish
 
 ```bash
 dotnet publish -c Release -o /release
