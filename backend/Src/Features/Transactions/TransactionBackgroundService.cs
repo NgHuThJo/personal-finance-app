@@ -22,8 +22,7 @@ public class TransactionBackgroundService(IServiceScopeFactory scopeFactory)
 
                 var dueTransactions = await db
                     .Transactions.Where(t =>
-                        (t.IsRecurring || !t.IsProcessed)
-                        && t.TransactionDate <= now
+                        !t.IsProcessed && t.TransactionDate <= now
                     )
                     .Include(t => t.Sender)
                         .ThenInclude(u => u.Balance)
@@ -58,6 +57,7 @@ public class TransactionBackgroundService(IServiceScopeFactory scopeFactory)
 
                     senderBalance.Current = newState.SenderBalanceCurrent;
                     recipientBalance.Current = newState.RecipientBalanceCurrent;
+                    transaction.IsProcessed = true;
 
                     if (transaction.IsRecurring)
                     {
@@ -73,10 +73,6 @@ public class TransactionBackgroundService(IServiceScopeFactory scopeFactory)
                         };
 
                         db.Transactions.Add(newTransaction);
-                    }
-                    else
-                    {
-                        transaction.IsProcessed = true;
                     }
                 }
 
