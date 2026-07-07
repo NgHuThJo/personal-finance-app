@@ -14,7 +14,10 @@ export function BalanceSummary() {
 
   return (
     <ul className={styles.list}>
-      <li className={`${styles["list-item"]} ${styles.balance}`}>
+      <li
+        className={`${styles["list-item"]} ${styles.balance}`}
+        style={{ "--order": 1 }}
+      >
         <h3 className={styles["list-item-description"]}>Current Balance</h3>
         <span
           className={`${styles["list-item-value"]} ${styles["balance-value"]}`}
@@ -25,7 +28,7 @@ export function BalanceSummary() {
           })}
         </span>
       </li>
-      <li className={styles["list-item"]}>
+      <li className={styles["list-item"]} style={{ "--order": 2 }}>
         <h3 className={styles["list-item-description"]}>Income</h3>
         <span className={styles["list-item-value"]}>
           {numberFormatter.formatNumber({
@@ -34,7 +37,7 @@ export function BalanceSummary() {
           })}
         </span>
       </li>
-      <li className={styles["list-item"]}>
+      <li className={styles["list-item"]} style={{ "--order": 3 }}>
         <h3 className={styles["list-item-description"]}>Expenses</h3>
         <span className={styles["list-item-value"]}>
           {numberFormatter.formatNumber({

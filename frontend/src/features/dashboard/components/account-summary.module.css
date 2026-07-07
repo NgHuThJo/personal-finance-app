@@ -1,6 +1,11 @@
 .list {
   display: grid;
   gap: 1rem;
+  transition: opacity 1s;
+
+  @starting-style {
+    opacity: 0;
+  }
 
   @media screen and (width >= 1024px) {
     display: revert;

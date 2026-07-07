@@ -1,8 +1,13 @@
 .layout {
   display: grid;
   grid-template-rows: auto 1fr;
-  /* align-items: start; */
   gap: 2rem;
+
+  transition: opacity 1s;
+
+  @starting-style {
+    opacity: 0;
+  }
 }
 
 .header {
