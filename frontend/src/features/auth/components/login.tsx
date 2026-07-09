@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
 import { useSyncExternalStore } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import styles from "./login.module.css";
 import { IconEye } from "#frontend/assets/icons/icons";
 import { Logger } from "#frontend/shared/app/logging";
@@ -91,14 +92,13 @@ export function Login() {
         credentials: "include",
       }),
       onSuccess: async (accessToken) => {
-        Logger.info("Guest login successful");
-
         queryClient.setQueryData<CreateRefreshTokenResponse>(
           createRefreshTokenQueryKey(),
           {
             accessToken,
           },
         );
+        toast.success("Guest login successful");
 
         await route.navigate({
           to: "/dashboard",
@@ -111,7 +111,6 @@ export function Login() {
       credentials: "include",
     }),
     onSuccess: async (accessToken) => {
-      Logger.info(`Login successful`);
       /* Make sure you use the response type of the createRefreshToken endpoint
       because it differs from the loginUser response type */
       queryClient.setQueryData<CreateRefreshTokenResponse>(
@@ -120,6 +119,7 @@ export function Login() {
           accessToken,
         },
       );
+      toast.success("Login successful");
 
       await route.navigate({
         to: "/dashboard",
@@ -127,7 +127,8 @@ export function Login() {
       });
     },
     onError: (error) => {
-      Logger.info(`Login failed`, error);
+      Logger.debug(`Login failed`, error);
+      toast.error("Login failed");
 
       switch (error.status) {
         case 401: {

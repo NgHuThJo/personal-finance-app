@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import styles from "./signup.module.css";
 import { IconEye } from "#frontend/assets/icons/icons";
 import { Logger } from "#frontend/shared/app/logging";
@@ -22,13 +23,15 @@ export function Signup() {
   const { mutate, isPending } = useMutation({
     ...signUpUserMutation(),
     onSuccess: (data) => {
-      Logger.info("Signup successful", data);
+      Logger.debug("Signup successful", data);
+      toast.success("Signup successful");
       route.navigate({
         to: "/login",
       });
     },
     onError: (error) => {
-      Logger.info("Signup failed", error);
+      Logger.debug("Signup failed", error);
+      toast.error("Signup failed");
 
       setError("root.server-conflict", {
         type: String(error.status),
