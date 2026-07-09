@@ -257,21 +257,34 @@ builder
             User user;
             if (providerInfo is null)
             {
-                user = new User
+                var userWithEmail = await dbContext
+                    .Users.Include(u => u.AuthProvider)
+                    .Where(u => u.Email == email)
+                    .SingleOrDefaultAsync();
+                var githubAuthProvider = new UserAuthProvider
                 {
-                    Email = email,
-                    Name = username,
-                    AvatarSeed = AvatarGenerator.GenerateSeed(),
-                    AvatarStyle = AvatarGenerator.GetRandomStyle(),
-                    Balance = new Balance(),
-                    AuthProvider = new UserAuthProvider
-                    {
-                        Provider = AuthProvider.GitHub,
-                        ProviderUserId = githubId,
-                    },
+                    Provider = AuthProvider.GitHub,
+                    ProviderUserId = githubId,
                 };
 
-                dbContext.Add(user);
+                if (userWithEmail is null)
+                {
+                    user = new User
+                    {
+                        Email = email,
+                        Name = username,
+                        AvatarSeed = AvatarGenerator.GenerateSeed(),
+                        AvatarStyle = AvatarGenerator.GetRandomStyle(),
+                        Balance = new Balance(),
+                    };
+                    user.AuthProvider.Add(githubAuthProvider);
+                    dbContext.Add(user);
+                }
+                else
+                {
+                    user = userWithEmail;
+                    user.AuthProvider.Add(githubAuthProvider);
+                }
 
                 await dbContext.SaveChangesAsync();
             }
@@ -390,21 +403,35 @@ builder
             User user; // Create new user if not associated with a provider
             if (providerRecord is null)
             {
-                user = new User
+                var userWithEmail = await db
+                    .Users.Include(u => u.AuthProvider)
+                    .Where(u => u.Email == email)
+                    .SingleOrDefaultAsync();
+                var googleAuthProvider = new UserAuthProvider
                 {
-                    Email = email,
-                    Name = name,
-                    AvatarSeed = AvatarGenerator.GenerateSeed(),
-                    AvatarStyle = AvatarGenerator.GetRandomStyle(),
-                    Balance = new Balance(),
-                    AuthProvider = new UserAuthProvider
-                    {
-                        Provider = AuthProvider.Google,
-                        ProviderUserId = sub,
-                    },
+                    Provider = AuthProvider.Google,
+                    ProviderUserId = sub,
                 };
 
-                db.Users.Add(user);
+                if (userWithEmail is null)
+                {
+                    user = new User
+                    {
+                        Email = email,
+                        Name = name,
+                        AvatarSeed = AvatarGenerator.GenerateSeed(),
+                        AvatarStyle = AvatarGenerator.GetRandomStyle(),
+                        Balance = new Balance(),
+                    };
+                    user.AuthProvider.Add(googleAuthProvider);
+                    db.Users.Add(user);
+                }
+                else
+                {
+                    user = userWithEmail;
+                    user.AuthProvider.Add(googleAuthProvider);
+                }
+
                 await db.SaveChangesAsync();
             }
             else

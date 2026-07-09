@@ -9,7 +9,7 @@ public class User
     public required string AvatarSeed { get; set; } = null!;
     public required AvatarStyle AvatarStyle { get; set; }
     public Balance Balance { get; set; } = null!;
-    public UserAuthProvider? AuthProvider { get; set; }
+    public List<UserAuthProvider> AuthProvider { get; set; } = [];
     public List<Transaction> SentTransactions { get; set; } = [];
     public List<Transaction> ReceivedTransactions { get; set; } = [];
     public List<Budget> Budgets { get; set; } = [];
